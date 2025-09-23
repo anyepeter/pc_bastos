@@ -1,101 +1,113 @@
 import Link from 'next/link';
-import { Cross, Phone, Mail, MapPin, Facebook, Instagram, Twitter, Youtube } from 'lucide-react';
+import Image from 'next/image';
+import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Heart } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-primary text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Church Info */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                <Cross className="w-6 h-6 text-primary" />
+    <footer className="bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 text-white relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 left-0 w-full h-full" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }}></div>
+      </div>
+      
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          {/* Brand Section */}
+          <div className="space-y-6 group">
+            <div className="flex items-center space-x-4">
+              <div className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <Image
+                  src="/images/logo_CEPCA.png"
+                  alt="CEPCA Logo"
+                  width={32}
+                  height={32}
+                />
               </div>
               <div>
-                <h3 className="text-xl font-serif font-bold">Grace Community</h3>
-                <p className="text-sm text-green-200">Church</p>
+                <h3 className="text-2xl font-playfair font-bold tracking-tight">CEPCA</h3>
+                <p className="text-purple-200 text-sm font-poppins">Council of Protestant Churches</p>
               </div>
             </div>
-            <p className="text-green-100 text-sm">
-              A place where faith grows, community thrives, and lives are transformed. 
-              Join us as we walk together in God's love.
+            <p className="text-purple-100 leading-relaxed font-inter">
+              Building faith communities across Cameroon through unity, service, and spiritual growth.
             </p>
+            <div className="flex items-center space-x-2 text-purple-200">
+              <Heart className="w-4 h-4 text-pink-300 animate-pulse" />
+              <span className="text-sm font-poppins">Serving with love since 1957</span>
+            </div>
           </div>
 
           {/* Quick Links */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-green-100">
-              <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
-              <li><Link href="/sermons" className="hover:text-white transition-colors">Sermons</Link></li>
-              <li><Link href="/events" className="hover:text-white transition-colors">Events</Link></li>
-              <li><Link href="/ministries" className="hover:text-white transition-colors">Ministries</Link></li>
-              <li><Link href="/give" className="hover:text-white transition-colors">Give</Link></li>
-              <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-            </ul>
+          <div className="space-y-6">
+            <h4 className="text-xl font-playfair font-semibold text-white">Quick Links</h4>
+            <nav className="grid grid-cols-2 gap-3">
+              <Link href="/members" className="group flex items-center space-x-2 text-purple-200 hover:text-white transition-all duration-300 font-poppins">
+                <span className="w-1 h-1 bg-purple-400 rounded-full group-hover:w-2 transition-all duration-300"></span>
+                <span>Members</span>
+              </Link>
+              <Link href="/blogs" className="group flex items-center space-x-2 text-purple-200 hover:text-white transition-all duration-300 font-poppins">
+                <span className="w-1 h-1 bg-purple-400 rounded-full group-hover:w-2 transition-all duration-300"></span>
+                <span>Blogs</span>
+              </Link>
+              <Link href="/contact" className="group flex items-center space-x-2 text-purple-200 hover:text-white transition-all duration-300 font-poppins">
+                <span className="w-1 h-1 bg-purple-400 rounded-full group-hover:w-2 transition-all duration-300"></span>
+                <span>Contact</span>
+              </Link>
+              <Link href="/about" className="group flex items-center space-x-2 text-purple-200 hover:text-white transition-all duration-300 font-poppins">
+                <span className="w-1 h-1 bg-purple-400 rounded-full group-hover:w-2 transition-all duration-300"></span>
+                <span>About</span>
+              </Link>
+            </nav>
           </div>
 
-          {/* Service Times */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Service Times</h4>
-            <div className="space-y-2 text-green-100">
-              <div>
-                <p className="font-medium">Sunday Worship</p>
-                <p className="text-sm">9:00 AM & 11:00 AM</p>
-              </div>
-              <div>
-                <p className="font-medium">Wednesday Prayer</p>
-                <p className="text-sm">7:00 PM</p>
-              </div>
-              <div>
-                <p className="font-medium">Youth Service</p>
-                <p className="text-sm">Friday 6:30 PM</p>
-              </div>
+          {/* Contact & Social */}
+          <div className="space-y-6">
+            <h4 className="text-xl font-playfair font-semibold text-white">Get In Touch</h4>
+            <div className="space-y-4">
+              <a href="https://wa.me/237242657608" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 group hover:bg-white/5 p-2 rounded-lg transition-colors duration-300">
+                <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center group-hover:bg-green-500/30 transition-colors duration-300">
+                  <Phone className="w-4 h-4 text-green-300" />
+                </div>
+                <span className="text-purple-100 font-poppins group-hover:text-white">+237 242 657 608</span>
+              </a>
+              <a href="mailto:generalsecretarycepca@gmail.com" className="flex items-center space-x-3 group hover:bg-white/5 p-2 rounded-lg transition-colors duration-300">
+                <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center group-hover:bg-blue-500/30 transition-colors duration-300">
+                  <Mail className="w-4 h-4 text-blue-300" />
+                </div>
+                <span className="text-purple-100 font-poppins group-hover:text-white">generalsecretarycepca@gmail.com</span>
+              </a>
+              <a href="https://www.google.com/maps/search/Presbyterian+Church+Bastos+Yaound%C3%A9+Cameroon" target="_blank" rel="noopener noreferrer" className="flex items-start space-x-3 group hover:bg-white/5 p-2 rounded-lg transition-colors duration-300">
+                <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center group-hover:bg-purple-500/30 transition-colors duration-300">
+                  <MapPin className="w-4 h-4 text-purple-300" />
+                </div>
+                <span className="text-purple-100 font-poppins leading-relaxed group-hover:text-white">Presbyterian Church<br />Bastos, Yaoundé, Cameroon</span>
+              </a>
             </div>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
-            <div className="space-y-3 text-green-100">
-              <div className="flex items-start space-x-3">
-                <MapPin className="w-5 h-5 mt-0.5 text-green-200" />
-                <p className="text-sm">
-                  123 Faith Street<br />
-                  Springfield, IL 62701
-                </p>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-green-200" />
-                <p className="text-sm">(555) 123-4567</p>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-green-200" />
-                <p className="text-sm">hello@gracecommunitychurch.org</p>
-              </div>
-            </div>
-
+            
             {/* Social Media */}
-            <div className="flex space-x-4 mt-6">
-              <a href="#" className="text-green-200 hover:text-white transition-colors">
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-green-200 hover:text-white transition-colors">
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-green-200 hover:text-white transition-colors">
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-green-200 hover:text-white transition-colors">
-                <Youtube className="w-5 h-5" />
-              </a>
+            <div className="space-y-3">
+              <p className="text-purple-200 font-poppins text-sm">Follow Us</p>
+              <div className="flex space-x-3">
+                <a href="#" className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 hover:scale-110 transition-all duration-300 group">
+                  <Facebook className="w-5 h-5 text-purple-200 group-hover:text-white" />
+                </a>
+                <a href="#" className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 hover:scale-110 transition-all duration-300 group">
+                  <Instagram className="w-5 h-5 text-purple-200 group-hover:text-white" />
+                </a>
+                <a href="#" className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 hover:scale-110 transition-all duration-300 group">
+                  <Twitter className="w-5 h-5 text-purple-200 group-hover:text-white" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-green-700 mt-12 pt-8 text-center text-green-200 text-sm">
-          <p>&copy; 2025 Grace Community Church. All rights reserved.</p>
+        {/* Bottom Section */}
+        <div className="border-t border-white/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+          <p className="text-purple-200 text-sm font-poppins">&copy; 2025 CEPCA. All rights reserved.</p>
+          <p className="text-purple-300 text-sm font-inter">Made with <Heart className="w-4 h-4 inline text-pink-400 animate-pulse" /> for our community</p>
         </div>
       </div>
     </footer>
