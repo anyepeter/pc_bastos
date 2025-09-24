@@ -45,7 +45,7 @@ const Navigation = () => {
       name: 'About', href: '#'
     },
     { 
-      name: 'Members', href: '/members',
+      name: 'Members', href: '#',
       submenu: [
         { name: 'Eglise Anglicane (EA)', href: '/members/ea' },
         { name: 'Cameroon Baptist Convention (CBC)', href: '/members/cbc' },
@@ -63,24 +63,19 @@ const Navigation = () => {
     },
     { 
       name: 'Sermons', 
-      href: '#',
-      submenu: [
-        { name: 'Recent Sermons', href: '/sermons/recent' },
-        { name: 'Sermon Series', href: '/sermons/series' },
-        { name: 'Topics', href: '/sermons/topics' },
-      ]
+      href: '/sermons'
     },
     { 
       name: 'Activities', 
       href: '#',
       submenu: [
         { name: 'Charity', href: '/events/upcoming' },
-        { name: 'Workshops/Tranings', href: '/events/calendar' },
+        { name: 'Workshops/Trainings', href: '/workshops' },
       ]
     },
-    { 
+    {
       name: 'News', 
-      href: '/news',
+      href: '#',
       submenu: [
         { name: "Future events", href: '/events' },
         { name: 'Announcements', href: '/announcements' },

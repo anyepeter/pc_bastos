@@ -86,7 +86,7 @@ export default function BlogsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-purple-500 border-b border-gray-200 pt-28 pb-16">
+      <div className="bg-purple-500 border-b border-gray-200 pt-24 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center">
             <div className={`transform transition-all duration-700 ease-out ${
