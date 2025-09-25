@@ -54,6 +54,7 @@ const announcementsData = [
 
 export default function AnnouncementsPage() {
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<typeof announcementsData[0] | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -94,6 +95,10 @@ export default function AnnouncementsPage() {
   };
 
   useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  useEffect(() => {
     if (selectedAnnouncement) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -123,10 +128,11 @@ export default function AnnouncementsPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Mobile: List View */}
         <div className="block lg:hidden space-y-6">
-          {announcementsData.map((announcement) => (
+          {announcementsData.map((announcement, index) => (
             <div 
               key={announcement.id} 
-              className="bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+              className={`bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 cursor-pointer transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
+              style={{ transitionDelay: `${index * 100}ms` }}
               onClick={() => openModal(announcement)}
             >
               <div className="relative h-48 rounded-t-2xl overflow-hidden">
@@ -164,10 +170,11 @@ export default function AnnouncementsPage() {
 
         {/* Desktop: Grid View */}
         <div className="hidden lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
-          {announcementsData.map((announcement) => (
+          {announcementsData.map((announcement, index) => (
             <div 
               key={announcement.id} 
-              className="bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 transform group cursor-pointer"
+              className={`bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 transform group cursor-pointer ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
+              style={{ transitionDelay: `${index * 150}ms` }}
               onClick={() => openModal(announcement)}
             >
               <div className="relative h-48 rounded-t-2xl overflow-hidden">
@@ -202,8 +209,8 @@ export default function AnnouncementsPage() {
 
       {/* Modal */}
       {selectedAnnouncement && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
             <div className="relative h-64">
               <div className="w-full h-full bg-gradient-to-br from-purple-400 to-indigo-500"></div>
               <button

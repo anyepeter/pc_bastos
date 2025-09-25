@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin, ChevronRight } from 'lucide-react';
 import BackButton from '@/components/BackButton';
 
@@ -61,6 +62,12 @@ const eventsData = [
 ];
 
 export default function EventsPage() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
@@ -113,8 +120,8 @@ export default function EventsPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Mobile: List View */}
         <div className="block lg:hidden space-y-6">
-          {eventsData.map((event) => (
-            <div key={event.id} className="bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+          {eventsData.map((event, index) => (
+            <div key={event.id} className={`bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: `${index * 100}ms` }}>
               <div className="p-6">
                 <div className="flex items-start space-x-4">
                   <div className="flex-shrink-0">
@@ -170,8 +177,8 @@ export default function EventsPage() {
 
         {/* Desktop: Grid View */}
         <div className="hidden lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
-          {eventsData.map((event) => (
-            <div key={event.id} className="bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 transform group">
+          {eventsData.map((event, index) => (
+            <div key={event.id} className={`bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 transform group ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: `${index * 150}ms` }}>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex flex-col items-center justify-center text-white shadow-lg">
