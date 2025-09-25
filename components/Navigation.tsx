@@ -240,7 +240,7 @@ const Navigation = () => {
           </div>
           
           {/* Fixed donate button at bottom */}
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4">
             <Link
               href="/give"
               className="block bg-green-600 hover:bg-green-700 active:bg-green-800 text-white px-4 py-3 rounded-lg font-medium text-center touch-manipulation"
