@@ -1,44 +1,52 @@
-import { Play, Download, Share, Calendar } from 'lucide-react';
+'use client';
+
+import { useState } from 'react';
+import { Play, Download, Calendar } from 'lucide-react';
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 
 const SermonsSection = () => {
+  const [activePlayerId, setActivePlayerId] = useState<number | null>(null);
+
   const sermons = [
     {
       id: 1,
       title: 'Walking in Faith Through Life\'s Storms',
-      speaker: 'Pastor Michael Johnson',
+      address: 'Simbock Yaounde',
       date: 'February 25, 2025',
-      series: 'Unshakeable Faith',
       duration: '42 min',
       description: 'Discover how to maintain your faith and trust in God even when life gets difficult.',
       image: 'https://images.pexels.com/photos/8468077/pexels-photo-8468077.jpeg?auto=compress&cs=tinysrgb&w=400',
-      audioUrl: '#',
+      audioUrl: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav',
       videoUrl: '#'
     },
     {
       id: 2,
       title: 'The Power of Community in Christian Living',
-      speaker: 'Pastor Sarah Davis',
+      address: 'Simbock Yaounde',
       date: 'February 18, 2025',
-      series: 'Better Together',
       duration: '38 min',
       description: 'Learn about the importance of Christian community and how we can support one another.',
       image: 'https://images.pexels.com/photos/8468048/pexels-photo-8468048.jpeg?auto=compress&cs=tinysrgb&w=400',
-      audioUrl: '#',
+      audioUrl: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav',
       videoUrl: '#'
     },
     {
       id: 3,
       title: 'God\'s Grace: Sufficient for Every Season',
-      speaker: 'Pastor Michael Johnson',
+      address: 'Simbock Yaounde',
       date: 'February 11, 2025',
-      series: 'Amazing Grace',
       duration: '45 min',
       description: 'Explore the depth and richness of God\'s grace in every aspect of our lives.',
       image: 'https://images.pexels.com/photos/8468025/pexels-photo-8468025.jpeg?auto=compress&cs=tinysrgb&w=400',
-      audioUrl: '#',
+      audioUrl: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav',
       videoUrl: '#'
     }
   ];
+
+  const handleListenClick = (sermonId: number) => {
+    setActivePlayerId(sermonId);
+  };
 
   return (
     <section className="py-20 bg-white">
@@ -66,7 +74,10 @@ const SermonsSection = () => {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200">
-                  <button className="bg-white/90 hover:bg-white text-primary p-4 rounded-full shadow-lg transition-all duration-200">
+                  <button 
+                    onClick={() => handleListenClick(sermon.id)}
+                    className="bg-white/90 hover:bg-white text-primary p-4 rounded-full shadow-lg transition-all duration-200"
+                  >
                     <Play className="w-6 h-6" />
                   </button>
                 </div>
@@ -78,7 +89,6 @@ const SermonsSection = () => {
               </div>
               
               <div className="p-6">
-                <div className="text-accent font-semibold text-sm mb-2">{sermon.series}</div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{sermon.title}</h3>
                 <p className="text-gray-600 mb-4">{sermon.description}</p>
                 
@@ -86,20 +96,41 @@ const SermonsSection = () => {
                   <Calendar className="w-4 h-4" />
                   <span>{sermon.date}</span>
                   <span>•</span>
-                  <span>{sermon.speaker}</span>
+                  <span>{sermon.address}</span>
                 </div>
                 
-                <div className="flex items-center space-x-2">
-                  <button className="flex-1 bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-2">
-                    <Play className="w-4 h-4" />
-                    <span>Listen</span>
-                  </button>
-                  <button className="p-2 border border-gray-300 hover:border-primary hover:text-primary rounded-lg transition-colors duration-200">
-                    <Download className="w-4 h-4" />
-                  </button>
-                  <button className="p-2 border border-gray-300 hover:border-primary hover:text-primary rounded-lg transition-colors duration-200">
-                    <Share className="w-4 h-4" />
-                  </button>
+                <div className="space-y-3">
+                  {activePlayerId === sermon.id ? (
+                    <div className="bg-white rounded-lg p-2">
+                      <AudioPlayer
+                        src={sermon.audioUrl}
+                        showJumpControls={false}
+                        showSkipControls={false}
+                        showDownloadProgress={false}
+                        customAdditionalControls={[]}
+                        customVolumeControls={[]}
+                        layout="horizontal-reverse"
+                        className="!shadow-none"
+                        style={{
+                          backgroundColor: 'transparent',
+                          boxShadow: 'none'
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <button 
+                        onClick={() => handleListenClick(sermon.id)}
+                        className="flex-1 bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-2"
+                      >
+                        <Play className="w-4 h-4" />
+                        <span>Listen</span>
+                      </button>
+                      <button className="p-2 border border-gray-300 hover:border-primary hover:text-primary rounded-lg transition-colors duration-200">
+                        <Download className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -98,14 +98,14 @@ export default function ContactPage() {
 
             {/* Contact Cards */}
             <div className="space-y-6">
-              <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 opacity-0 translate-y-8 animate-[fadeInUp_1.2s_ease-out_0.2s_forwards] group">
-                <div className="flex items-start space-x-4">
+              <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 opacity-0 translate-y-8 animate-[fadeInUp_1.2s_ease-out_0.2s_forwards] group">
+                <div className="flex items-center sm:items-start justify-center flex-col sm:flex-row sm:justify-start gap-4 sm:gap-4">
                   <div className="w-12 h-12 bg-primary/10 group-hover:bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-300">
                     <MapPin className="w-6 h-6 text-primary" />
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors duration-300">Visit Us</h3>
-                    <p className="text-gray-600 mb-2">
+                  <div className="text-center sm:text-left">
+                    <h3 className="text-xl font-semibold text-gray-900 group-hover:text-primary transition-colors duration-300">Visit Us</h3>
+                    <p className="text-gray-600">
                       Presbyterian Church<br />
                       Bastos, Yaoundé, Cameroon
                     </p>
@@ -116,14 +116,14 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 opacity-0 translate-y-8 animate-[fadeInUp_1.2s_ease-out_0.4s_forwards] group">
-                <div className="flex items-start space-x-4">
+              <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 opacity-0 translate-y-8 animate-[fadeInUp_1.2s_ease-out_0.4s_forwards] group">
+                <div className="flex items-center sm:items-start justify-center flex-col sm:flex-row sm:justify-start gap-4 sm:gap-4">
                   <div className="w-12 h-12 bg-primary/10 group-hover:bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-300">
                     <Phone className="w-6 h-6 text-primary" />
                   </div>
-                  <div>
+                  <div className="text-center sm:text-left">
                     <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors duration-300">Call Us</h3>
-                    <a href="https://wa.me/237242657608" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 font-medium mb-2 block transition-colors duration-300">+237 242 657 608</a>
+                    <a href="https://wa.me/237242657608" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 font-medium block transition-colors duration-300">+237 242 657 608</a>
                     <p className="text-sm text-gray-500">
                       Monday - Friday: 9:00 AM - 5:00 PM<br />
                       Emergency: Available 24/7
@@ -132,14 +132,14 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 opacity-0 translate-y-8 animate-[fadeInUp_1.2s_ease-out_0.6s_forwards] group">
-                <div className="flex items-start space-x-4">
+              <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 opacity-0 translate-y-8 animate-[fadeInUp_1.2s_ease-out_0.6s_forwards] group">
+                <div className="flex items-center sm:items-start justify-center flex-col sm:flex-row sm:justify-start gap-4 sm:gap-4">
                   <div className="w-12 h-12 bg-primary/10 group-hover:bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-300">
                     <Mail className="w-6 h-6 text-primary" />
                   </div>
-                  <div>
+                  <div className="text-center sm:text-left">
                     <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors duration-300">Email Us</h3>
-                    <a href="mailto:generalsecretarycepca@gmail.com" className="text-primary hover:text-primary/80 font-medium mb-2 block transition-colors duration-300">generalsecretarycepca@gmail.com</a>
+                    <a href="mailto:generalsecretarycepca@gmail.com" className="text-primary hover:text-primary/80 font-medium block transition-colors duration-300">generalsecretarycepca@gmail.com</a>
                     <p className="text-sm text-gray-500">
                       We typically respond within 24 hours
                     </p>
@@ -147,15 +147,15 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 opacity-0 translate-y-8 animate-[fadeInUp_1.2s_ease-out_0.8s_forwards] group">
-                <div className="flex items-start space-x-4">
+              <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 opacity-0 translate-y-8 animate-[fadeInUp_1.2s_ease-out_0.8s_forwards] group">
+                <div className="flex items-center sm:items-start justify-center flex-col sm:flex-row sm:justify-start gap-4 sm:gap-4">
                   <div className="w-12 h-12 bg-primary/10 group-hover:bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-300">
                     <MessageCircle className="w-6 h-6 text-primary" />
                   </div>
-                  <div>
+                  <div className="text-center sm:text-left">
                     <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors duration-300">Contact on WhatsApp</h3>
-                    <a href="https://wa.me/237677875300" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 font-medium block mb-1 transition-colors duration-300">+237 677 875 300</a>
-                    <a href="https://wa.me/237656779874" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 font-medium block mb-2 transition-colors duration-300">+237 656 779 874</a>
+                    <a href="https://wa.me/237677875300" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 font-medium block transition-colors duration-300">+237 677 875 300</a>
+                    <a href="https://wa.me/237656779874" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 font-medium block transition-colors duration-300">+237 656 779 874</a>
                     <p className="text-sm text-gray-500">
                       Quick responses via WhatsApp
                     </p>

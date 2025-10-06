@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ChevronDown, Calendar, User, BookOpen, Clock } from 'lucide-react';
+import { ChevronDown, Calendar, User, BookOpen, Clock, X } from 'lucide-react';
 
 const blogsData = [
   {
@@ -50,6 +50,7 @@ export default function BlogsPage() {
   const [expandedBlogs, setExpandedBlogs] = useState<number[]>([]);
   const [visibleBlogs, setVisibleBlogs] = useState<number[]>([]);
   const [headerVisible, setHeaderVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
     const headerTimer = setTimeout(() => {
@@ -65,6 +66,18 @@ export default function BlogsPage() {
       clearTimeout(blogsTimer);
     };
   }, []);
+
+  useEffect(() => {
+    if (selectedImage) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedImage]);
 
   const toggleBlog = (id: number) => {
     setExpandedBlogs(prev => 
@@ -118,7 +131,8 @@ export default function BlogsPage() {
                   <img 
                     src={blog.image} 
                     alt={blog.title}
-                    className="w-full h-64 md:h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-64 md:h-full object-cover group-hover:scale-105 transition-transform duration-700 cursor-pointer"
+                    onClick={() => setSelectedImage(blog.image)}
                   />
                   <div className="absolute top-4 left-4">
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium font-poppins ${getCategoryColor(blog.category)}`}>
@@ -166,6 +180,29 @@ export default function BlogsPage() {
           ))}
         </div>
       </div>
+
+      {/* Image Popup Modal */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div className="relative max-w-4xl max-h-full">
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute -top-10 right-0 text-white hover:text-gray-300 transition-colors"
+            >
+              <X className="w-8 h-8" />
+            </button>
+            <img 
+              src={selectedImage} 
+              alt="Blog image"
+              className="max-w-full max-h-full object-contain rounded-lg"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
