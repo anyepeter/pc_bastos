@@ -1,6 +1,7 @@
 import { Calendar, MapPin, ArrowLeft, Users, Clock } from 'lucide-react';
 import Link from 'next/link';
 import WorkshopClient from './WorkshopClient';
+import PageLayout from '@/components/PageLayout';
 
 const workshopsData = {
   '1': {
@@ -81,5 +82,9 @@ export default function WorkshopDetailPage({ params }: { params: { id: string } 
     );
   }
 
-  return <WorkshopClient workshop={workshop} />;
+  return (
+    <PageLayout>
+      <WorkshopClient workshop={workshop} />
+    </PageLayout>
+  );
 }

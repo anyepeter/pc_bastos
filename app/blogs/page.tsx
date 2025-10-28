@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ChevronDown, Calendar, User, BookOpen, Clock, X } from 'lucide-react';
+import PageLayout from '@/components/PageLayout';
 
 const blogsData = [
   {
@@ -98,15 +99,16 @@ export default function BlogsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-purple-500 border-b border-gray-200 pt-24 pb-16">
+    <PageLayout>
+      <div className="min-h-screen bg-gray-50">
+      <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-purple-600 text-white relative overflow-hidden pt-20 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center">
             <div className={`transform transition-all duration-700 ease-out ${
               headerVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
             }`}>
-              <h1 className="text-3xl sm:text-4xl font-bold font-playfair text-gray-900 mb-2 tracking-tight">Blogs</h1>
-              <p className="text-lg text-gray-600 font-inter max-w-3xl mx-auto leading-relaxed">
+              <h1 className="text-4xl sm:text-6xl font-bold  font-playfair  text-white text-gray-900 mb-4 tracking-tight">Blogs</h1>
+              <p className="text-lg text-white text-gray-600 font-inter max-w-3xl mx-auto leading-relaxed">
                 Inspiring stories and spiritual insights from our community
               </p>
             </div>
@@ -203,6 +205,7 @@ export default function BlogsPage() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </PageLayout>
   );
 }

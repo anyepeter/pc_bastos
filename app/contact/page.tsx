@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, Heart, MessageCircle } from 'lucide-react';
 import BackButton from '@/components/BackButton';
+import PageLayout from '@/components/PageLayout';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -52,7 +53,7 @@ export default function ContactPage() {
   };
 
   return (
-    <>
+    <PageLayout>
       <style jsx>{`
         @keyframes fadeInUp {
           from {
@@ -361,6 +362,6 @@ We're located in Bastos, Yaoundé, serving the Presbyterian community with faith
         </div>
       </div>
     </div>
-    </>
+    </PageLayout>
   );
 }

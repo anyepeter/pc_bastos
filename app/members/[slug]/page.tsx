@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import MemberDetailClient from './MemberDetailClient';
+import PageLayout from '@/components/PageLayout';
 
 const membersData = {
   ea: {
@@ -181,5 +182,9 @@ export default function MemberDetailPage({ params }: { params: { slug: string } 
     );
   }
 
-  return <MemberDetailClient member={member} />;
+  return (
+    <PageLayout>
+      <MemberDetailClient member={member} />
+    </PageLayout>
+  );
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin, ChevronRight } from 'lucide-react';
 import BackButton from '@/components/BackButton';
+import PageLayout from '@/components/PageLayout';
 
 const eventsData = [
   {
@@ -102,7 +103,8 @@ export default function EventsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100">
+    <PageLayout>
+      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100">
       <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
@@ -232,6 +234,7 @@ export default function EventsPage() {
           ))}
         </div>
       </div>
-    </div>
+      </div>
+    </PageLayout>
   );
 }

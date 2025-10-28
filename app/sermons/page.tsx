@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Play, Volume2, X, Calendar, Download } from 'lucide-react';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
+import PageLayout from '@/components/PageLayout';
 
 const sermonsData = [
   {
@@ -118,7 +119,8 @@ export default function SermonsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-purple-100 pt-20">
+    <PageLayout>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-purple-100">
       {/* Header */}
       <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-purple-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
@@ -251,5 +253,6 @@ export default function SermonsPage() {
         </div>
       )}
     </div>
+    </PageLayout>
   );
 }

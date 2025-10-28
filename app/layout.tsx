@@ -25,9 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} ${poppins.variable} font-sans antialiased`}>
-        <Navigation />
         <main>{children}</main>
-        <Footer />
       </body>
     </html>
   );

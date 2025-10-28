@@ -8,6 +8,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import PageLayout from '@/components/PageLayout';
 
 const workshopsData = [
   {
@@ -82,10 +83,11 @@ export default function WorkshopsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-purple-100 pt-20">
+    <PageLayout>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-purple-100 ">
       <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-purple-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 py-16">
           <div className={`text-center transform transition-all duration-1000 ease-out ${
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
           }`}>
@@ -164,6 +166,7 @@ export default function WorkshopsPage() {
           ))}
         </div>
       </div>
-    </div>
+      </div>
+    </PageLayout>
   );
 }

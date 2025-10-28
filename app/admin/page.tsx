@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Users, BookOpen, Newspaper, FileText, Plus, Edit, Trash2, Search, Home, Settings, BarChart3, Menu, X } from 'lucide-react';
+import PageLayout from '@/components/PageLayout';
 
 interface Member {
   id: number;
@@ -227,7 +228,8 @@ export default function AdminPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <PageLayout>
+      <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
       <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
@@ -450,7 +452,8 @@ export default function AdminPage() {
           onClose={() => setShowModal(false)}
         />
       )}
-    </div>
+      </div>
+    </PageLayout>
   );
 }
 
