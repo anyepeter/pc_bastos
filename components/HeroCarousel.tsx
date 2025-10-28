@@ -182,8 +182,6 @@ const HeroCarousel = () => {
         ))}
       </Swiper>
 
- */}
-
       {/* Play/Pause Button */}
       <button
         onClick={toggleAutoplay}
