@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Calendar, MapPin, ArrowLeft, Users, Clock } from 'lucide-react';
-import Link from 'next/link';
+import { Calendar, MapPin, Users, Clock } from 'lucide-react';
+import BackButton from '@/components/BackButton';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -37,12 +37,13 @@ export default function WorkshopClient({ workshop }: { workshop: Workshop }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-purple-100">
+    <div className="min-h-screen bg-white">
       <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-purple-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8">
+          <BackButton />
           <div className={`transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            <h1 className="text-4xl text-center sm:text-6xl font-bold font-playfair mb-4 bg-gradient-to-r from-white to-green-100 bg-clip-text text-transparent pt-10">
+            <h1 className="text-4xl text-center sm:text-6xl font-bold font-playfair mb-4 bg-gradient-to-r from-white to-green-100 bg-clip-text text-transparent">
               {workshop.title}
             </h1>
             <p className="text-xl text-green-100 font-inter leading-relaxed max-w-3xl">
@@ -52,10 +53,10 @@ export default function WorkshopClient({ workshop }: { workshop: Workshop }) {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 px-4 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className={`transform transition-all duration-1000 ease-out delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 overflow-hidden">
+            <div className="bg-white backdrop-blur-sm shadow-lg border border-white/50 overflow-hidden">
               <Swiper
                 modules={[Navigation, Pagination, Autoplay]}
                 spaceBetween={0}
@@ -79,8 +80,8 @@ export default function WorkshopClient({ workshop }: { workshop: Workshop }) {
           </div>
 
           <div className={`space-y-8 transform transition-all duration-1000 ease-out delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/50">
-              <h2 className="text-2xl font-bold font-playfair bg-gradient-to-r from-green-600 to-purple-600 bg-clip-text text-transparent mb-4">
+            <div className="bg-white backdrop-blur-sm border border-white/50">
+              <h2 className="text-2xl font-bold font-playfair bg-clip-text mb-4">
                 Workshop Details
               </h2>
               <div className="space-y-4">
@@ -106,8 +107,8 @@ export default function WorkshopClient({ workshop }: { workshop: Workshop }) {
         </div>
 
         <div className={`mt-12 transform transition-all duration-1000 ease-out delay-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/50">
-            <h2 className="text-2xl font-bold font-playfair bg-gradient-to-r from-green-600 to-purple-600 bg-clip-text text-transparent mb-6">
+          <div className="bg-white/90">
+            <h2 className="text-2xl font-bold font-playfair  mb-6">
               About This Workshop
             </h2>
             <p className="text-gray-700 leading-relaxed font-inter text-lg">

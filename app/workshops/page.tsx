@@ -9,6 +9,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import PageLayout from '@/components/PageLayout';
+import BackButton from '@/components/BackButton';
+import HomeButton from '@/components/homeButton';
 
 const workshopsData = [
   {
@@ -85,9 +87,10 @@ export default function WorkshopsPage() {
   return (
     <PageLayout>
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-purple-100 ">
-      <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-purple-600 text-white relative overflow-hidden">
+      <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 py-16">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 py-8">
+          <HomeButton />
           <div className={`text-center transform transition-all duration-1000 ease-out ${
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
           }`}>
@@ -107,7 +110,7 @@ export default function WorkshopsPage() {
             <Link
               key={workshop.id}
               href={`/workshops/${workshop.id}`}
-              className={`block bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 overflow-hidden hover:shadow-2xl hover:scale-[1.02] transition-all duration-700 transform ${
+              className={`block bg-white/90 border border-white/50 overflow-hidden hover:shadow-2xl hover:scale-[1.02] transition-all duration-700 transform ${
                 visibleCards.includes(workshop.id)
                   ? 'translate-y-0 opacity-100'
                   : 'translate-y-12 opacity-0'
@@ -119,7 +122,6 @@ export default function WorkshopsPage() {
                   modules={[Navigation, Pagination]}
                   spaceBetween={0}
                   slidesPerView={1}
-                  navigation
                   pagination={{ clickable: true }}
                   className="h-full"
                 >
@@ -137,7 +139,7 @@ export default function WorkshopsPage() {
               </div>
 
               <div className="p-6">
-                <h3 className="text-xl font-bold font-playfair bg-gradient-to-r from-green-700 to-purple-700 bg-clip-text text-transparent mb-3 leading-tight">
+                <h3 className="text-xl font-bold font-playfair text-gray-900 mb-3 leading-tight">
                   {workshop.title}
                 </h3>
                 <p className="text-gray-700 leading-relaxed font-inter mb-4">
@@ -156,7 +158,7 @@ export default function WorkshopsPage() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold bg-gradient-to-r from-green-600 to-purple-600 bg-clip-text text-transparent">
+                  <span className="text-sm font-semibold text-purple-600">
                     Learn More
                   </span>
                   <ArrowRight className="w-5 h-5 text-green-600 transition-transform duration-200" />

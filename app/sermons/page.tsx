@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Play, Volume2, X, Calendar, Download } from 'lucide-react';
-import AudioPlayer from 'react-h5-audio-player';
-import 'react-h5-audio-player/lib/styles.css';
+import { Play, Volume2, X, Calendar, Download, Loader2 } from 'lucide-react';
+import AudioPlayer from '@/components/AudioPlayer';
 import PageLayout from '@/components/PageLayout';
 
 const sermonsData = [
@@ -80,6 +79,7 @@ export default function SermonsPage() {
   const [visibleCards, setVisibleCards] = useState<number[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [activePlayerId, setActivePlayerId] = useState<number | null>(null);
+  const [loadingAudio, setLoadingAudio] = useState<number | null>(null);
 
 
   useEffect(() => {
@@ -115,7 +115,11 @@ export default function SermonsPage() {
   };
 
   const handleListenClick = (sermonId: number) => {
-    setActivePlayerId(sermonId);
+    setLoadingAudio(sermonId);
+    setTimeout(() => {
+      setLoadingAudio(null);
+      setActivePlayerId(sermonId);
+    }, 1500);
   };
 
   return (
@@ -198,29 +202,17 @@ export default function SermonsPage() {
                 <div className="flex space-x-2">
                   {
                     activePlayerId === sermon.id ? (
-                      <div className="bg-purple-600 w-full rounded-lg">
-                      <AudioPlayer
-                        src={sermon.audioUrl}
-                        showJumpControls={false}
-                        showSkipControls={false}
-                        showDownloadProgress={false}
-                        customAdditionalControls={[]}
-                        customVolumeControls={[]}
-                        layout="horizontal-reverse"
-                        className="!shadow-none"
-                        style={{
-                          backgroundColor: 'transparent',
-                        }}
-                      />
-                    </div>
-                    ) : (
+                      <div className="w-full">
+                        <AudioPlayer src={sermon.audioUrl} />
+                      </div>
+                    )  : (
                       <button 
-                      onClick={() => handleListenClick(sermon.id)}
-                      className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg font-medium transition-colors duration-300 flex items-center justify-center space-x-2"
-                    >
-                      <Play className="w-4 h-4" fill="currentColor" />
-                      <span>Listen</span>
-                    </button>
+                        onClick={() => handleListenClick(sermon.id)}
+                        className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg font-medium transition-colors duration-300 flex items-center justify-center space-x-2"
+                      >
+                        <Play className="w-4 h-4" fill="currentColor" />
+                        <span>Listen</span>
+                      </button>
                     )
                   }
                   <button className="p-2 border border-gray-300 hover:border-purple-300 rounded-lg transition-colors duration-300">

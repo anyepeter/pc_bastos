@@ -1,17 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Calendar, Clock, MapPin, ChevronRight } from 'lucide-react';
+import { Calendar, Clock, MapPin, ChevronRight, X } from 'lucide-react';
 import BackButton from '@/components/BackButton';
 import PageLayout from '@/components/PageLayout';
+import HomeButton from '@/components/homeButton';
 
 const eventsData = [
   {
     id: 1,
-    title: 'Annual General Assembly 2025',
+    title: 'Annual General Assembly 2025 dsgs sdfdsf dsfsdf dsfd',
     date: '2025-03-15',
     time: '09:00 AM',
-    description: 'Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon.',
+    description: 'Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon. Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon. Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon. Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon. Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon. Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon.Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon. Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon. Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon.',
     location: 'Yaoundé',
     category: 'Assembly'
   },
@@ -64,10 +65,22 @@ const eventsData = [
 
 export default function EventsPage() {
   const [isVisible, setIsVisible] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<typeof eventsData[0] | null>(null);
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  useEffect(() => {
+    if (selectedEvent) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedEvent]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -90,24 +103,13 @@ export default function EventsPage() {
     return new Date(dateString) > new Date();
   };
 
-  const getCategoryColor = (category: string) => {
-    const colors = {
-      'Assembly': 'bg-purple-100 text-purple-700',
-      'Conference': 'bg-blue-100 text-blue-700',
-      'Outreach': 'bg-green-100 text-green-700',
-      'Retreat': 'bg-orange-100 text-orange-700',
-      'Workshop': 'bg-pink-100 text-pink-700',
-      'Camp': 'bg-indigo-100 text-indigo-700'
-    };
-    return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-700';
-  };
-
   return (
     <PageLayout>
       <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100">
       <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 py-8">
+          <HomeButton />
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl font-bold font-playfair mb-4 bg-gradient-to-r from-white to-purple-100 bg-clip-text text-transparent">
               Upcoming Events
@@ -123,7 +125,7 @@ export default function EventsPage() {
         {/* Mobile: List View */}
         <div className="block lg:hidden space-y-6">
           {eventsData.map((event, index) => (
-            <div key={event.id} className={`bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: `${index * 100}ms` }}>
+            <div key={event.id} onClick={() => setSelectedEvent(event)} className={`bg-white/80 hover:scale[1.02] border border-white/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform cursor-pointer ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: `${index * 100}ms` }}>
               <div className="p-6">
                 <div className="flex items-start space-x-4">
                   <div className="flex-shrink-0">
@@ -134,33 +136,36 @@ export default function EventsPage() {
                   </div>
                   
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(event.category)}`}>
-                        {event.category}
-                      </span>
-                      {isUpcoming(event.date) && (
+                    {isUpcoming(event.date) && (
+                      <div className="mb-2">
                         <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">
                           Upcoming
                         </span>
-                      )}
-                    </div>
+                      </div>
+                    )}
                     
                     <h3 className="font-bold font-playfair text-gray-900 text-lg mb-2 leading-tight">
                       {event.title}
                     </h3>
                     
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-3">
-                      <div className="flex items-center space-x-1">
-                        <Clock className="w-4 h-4" />
-                        <span>{event.time}</span>
-                      </div>
+                    <div className="flex flex-col flex-wrap items-start gap-2 text-sm text-gray-600 mb-3">
                       <div className="flex items-center space-x-1">
                         <MapPin className="w-4 h-4" />
                         <span>{event.location}</span>
                       </div>
+                      <div className='flex gap-4'>
+                      <div className="flex items-center space-x-1">
+                        <Clock className="w-4 h-4" />
+                        <span>{event.time}</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                    <Calendar className="w-4 h-4" />
+                    <span>{formatDate(event.date)}</span>
+                  </div>
+                      </div>
                     </div>
                     
-                    <p className="text-gray-700 text-sm leading-relaxed mb-4">
+                    <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-2">
                       {event.description}
                     </p>
                     
@@ -180,7 +185,7 @@ export default function EventsPage() {
         {/* Desktop: Grid View */}
         <div className="hidden lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
           {eventsData.map((event, index) => (
-            <div key={event.id} className={`bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 transform group ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: `${index * 150}ms` }}>
+            <div key={event.id} onClick={() => setSelectedEvent(event)} className={`bg-white/80 border border-white/50 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-[1.05] transition-all duration-500 transform group cursor-pointer ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: `${index * 150}ms` }}>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex flex-col items-center justify-center text-white shadow-lg">
@@ -188,16 +193,11 @@ export default function EventsPage() {
                     <span className="text-lg font-bold">{getMonthDay(event.date).day}</span>
                   </div>
                   
-                  <div className="flex flex-col items-end space-y-1">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(event.category)}`}>
-                      {event.category}
+                  {isUpcoming(event.date) && (
+                    <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
+                      Upcoming
                     </span>
-                    {isUpcoming(event.date) && (
-                      <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
-                        Upcoming
-                      </span>
-                    )}
-                  </div>
+                  )}
                 </div>
                 
                 <h3 className="font-bold font-playfair text-gray-900 text-xl mb-3 leading-tight group-hover:text-purple-700 transition-colors duration-300">
@@ -219,7 +219,7 @@ export default function EventsPage() {
                   </div>
                 </div>
                 
-                <p className="text-gray-700 text-sm leading-relaxed mb-6">
+                <p className="text-gray-700 text-sm leading-relaxed mb-6 line-clamp-2">
                   {event.description}
                 </p>
                 
@@ -234,6 +234,30 @@ export default function EventsPage() {
           ))}
         </div>
       </div>
+
+      {selectedEvent && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setSelectedEvent(null)}>
+          <div className="bg-white max-w-md w-full max-h-[90vh] overflow-y-auto p-6 relative" onClick={(e) => e.stopPropagation()}>
+            <button onClick={() => setSelectedEvent(null)} className="absolute top-4 right-4 bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors">
+              <X className="w-4 h-4" />
+            </button>
+            <h3 className="text-xl font-bold mb-4 pr-8">{selectedEvent.title}</h3>
+            <div className="flex items-center text-gray-600 mb-3">
+              <Calendar className="w-4 h-4 mr-2" />
+              <span>{formatDate(selectedEvent.date)}</span>
+            </div>
+            <div className="flex items-center text-gray-600 mb-3">
+              <Clock className="w-4 h-4 mr-2" />
+              <span>{selectedEvent.time}</span>
+            </div>
+            <div className="flex items-center text-gray-600 mb-4">
+              <MapPin className="w-4 h-4 mr-2" />
+              <span>{selectedEvent.location}</span>
+            </div>
+            <p className="text-gray-700">{selectedEvent.description}</p>
+          </div>
+        </div>
+      )}
       </div>
     </PageLayout>
   );

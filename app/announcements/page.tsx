@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Calendar, Bell, X, Clock } from 'lucide-react';
 import BackButton from '@/components/BackButton';
 import PageLayout from '@/components/PageLayout';
+import HomeButton from '@/components/homeButton';
 
 const announcementsData = [
   {
@@ -78,15 +79,6 @@ export default function AnnouncementsPage() {
     return `${Math.floor(diffDays / 30)} months ago`;
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'bg-red-100 text-red-700';
-      case 'medium': return 'bg-yellow-100 text-yellow-700';
-      case 'low': return 'bg-green-100 text-green-700';
-      default: return 'bg-gray-100 text-gray-700';
-    }
-  };
-
   const openModal = (announcement: typeof announcementsData[0]) => {
     setSelectedAnnouncement(announcement);
   };
@@ -115,7 +107,8 @@ export default function AnnouncementsPage() {
       <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100">
       <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 pt-24 pb-16">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 pt-20 pb-8">
+          <HomeButton />
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl font-bold font-playfair mb-4 bg-gradient-to-r from-white to-purple-100 bg-clip-text text-transparent">
               Announcements
@@ -133,17 +126,13 @@ export default function AnnouncementsPage() {
           {announcementsData.map((announcement, index) => (
             <div 
               key={announcement.id} 
-              className={`bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 cursor-pointer transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
+              className={`bg-white/80 backdrop-blur-sm border border-white/50  shadow-lg hover:shadow-xl transition-all duration-500 cursor-pointer transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
               style={{ transitionDelay: `${index * 100}ms` }}
               onClick={() => openModal(announcement)}
             >
-              <div className="relative h-48 rounded-t-2xl overflow-hidden">
+              <div className="relative h-48  overflow-hidden">
                 <div className="w-full h-full bg-gradient-to-br from-purple-400 to-indigo-500"></div>
-                <div className="absolute top-4 left-4">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(announcement.priority)}`}>
-                    {announcement.priority.toUpperCase()}
-                  </span>
-                </div>
+
               </div>
               
               <div className="p-6">
@@ -181,11 +170,7 @@ export default function AnnouncementsPage() {
             >
               <div className="relative h-48 rounded-t-2xl overflow-hidden">
                 <div className="w-full h-full bg-gradient-to-br from-purple-400 to-indigo-500"></div>
-                <div className="absolute top-4 right-4">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(announcement.priority)}`}>
-                    {announcement.priority.toUpperCase()}
-                  </span>
-                </div>
+
               </div>
               
               <div className="p-6">
@@ -221,11 +206,7 @@ export default function AnnouncementsPage() {
               >
                 <X className="w-5 h-5" />
               </button>
-              <div className="absolute bottom-4 left-6">
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(selectedAnnouncement.priority)}`}>
-                  {selectedAnnouncement.priority.toUpperCase()}
-                </span>
-              </div>
+
             </div>
             
             <div className="p-8 overflow-y-auto max-h-[calc(90vh-16rem)]">

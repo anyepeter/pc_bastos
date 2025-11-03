@@ -86,7 +86,13 @@ const Navigation = () => {
 
   const menuItems = [
     { 
-      name: 'About', href: '#'
+      name: 'About Us', href: '/about',
+      submenu: [
+        { name: 'Our Mission & Vision', href: '/about/mission-vision' },
+        { name: 'Leadership', href: '/about/departments' },
+        { name: 'Our History', href: '/about/history' },
+        { name: 'CEPCA Structures', href: '/about/structure' },
+      ]
     },
     { 
       name: 'Members', href: '#',
@@ -113,7 +119,7 @@ const Navigation = () => {
       name: 'Activities', 
       href: '#',
       submenu: [
-        { name: 'Charity', href: '/events/upcoming' },
+        { name: 'Charity', href: '/charity' },
         { name: 'Workshops/Trainings', href: '/workshops' },
       ]
     },
@@ -126,7 +132,7 @@ const Navigation = () => {
       ]
     },
     { name: 'Blogs', href: '/blogs' },
-    { name: 'Contact', href: '/contact' },
+    { name: 'Contact Us', href: '/contact' },
   ];
 
   return (
@@ -153,7 +159,7 @@ const Navigation = () => {
           <div className="hidden lg:flex items-center space-x-8">
             {menuItems.map((item) => (
               <div key={item.name} className="relative group">
-                <Link href={item.href} className={getDesktopLinkStyles()}>
+                <Link href={item.href || '#'} className={getDesktopLinkStyles()}>
                   {item.name}
                 </Link>
                 {item.submenu && (
@@ -162,7 +168,7 @@ const Navigation = () => {
                       {item.submenu.map((subitem) => (
                         <Link
                           key={subitem.name}
-                          href={subitem.href}
+                          href={subitem.href || '#'}
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors duration-200"
                         >
                           {subitem.name}
@@ -215,7 +221,7 @@ const Navigation = () => {
                           {item.submenu.map((subitem) => (
                             <Link
                               key={subitem.name}
-                              href={subitem.href}
+                              href={subitem.href || '#'}
                               className={mobileSubMenuItemStyles}
                               onClick={closeMenu}
                             >
@@ -227,7 +233,7 @@ const Navigation = () => {
                     </div>
                   ) : (
                     <Link
-                      href={item.href}
+                      href={item.href || '#'}
                       className={mobileMenuItemStyles}
                       onClick={closeMenu}
                     >

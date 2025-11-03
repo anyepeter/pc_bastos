@@ -3,12 +3,12 @@
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 
-export default function BackButton() {
+export default function HomeButton() {
   const router = useRouter();
 
   return (
     <button
-      onClick={() => router.back()}
+      onClick={() => router.push('/')}
       className="flex items-center space-x-2 text-purple-600 hover:text-purple-800 transition-colors p-2 -ml-2"
     >
       <ArrowLeft className="w-4 h-4 text-white sm:w-5 sm:h-5" />

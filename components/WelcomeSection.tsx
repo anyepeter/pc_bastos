@@ -8,55 +8,65 @@ const WelcomeSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
           <div className="space-y-6">
-            <div className="text-accent font-semibold text-sm uppercase tracking-wide">
-              Welcome to Grace Community Church
+            <div className="text-purple-600 font-semibold text-sm uppercase tracking-wide">
+              Welcome to CEPCA
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-gray-900">
-              A Place Where Faith
-              <span className="text-primary"> Comes Alive</span>
+              Being Church
+              <span className="text-purple-600"> Together</span>
             </h2>
             <p className="text-lg text-gray-600 leading-relaxed">
-              For over 25 years, Grace Community Church has been a beacon of hope and love in our community. 
-              We believe that everyone has a place at God's table, and we welcome you to join our family as 
-              we grow in faith, serve others, and experience the transforming power of God's love.
+              The Council of Protestant Churches of Cameroon (CEPCA) is an ecumenical organization representing
+              12 member churches, 13 million believers, and 15,500 congregations. We are united in our mission
+              of healing, education, and holistic community development across Cameroon.
             </p>
             
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Heart className="w-4 h-4 text-primary" />
+                <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Heart className="w-4 h-4 text-red-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Authentic Worship</h3>
-                  <p className="text-gray-600">Experience heartfelt worship that connects you with God and community.</p>
+                  <h3 className="font-semibold text-gray-900">Healthcare</h3>
+                  <p className="text-gray-600">350 hospitals and health centers providing quality care across Cameroon.</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Users className="w-4 h-4 text-primary" />
+                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Users className="w-4 h-4 text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Strong Community</h3>
-                  <p className="text-gray-600">Build lasting relationships with people who care about your spiritual journey.</p>
+                  <h3 className="font-semibold text-gray-900">Education</h3>
+                  <p className="text-gray-600">1,580 schools and 15 universities educating over 500,000 students annually.</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Cross className="w-4 h-4 text-primary" />
+                <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Cross className="w-4 h-4 text-purple-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Biblical Teaching</h3>
-                  <p className="text-gray-600">Grow in your faith through practical, life-changing biblical messages.</p>
+                  <h3 className="font-semibold text-gray-900">Spiritual Leadership</h3>
+                  <p className="text-gray-600">Serving 13 million believers through 15,500 congregations nationwide.</p>
                 </div>
               </div>
             </div>
             
-            <div className="pt-4">
-              <button className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+            <div className="pt-4 flex gap-4">
+              <a
+                href="/about"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+              >
                 Learn More About Us
-              </button>
+              </a>
+              <a
+                href="/donate"
+                className="bg-gradient-to-r from-green-600 via-emerald-600 to-purple-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center gap-2"
+              >
+                <Heart className="w-5 h-5" />
+                Support Our Work
+              </a>
             </div>
           </div>
           
@@ -74,12 +84,12 @@ const WelcomeSection = () => {
             <div className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-xl p-6 max-w-sm">
               <div className="grid grid-cols-2 gap-4 text-center">
                 <div>
-                  <div className="text-2xl font-bold text-primary">25+</div>
-                  <div className="text-sm text-gray-600">Years Serving</div>
+                  <div className="text-2xl font-bold text-purple-600">12</div>
+                  <div className="text-sm text-gray-600">Member Churches</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-primary">800+</div>
-                  <div className="text-sm text-gray-600">Church Family</div>
+                  <div className="text-2xl font-bold text-purple-600">13M</div>
+                  <div className="text-sm text-gray-600">Believers</div>
                 </div>
               </div>
             </div>

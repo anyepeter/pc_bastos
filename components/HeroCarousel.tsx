@@ -3,25 +3,35 @@
 import { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay, EffectFade } from 'swiper/modules';
-import { Play, Pause } from 'lucide-react';
+import { Play, Pause, Heart, Calendar, MapPin } from 'lucide-react';
 import 'swiper/css';
 
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 
-const HeroCarousel = () => {
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [swiperInstance, setSwiperInstance] = useState<any>(null);
-
-  const slides = [
-    {
-      id: 1,
-      headline: "Being Church Together",
+export const heroSlidesData = [
+  {
+    id: 1,
+    headline: "Being Church Together",
       subheadline: "The United Voice of Protestant Churches in Cameroon",
       supportingText: "12 Member Churches • 13 Million Believers • 15,500 Congregations",
       primaryCTA: { text: "Discover Our Mission", href: "#about" },
       secondaryCTA: { text: "View Our Members", href: "/members" },
-      backgroundImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&h=1080&fit=crop&auto=format"
+      backgroundImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&h=1080&fit=crop&auto=format",
+      cards: [
+        {
+          title: "General Assembly 2025",
+          date: "Mar 15",
+          time: "9:00 am",
+          link: "/events"
+        },
+        {
+          title: "Member Churches Summit",
+          date: "Apr 5",
+          time: "10:00 am",
+          link: "/events"
+        }
+      ]
     },
     {
       id: 2,
@@ -30,7 +40,21 @@ const HeroCarousel = () => {
       supportingText: "From combating HIV/AIDS to maternal health, we provide quality medical care reaching millions across all regions.",
       primaryCTA: { text: "See Our Health Work", href: "/activities/healthcare" },
       secondaryCTA: { text: "Support Healthcare", href: "/donate?focus=health" },
-      backgroundImage: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=1920&h=1080&fit=crop&auto=format"
+      backgroundImage: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=1920&h=1080&fit=crop&auto=format",
+      cards: [
+        {
+          title: "Health Workers Training Program",
+          date: "Feb 20",
+          time: "8:00 am",
+          link: "/activities/healthcare"
+        },
+        {
+          title: "Community Health Outreach",
+          date: "Mar 10",
+          time: "2:00 pm",
+          link: "/activities/healthcare"
+        }
+      ]
     },
     {
       id: 3,
@@ -39,7 +63,21 @@ const HeroCarousel = () => {
       supportingText: "Continuing the legacy of Christian missions, we educate over 500,000 students annually, building ethical, competent citizens.",
       primaryCTA: { text: "Explore Our Schools", href: "/activities/education" },
       secondaryCTA: { text: "Support Education", href: "/donate?focus=education" },
-      backgroundImage: "https://images.unsplash.com/photo-1523050854058-8df90110c9d1?w=1920&h=1080&fit=crop&auto=format"
+      backgroundImage: "https://images.unsplash.com/photo-1523050854058-8df90110c9d1?w=1920&h=1080&fit=crop&auto=format",
+      cards: [
+        {
+          title: "Scholarship Award Ceremony",
+          date: "Apr 18",
+          time: "11:00 am",
+          link: "/activities/education"
+        },
+        {
+          title: "Teachers Development Workshop",
+          date: "May 2",
+          time: "9:00 am",
+          link: "/activities/education"
+        }
+      ]
     },
     {
       id: 4,
@@ -48,7 +86,21 @@ const HeroCarousel = () => {
       supportingText: "Through women's empowerment, youth development, and microfinance, we're creating sustainable change for the next generation.",
       primaryCTA: { text: "See Our Programs", href: "/activities" },
       secondaryCTA: { text: "Get Involved", href: "/contact" },
-      backgroundImage: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1920&h=1080&fit=crop&auto=format"
+      backgroundImage: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1920&h=1080&fit=crop&auto=format",
+      cards: [
+        {
+          title: "Women's Leadership Conference",
+          date: "Mar 25",
+          time: "10:00 am",
+          link: "/activities/women"
+        },
+        {
+          title: "Youth Entrepreneurship Training",
+          date: "Apr 12",
+          time: "1:00 pm",
+          link: "/activities"
+        }
+      ]
     },
     {
       id: 5,
@@ -57,9 +109,31 @@ const HeroCarousel = () => {
       supportingText: "Connect with thousands of believers, learn from inspiring speakers, and be part of something transformative.",
       primaryCTA: { text: "Register Now", href: "/events/register" },
       secondaryCTA: { text: "View All Events", href: "/news/events" },
-      backgroundImage: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920&h=1080&fit=crop&auto=format"
+      backgroundImage: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920&h=1080&fit=crop&auto=format",
+      cards: [
+        {
+          title: "Youth Leadership Summit 2025",
+          date: "Apr 10",
+          time: "9:00 am",
+          link: "/events/register"
+        },
+        {
+          title: "Praise & Worship Night",
+          date: "May 15",
+          time: "6:00 pm",
+          link: "/events"
+        }
+      ]
     }
-  ];
+];
+
+interface HeroCarouselProps {
+  onSlideChange?: (activeIndex: number) => void;
+}
+
+const HeroCarousel = ({ onSlideChange }: HeroCarouselProps = {}) => {
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [swiperInstance, setSwiperInstance] = useState<any>(null);
 
   const toggleAutoplay = () => {
     if (swiperInstance) {
@@ -105,11 +179,16 @@ const HeroCarousel = () => {
           clickable: true,
         }}
         onSwiper={setSwiperInstance}
+        onSlideChange={(swiper) => {
+          if (onSlideChange) {
+            onSlideChange(swiper.realIndex);
+          }
+        }}
         className="h-full"
         role="region"
         aria-label="Hero carousel"
       >
-        {slides.map((slide, index) => (
+        {heroSlidesData.map((slide, index) => (
           <SwiperSlide key={slide.id}>
             <div className="relative h-full">
               <div 
@@ -153,26 +232,34 @@ const HeroCarousel = () => {
                     {slide.supportingText}
                   </p>
                   
-                  <div 
+                  <div
                     className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in"
-                    style={{ 
+                    style={{
                       animationDelay: '0.6s',
                       animationFillMode: 'both'
                     }}
                   >
-                    <a
+                    {/* <a
                       href={slide.primaryCTA.href}
                       className="bg-violet-600 hover:bg-violet-700 text-white px-10 py-4 rounded font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black"
                       tabIndex={index === 0 ? 0 : -1}
                     >
                       {slide.primaryCTA.text}
-                    </a>
+                    </a> */}
                     <a
                       href={slide.secondaryCTA.href}
                       className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-10 py-4 rounded font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
                       tabIndex={index === 0 ? 0 : -1}
                     >
                       {slide.secondaryCTA.text}
+                    </a>
+                    <a
+                      href="/donate"
+                      className="bg-gradient-to-r from-green-600 via-emerald-600 to-purple-600 text-white px-10 py-4 rounded font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-black flex items-center gap-2"
+                      tabIndex={index === 0 ? 0 : -1}
+                    >
+                      <Heart className="w-5 h-5" />
+                      Donate Now
                     </a>
                   </div>
                 </div>
@@ -215,12 +302,27 @@ const HeroCarousel = () => {
           }
         }
 
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translateY(40px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         .animate-slide-up {
           animation: slide-up 0.6s ease-out;
         }
 
         .animate-fade-in {
           animation: fade-in 0.6s ease-out;
+        }
+
+        .animate-fade-in-up {
+          animation: fade-in-up 0.8s ease-out;
         }
 
         :global(.swiper-pagination-bullet) {
@@ -266,9 +368,16 @@ const HeroCarousel = () => {
           }
         }
 
+        @media (max-width: 640px) {
+          .animate-fade-in-up > div {
+            grid-template-columns: 1fr;
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .animate-slide-up,
-          .animate-fade-in {
+          .animate-fade-in,
+          .animate-fade-in-up {
             animation: none;
           }
         }

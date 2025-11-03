@@ -1,25 +1,38 @@
-import HeroCarousel from '@/components/HeroCarousel';
+import HeroSection from '@/components/HeroSection';
 import WelcomeSection from '@/components/WelcomeSection';
-import ServiceTimesSection from '@/components/ServiceTimesSection';
-import EventsSection from '@/components/EventsSection';
+import ImpactSection from '@/components/ImpactSection';
+import MissionVisionSection from '@/components/MissionVisionSection';
+import ObjectivesSection from '@/components/ObjectivesSection';
+import CharitySection from '@/components/CharitySection';
 import SermonsSection from '@/components/SermonsSection';
-import TestimonialsSection from '@/components/TestimonialsSection';
-import MinistriesSection from '@/components/MinistriesSection';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import WhatsAppButton from '@/components/WhatsAppButton';
 
 export default function Home() {
   return (
     <>
       <Navigation />
-      <HeroCarousel />
+      {/* Hero Section with Event Cards */}
+      <HeroSection />
+
+      {/* Introduction to CEPCA */}
       <WelcomeSection />
-      <ServiceTimesSection />
-      <EventsSection />
+
+      {/* Mission, Vision & Core Principles */}
+      <MissionVisionSection />
+
+      {/* Our Objectives with link to About page */}
+      <ObjectivesSection />
+
+      {/* Recent Sermons/Messages */}
       <SermonsSection />
-      <TestimonialsSection />
-      <MinistriesSection />
+
+            {/* Charity Programs */}
+            <CharitySection />
+
       <Footer />
+      <WhatsAppButton />
     </>
   );
 }

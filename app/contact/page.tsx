@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, Heart, MessageCircle } from 'lucide-react';
 import BackButton from '@/components/BackButton';
 import PageLayout from '@/components/PageLayout';
+import HomeButton from '@/components/homeButton';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -68,9 +69,9 @@ export default function ContactPage() {
       `}</style>
       <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative py-20 bg-primary text-white">
+      <section className="relative pt-16 pb-8 bg-primary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <BackButton />
+          <HomeButton />
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
               Get in <span className="text-yellow-300">Touch</span>
@@ -83,7 +84,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Information */}
           <div className="space-y-8">
