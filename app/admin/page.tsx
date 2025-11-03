@@ -57,7 +57,7 @@ const initialBlogs: Blog[] = [
 ];
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'members' | 'sermons' | 'news' | 'blogs'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'members' | 'sermons' | 'news' | 'blogs' | 'analytics' | 'settings'>('dashboard');
   const [members, setMembers] = useState<Member[]>(initialMembers);
   const [sermons, setSermons] = useState<Sermon[]>(initialSermons);
   const [news, setNews] = useState<News[]>(initialNews);
