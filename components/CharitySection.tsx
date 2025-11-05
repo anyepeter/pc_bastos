@@ -56,14 +56,11 @@ export default function CharitySection() {
   };
 
   return (
-    <section className="py-20 bg-zic-100">
+    <section className="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className={`text-center mb-12 transform transition-all duration-1000 ease-out ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
         }`}>
-          <div className="text-green-600 font-semibold text-sm uppercase tracking-wide mb-4">
-            Community Impact
-          </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-6">
             Our <span className="text-purple-600">Charity Programs</span>
           </h2>
@@ -108,7 +105,7 @@ export default function CharitySection() {
                 </div>
 
                 <div className="p-6">
-                  <h3 className="text-2xl font-bold font-playfair text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-2xl font-bold font-playfair text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">
                     {program.title}
                   </h3>
                   <p className="text-gray-600 leading-relaxed font-inter mb-6 line-clamp-2">
@@ -123,7 +120,7 @@ export default function CharitySection() {
                     
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
-                        className="bg-gradient-to-r from-blue-500 to-teal-500 h-2 rounded-full transition-all duration-1000 ease-out"
+                        className="bg-gradient-to-r from-green-500 to-purple-500 h-2 rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${progressPercentage}%` }}
                       ></div>
                     </div>
@@ -147,7 +144,7 @@ export default function CharitySection() {
         <div className={`text-center transform transition-all duration-1000 ease-out delay-1000 ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
         }`}>
-          <Link href="/charity" className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
+          <Link href="/charity" className="inline-block bg-green-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
             View All Programs
           </Link>
         </div>

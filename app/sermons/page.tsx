@@ -126,9 +126,15 @@ export default function SermonsPage() {
     <PageLayout>
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-purple-100">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-purple-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="text-white relative overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url("https://images.unsplash.com/photo-1507692049790-de58290a4334?w=1920&h=600&fit=crop&auto=format")'
+          }}
+        />
+        <div className="absolute inset-0 bg-black/70"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-10 md:pb-16">
           <div className={`text-center transform transition-all duration-1000 ease-out ${
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
           }`}>

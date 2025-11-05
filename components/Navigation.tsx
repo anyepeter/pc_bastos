@@ -5,17 +5,18 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, Heart, Calendar, Users, Phone, ChevronDown, ChevronUp } from 'lucide-react';
 
-const Navigation = () => {
+const Navigation = ({scroll = false}: {scroll?: boolean}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdowns, setOpenDropdowns] = useState<string[]>([]);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(scroll);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      if (!scroll){
+        setIsScrolled(window.scrollY > 10);
+        console.log('Scrolling enabled');
+      }
     };
-
-    setIsScrolled(window.scrollY > 10);
     
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);

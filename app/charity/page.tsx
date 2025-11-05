@@ -70,17 +70,21 @@ export default function CharityPage() {
 
   return (
     <PageLayout>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-teal-50 to-cyan-100">
-        <div className="bg-gradient-to-r from-blue-600 via-teal-600 to-cyan-600 text-white relative overflow-hidden">
-          <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-black/5"></div>
-          </div>
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 py-12">
-            <HomeButton />
+      <div className="min-h-screen">
+        <div className="text-white relative overflow-hidden">
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: 'url("https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1920&h=600&fit=crop&auto=format")'
+            }}
+          />
+          <div className="absolute inset-0 bg-black/70"></div>
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-10 md:pb-16">
+            {/* <HomeButton /> */}
             <div className={`text-center transform transition-all duration-1000 ease-out ${
               isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
             }`}>
-              <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-6 bg-gradient-to-r from-white to-cyan-100 bg-clip-text text-transparent">
+              <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-2 bg-gradient-to-r from-white to-cyan-100 bg-clip-text text-transparent">
                 Charity Programs
               </h1>
               <p className="text-xl text-cyan-100 font-inter max-w-3xl mx-auto leading-relaxed">
@@ -127,7 +131,7 @@ export default function CharityPage() {
                   </div>
 
                   <div className="p-6">
-                    <h3 className="text-2xl font-bold font-playfair text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                    <h3 className="text-2xl font-bold font-playfair text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">
                       {program.title}
                     </h3>
                     <p className="text-gray-600 leading-relaxed font-inter mb-6 line-clamp-2">
@@ -142,7 +146,7 @@ export default function CharityPage() {
                       
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div 
-                          className="bg-gradient-to-r from-blue-500 to-teal-500 h-2 rounded-full transition-all duration-1000 ease-out"
+                          className="bg-gradient-to-r from-green-500 to-purple-500 h-2 rounded-full transition-all duration-1000 ease-out"
                           style={{ width: `${progressPercentage}%` }}
                         ></div>
                       </div>

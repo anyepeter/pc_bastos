@@ -82,7 +82,7 @@ const Footer = () => {
                 <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center group-hover:bg-purple-500/30 transition-colors duration-300">
                   <MapPin className="w-4 h-4 text-purple-300" />
                 </div>
-                <span className="text-purple-100 font-poppins leading-relaxed group-hover:text-white">Presbyterian Church<br />Bastos, Yaoundé, Cameroon</span>
+                <span className="text-purple-100 font-poppins leading-relaxed group-hover:text-white">Yaoundé, P.O. Box 491 Rue Ceper, Elig-Essono</span>
               </a>
             </div>
             
@@ -107,7 +107,6 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="border-t border-white/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <p className="text-purple-200 text-sm font-poppins">&copy; 2025 CEPCA. All rights reserved.</p>
-          <p className="text-purple-300 text-sm font-inter">Made with <Heart className="w-4 h-4 inline text-pink-400 animate-pulse" /> for our community</p>
         </div>
       </div>
     </footer>

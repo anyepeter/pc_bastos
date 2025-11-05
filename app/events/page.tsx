@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Calendar, Clock, MapPin, ChevronRight, X } from 'lucide-react';
+import { Calendar, Clock, MapPin, ChevronRight } from 'lucide-react';
+import Link from 'next/link';
 import BackButton from '@/components/BackButton';
 import PageLayout from '@/components/PageLayout';
 import HomeButton from '@/components/homeButton';
@@ -65,22 +66,10 @@ const eventsData = [
 
 export default function EventsPage() {
   const [isVisible, setIsVisible] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<typeof eventsData[0] | null>(null);
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
-
-  useEffect(() => {
-    if (selectedEvent) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [selectedEvent]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -106,10 +95,16 @@ export default function EventsPage() {
   return (
     <PageLayout>
       <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100">
-      <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 py-8">
-          <HomeButton />
+      <div className="text-white relative overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url("https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1920&h=600&fit=crop&auto=format")'
+          }}
+        />
+        <div className="absolute inset-0 bg-black/70"></div>
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-10 md:pb-16">
+          {/* <HomeButton /> */}
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl font-bold font-playfair mb-4 bg-gradient-to-r from-white to-purple-100 bg-clip-text text-transparent">
               Upcoming Events
@@ -125,7 +120,7 @@ export default function EventsPage() {
         {/* Mobile: List View */}
         <div className="block lg:hidden space-y-6">
           {eventsData.map((event, index) => (
-            <div key={event.id} onClick={() => setSelectedEvent(event)} className={`bg-white/80 hover:scale[1.02] border border-white/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform cursor-pointer ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: `${index * 100}ms` }}>
+            <Link key={event.id} href={`/events/${event.id}`} className={`block bg-white/80 hover:scale[1.02] border border-white/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform cursor-pointer ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: `${index * 100}ms` }}>
               <div className="p-6">
                 <div className="flex items-start space-x-4">
                   <div className="flex-shrink-0">
@@ -170,22 +165,22 @@ export default function EventsPage() {
                     </p>
                     
                     {isUpcoming(event.date) && (
-                      <button className="inline-flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-md">
+                      <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-md">
                         <span>Learn More</span>
                         <ChevronRight className="w-4 h-4" />
-                      </button>
+                      </div>
                     )}
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
         {/* Desktop: Grid View */}
         <div className="hidden lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
           {eventsData.map((event, index) => (
-            <div key={event.id} onClick={() => setSelectedEvent(event)} className={`bg-white/80 border border-white/50 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-[1.05] transition-all duration-500 transform group cursor-pointer ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: `${index * 150}ms` }}>
+            <Link key={event.id} href={`/events/${event.id}`} className={`block bg-white/80 border border-white/50 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-[1.05] transition-all duration-500 transform group cursor-pointer ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: `${index * 150}ms` }}>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex flex-col items-center justify-center text-white shadow-lg">
@@ -224,40 +219,18 @@ export default function EventsPage() {
                 </p>
                 
                 {isUpcoming(event.date) && (
-                  <button className="w-full inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-md group-hover:shadow-lg">
+                  <div className="w-full inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-md group-hover:shadow-lg">
                     <span>Learn More</span>
                     <ChevronRight className="w-4 h-4" />
-                  </button>
+                  </div>
                 )}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
 
-      {selectedEvent && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setSelectedEvent(null)}>
-          <div className="bg-white max-w-md w-full max-h-[90vh] overflow-y-auto p-6 relative" onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => setSelectedEvent(null)} className="absolute top-4 right-4 bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors">
-              <X className="w-4 h-4" />
-            </button>
-            <h3 className="text-xl font-bold mb-4 pr-8">{selectedEvent.title}</h3>
-            <div className="flex items-center text-gray-600 mb-3">
-              <Calendar className="w-4 h-4 mr-2" />
-              <span>{formatDate(selectedEvent.date)}</span>
-            </div>
-            <div className="flex items-center text-gray-600 mb-3">
-              <Clock className="w-4 h-4 mr-2" />
-              <span>{selectedEvent.time}</span>
-            </div>
-            <div className="flex items-center text-gray-600 mb-4">
-              <MapPin className="w-4 h-4 mr-2" />
-              <span>{selectedEvent.location}</span>
-            </div>
-            <p className="text-gray-700">{selectedEvent.description}</p>
-          </div>
-        </div>
-      )}
+
       </div>
     </PageLayout>
   );

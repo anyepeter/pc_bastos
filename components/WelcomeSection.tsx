@@ -3,7 +3,7 @@ import { Heart, Users, Cross } from 'lucide-react';
 
 const WelcomeSection = () => {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
@@ -56,13 +56,13 @@ const WelcomeSection = () => {
             <div className="pt-4 flex gap-4">
               <a
                 href="/about"
-                className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
               >
                 Learn More About Us
               </a>
               <a
                 href="/donate"
-                className="bg-gradient-to-r from-green-600 via-emerald-600 to-purple-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center gap-2"
+                className="bg-green-600 text-white px-8 py-3 rounded font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center gap-2"
               >
                 <Heart className="w-5 h-5" />
                 Support Our Work
@@ -74,7 +74,7 @@ const WelcomeSection = () => {
           <div className="relative">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src="https://images.pexels.com/photos/8468036/pexels-photo-8468036.jpeg?auto=compress&cs=tinysrgb&w=800"
+                src="/images/hero-image.jpg"
                 alt="Church community"
                 className="w-full h-96 lg:h-[500px] object-cover"
               />

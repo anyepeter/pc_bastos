@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Calendar } from 'lucide-react';
-import BackButton from '@/components/BackButton';
 
 interface Blog {
   id: number;
@@ -36,17 +35,17 @@ export default function BlogDetailClient({ blog }: BlogDetailClientProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-purple-500 pt-16 pb-6 md:pb-10">
+      <div className="pt-24 md:pt-28 pb-2">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <BackButton />
+          {/* <BackButton /> */}
           <div className={`transform transition-all pt-2 duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium mb-4 ${getCategoryColor(blog.category)}`}>
+            {/* <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium mb-4 ${getCategoryColor(blog.category)}`}>
               {blog.category}
-            </span>
-            <h1 className="text-4xl sm:text-5xl font-bold font-playfair text-white mb-4 leading-tight">
+            </span> */}
+            <h1 className="text-4xl sm:text-5xl font-bold font-playfair mb-4 leading-tight">
               {blog.title}
             </h1>
-            <div className="flex items-center text-purple-100">
+            <div className="flex items-center">
               <Calendar className="w-4 h-4 mr-2" />
               <span className="font-poppins">{blog.date}</span>
             </div>
@@ -54,15 +53,15 @@ export default function BlogDetailClient({ blog }: BlogDetailClientProps) {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
         <article className={`transform transition-all duration-700 ease-out delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
           <div className=" overflow-hidden">
             <img 
               src={blog.image} 
               alt={blog.title}
-              className="w-full  object-cover rounded-lg shadow-md"
+              className="w-full object-cover shadow-md"
             />
-            <div className="pt-6 sm:pt-10">
+            <div className="pt-8 sm:pt-10">
               <div className="prose prose-lg max-w-none">
                 {blog.content.split('\n\n').map((paragraph, index) => (
                   <p key={index} className="text-gray-700 leading-relaxed font-inter mb-6">

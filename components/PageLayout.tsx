@@ -9,7 +9,7 @@ interface PageLayoutProps {
 export default function PageLayout({ children }: PageLayoutProps) {
   return (
     <>
-      <Navigation />
+      <Navigation scroll={true} />
       {children}
       <Footer />
       <WhatsAppButton />

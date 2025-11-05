@@ -16,9 +16,6 @@ const ObjectivesSection = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <p className="text-green-600 font-semibold text-sm uppercase tracking-wide mb-3">
-            Our Purpose
-          </p>
           <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
             Our Objectives
           </h2>

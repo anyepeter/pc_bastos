@@ -20,9 +20,16 @@ export default function StructurePage() {
   return (
     <PageLayout>
       <div className="min-h-screen bg-white">
-        <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 text-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 py-16">
-            <BackButton />
+        <div className="text-white relative">
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: 'url("https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1920&h=600&fit=crop&auto=format")'
+            }}
+          />
+          <div className="absolute inset-0 bg-black/70"></div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-10 md:pb-16 relative z-10">
+            {/* <BackButton /> */}
             <div className={`text-center transform transition-all duration-1000 ease-out ${
               isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
             }`}>
@@ -228,7 +235,14 @@ export default function StructurePage() {
               </div>
               <div>
                 <h4 className="font-semibold text-gray-900 mb-2">Logo</h4>
-                <p className="text-gray-700 font-inter">The map of Cameroon with a cross inside, set against green, violet, and white backgrounds</p>
+                <div className="flex justify-center mb-2">
+                  <img 
+                    src="/images/logo_CEPCA.png"
+                    alt="CEPCA Logo - Map of Cameroon with cross" 
+                    className="w-24 h-24 object-contain rounded-lg shadow-md"
+                  />
+                </div>
+                <p className="text-gray-700 font-inter text-sm">The map of Cameroon with a cross inside, set against green, violet, and white backgrounds</p>
               </div>
               <div>
                 <h4 className="font-semibold text-gray-900 mb-2">Motto</h4>

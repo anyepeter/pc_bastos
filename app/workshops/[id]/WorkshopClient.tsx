@@ -3,11 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Calendar, MapPin, Users, Clock } from 'lucide-react';
 import BackButton from '@/components/BackButton';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import ImageSlider from './ImageSlider';
 
 interface Workshop {
   title: string;
@@ -38,45 +34,25 @@ export default function WorkshopClient({ workshop }: { workshop: Workshop }) {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-purple-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8">
-          <BackButton />
+      <div className=" relative overflow-hidden">
+        <div className="absolute inset-0"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32">
+          {/* <BackButton /> */}
           <div className={`transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            <h1 className="text-4xl text-center sm:text-6xl font-bold font-playfair mb-4 bg-gradient-to-r from-white to-green-100 bg-clip-text text-transparent">
+            <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-4">
               {workshop.title}
             </h1>
-            <p className="text-xl text-green-100 font-inter leading-relaxed max-w-3xl">
+            <p className="text-xl text-gray-900 font-inter leading-relaxed max-w-3xl">
               {workshop.description}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 px-4 py-12">
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 px-4 py-10 md:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className={`transform transition-all duration-1000 ease-out delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            <div className="bg-white backdrop-blur-sm shadow-lg border border-white/50 overflow-hidden">
-              <Swiper
-                modules={[Navigation, Pagination, Autoplay]}
-                spaceBetween={0}
-                slidesPerView={1}
-                navigation
-                pagination={{ clickable: true }}
-                autoplay={{ delay: 4000, disableOnInteraction: false }}
-                className="h-96"
-              >
-                {workshop.images.map((image, index) => (
-                  <SwiperSlide key={index}>
-                    <img
-                      src={image}
-                      alt={`${workshop.title} - Image ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </div>
+          <div className={`transform transition-all duration-1000 ease-out delay-300 group ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+            <ImageSlider images={workshop.images} alt={workshop.title} />
           </div>
 
           <div className={`space-y-8 transform transition-all duration-1000 ease-out delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>

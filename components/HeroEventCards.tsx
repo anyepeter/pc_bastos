@@ -15,41 +15,53 @@ const HeroEventCards = ({ activeSlide }: HeroEventCardsProps) => {
   return (
     <section className="relative -mt-20 z-20 pb-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {currentCards.map((card, index) => (
             <div
               key={index}
-              className="bg-white rounded-xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 animate-fade-in-up"
+              className="bg-white/80 border border-white/50 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 transform group cursor-pointer animate-fade-in-up"
               style={{
                 animationDelay: `${index * 0.1}s`,
                 animationFillMode: 'both'
               }}
             >
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center">
-                    <Calendar className="w-8 h-8 text-white" />
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex flex-col items-center justify-center text-white shadow-lg">
+                    <span className="text-xs font-medium">{card.date.split(' ')[0].toUpperCase()}</span>
+                    <span className="text-lg font-bold">{card.date.split(' ')[1]}</span>
+                  </div>
+                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
+                    Upcoming
+                  </span>
+                </div>
+                
+                <h3 className="font-bold font-playfair text-gray-900 text-xl mb-3 leading-tight group-hover:text-purple-700 transition-colors duration-300">
+                  {card.title}
+                </h3>
+                
+                <div className="space-y-2 text-sm text-gray-600 mb-4">
+                  <div className="flex items-center space-x-2">
+                    <Calendar className="w-4 h-4 text-purple-500" />
+                    <span>{card.date}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>{card.time}</span>
                   </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-gray-900 font-bold text-xl mb-3">
-                    Event: {card.title}
-                  </h3>
-                  <a
-                    href={card.link}
-                    className="text-green-600 font-semibold text-base hover:underline inline-block"
-                  >
-                    Event Details
-                  </a>
-                </div>
-              </div>
-              <div className="mt-4 flex items-center gap-4 text-sm">
-                <div className="flex items-center">
-                  <span className="text-green-600 font-bold text-base">{card.date}</span>
-                </div>
-                <div className="bg-green-600 text-white text-sm px-3 py-1 rounded">
-                  {card.time}
-                </div>
+                
+                <a
+                  href={`/events/${index + 1}`}
+                  className="w-full inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-md group-hover:shadow-lg"
+                >
+                  <span>LearnMore</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
               </div>
             </div>
           ))}

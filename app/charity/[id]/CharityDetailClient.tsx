@@ -3,11 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Calendar, MapPin, Users, Target } from 'lucide-react';
 import BackButton from '@/components/BackButton';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import ImageSlider from './ImageSlider';
 
 interface Charity {
   id: number;
@@ -53,50 +49,32 @@ export default function CharityDetailClient({ charity }: CharityDetailClientProp
 
   return (
     <div className="min-h-screen">
-      <div className="bg-gradient-to-r from-blue-600 via-teal-600 to-cyan-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/5"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <BackButton />
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:pt-20 pb-4">
+          {/* <BackButton /> */}
           <div className={`transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            <h1 className="text-4xl text-center sm:text-6xl font-bold font-playfair mb-4 bg-gradient-to-r from-white to-cyan-100 bg-clip-text text-transparent pt-10">
+            <h1 className="text-4xl text-center sm:text-6xl font-bold font-playfair mb-4 bg-gradient-to-r from-white to-cyan-100 bg-clip-text pt-10">
               {charity.title}
             </h1>
-            <p className="text-xl text-cyan-100 font-inter leading-relaxed max-w-3xl mx-auto text-center">
+            <p className="text-xl font-inter leading-relaxed max-w-3xl mx-auto text-center">
               {charity.impact}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <div className={`transform transition-all duration-1000 ease-out delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-              <div className="bg-white border border-gray-100 overflow-hidden mb-8">
-                <Swiper
-                  modules={[Navigation, Pagination, Autoplay]}
-                  spaceBetween={0}
-                  slidesPerView={1}
-                  navigation
-                  pagination={{ clickable: true }}
-                  autoplay={{ delay: 4000, disableOnInteraction: false }}
-                  className="h-96"
-                >
-                  {charity.images.map((image, index) => (
-                    <SwiperSlide key={index}>
-                      <img
-                        src={image}
-                        alt={`${charity.title} - Image ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
+              <div className="mb-8">
+                <ImageSlider images={charity.images} alt={charity.title} />
               </div>
             </div>
 
             <div className={`transform transition-all duration-1000 ease-out delay-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-              <div className="bg-white">
+              <div className="">
                 <h2 className="text-2xl font-bold font-playfair text-gray-900 mb-6">
                   About This Program
                 </h2>
@@ -107,7 +85,7 @@ export default function CharityDetailClient({ charity }: CharityDetailClientProp
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-6 flex flex-col gap-4">
             <div className={`transform transition-all duration-1000 ease-out delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
                 <h3 className="text-xl font-bold font-playfair text-gray-900 mb-4">
@@ -124,7 +102,7 @@ export default function CharityDetailClient({ charity }: CharityDetailClientProp
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3">
                     <div 
-                      className="bg-gradient-to-r from-blue-500 to-teal-500 h-3 rounded-full transition-all duration-1000 ease-out"
+                      className="bg-gradient-to-r from-green-500 to-purple-500 h-3 rounded-full transition-all duration-1000 ease-out"
                       style={{ width: `${progressPercentage}%` }}
                     ></div>
                   </div>
@@ -163,14 +141,14 @@ export default function CharityDetailClient({ charity }: CharityDetailClientProp
             </div>
 
             <div className={`transform transition-all duration-1000 ease-out delay-800 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-              <div className="bg-gradient-to-r from-blue-500 to-teal-500 rounded-2xl p-6 text-white">
+              <div className="bg-green-500 rounded-2xl p-6 text-white">
                 <h3 className="text-xl font-bold font-playfair mb-3">
                   Make a Difference
                 </h3>
-                <p className="text-blue-100 mb-4 font-inter">
+                <p className="mb-4 font-inter">
                   Your contribution can help us reach our goal and impact more lives in the community.
                 </p>
-                <button className="w-full bg-white text-blue-600 font-semibold py-3 px-6 rounded-lg hover:bg-blue-50 transition-colors">
+                <button className="w-full bg-white text-green-600 font-semibold py-3 px-6 rounded-lg hover:bg-blue-50 transition-colors">
                   Donate Now
                 </button>
               </div>

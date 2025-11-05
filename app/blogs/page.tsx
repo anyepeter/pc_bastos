@@ -89,9 +89,16 @@ export default function BlogsPage() {
   return (
     <PageLayout>
       <div className="min-h-screen bg-gray-50">
-      <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-purple-600 text-white relative overflow-hidden pt-12">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <HomeButton />
+      <div className="text-white relative overflow-hidden pt-12">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url("https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1920&h=600&fit=crop&auto=format")'
+          }}
+        />
+        <div className="absolute inset-0 bg-black/70"></div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 relative z-10 pt-12 md:pt-20 pb-10 md:pb-16">
+          {/* <HomeButton /> */}
           <div className="text-center">
             <div className={`transform transition-all duration-700 ease-out ${
               headerVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'

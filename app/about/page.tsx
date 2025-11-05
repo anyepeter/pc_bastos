@@ -60,8 +60,15 @@ export default function AboutPage() {
   return (
     <PageLayout>
       <div className="min-h-screen bg-white">
-        <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 text-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 py-16">
+        <div className="text-white relative">
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: 'url("https://images.unsplash.com/photo-1438032005730-c779502df39b?w=1920&h=600&fit=crop&auto=format")'
+            }}
+          />
+          <div className="absolute inset-0 bg-black/70"></div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-10 md:pb-16 relative z-10">
             <HomeButton />
             <div className={`text-center transform transition-all duration-1000 ease-out ${
               isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'

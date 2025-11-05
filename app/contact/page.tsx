@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, Heart, MessageCircle } from 'lucide-react';
-import BackButton from '@/components/BackButton';
 import PageLayout from '@/components/PageLayout';
 import HomeButton from '@/components/homeButton';
 
@@ -69,9 +68,15 @@ export default function ContactPage() {
       `}</style>
       <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative pt-16 pb-8 bg-primary text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <HomeButton />
+      <section className="relative pt-16 pb-8 text-white">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url("https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1920&h=600&fit=crop&auto=format")'
+          }}
+        />
+        <div className="absolute inset-0 bg-black/70"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8 relative z-10">
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
               Get in <span className="text-yellow-300">Touch</span>
@@ -217,7 +222,7 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
                     Phone Number
@@ -229,26 +234,8 @@ export default function ContactPage() {
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
-                    placeholder="(555) 123-4567"
+                    placeholder="671 23 45 67"
                   />
-                </div>
-                <div>
-                  <label htmlFor="requestType" className="block text-sm font-medium text-gray-700 mb-1">
-                    Request Type
-                  </label>
-                  <select
-                    id="requestType"
-                    name="requestType"
-                    value={formData.requestType}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
-                  >
-                    <option value="general">General Inquiry</option>
-                    <option value="visit">Planning a Visit</option>
-                    <option value="prayer">Prayer Request</option>
-                    <option value="ministry">Ministry Information</option>
-                    <option value="pastoral">Pastoral Care</option>
-                  </select>
                 </div>
               </div>
 
