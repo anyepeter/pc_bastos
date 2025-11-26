@@ -11,7 +11,7 @@ const eventsData = [
   {
     id: 1,
     title: 'Annual General Assembly 2025 dsgs sdfdsf dsfsdf dsfd',
-    date: '2025-03-15',
+    date: '2025-12-15',
     time: '09:00 AM',
     description: 'Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon. Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon. Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon. Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon. Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon. Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon.Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon. Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon. Join us for our annual gathering where member churches will present their yearly reports and discuss future initiatives for the Protestant community in Cameroon.',
     location: 'Yaoundé',
@@ -121,7 +121,14 @@ export default function EventsPage() {
         <div className="block lg:hidden space-y-6">
           {eventsData.map((event, index) => (
             <Link key={event.id} href={`/events/${event.id}`} className={`block bg-white/80 hover:scale[1.02] border border-white/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform cursor-pointer ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: `${index * 100}ms` }}>
-              <div className="p-6">
+              <div className="p-4">
+              {isUpcoming(event.date) && (
+                      <div className="mb-2">
+                        <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">
+                          Upcoming
+                        </span>
+                      </div>
+                    )}
                 <div className="flex items-start space-x-4">
                   <div className="flex-shrink-0">
                     <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex flex-col items-center justify-center text-white shadow-lg">
@@ -131,22 +138,11 @@ export default function EventsPage() {
                   </div>
                   
                   <div className="flex-1 min-w-0">
-                    {isUpcoming(event.date) && (
-                      <div className="mb-2">
-                        <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">
-                          Upcoming
-                        </span>
-                      </div>
-                    )}
                     
-                    <h3 className="font-bold font-playfair text-gray-900 text-lg mb-2 leading-tight">
-                      {event.title}
-                    </h3>
-                    
-                    <div className="flex flex-col flex-wrap items-start gap-2 text-sm text-gray-600 mb-3">
+                    <div className="flex flex-col-reverse flex-wrap items-start gap-2 text-sm text-gray-600 mb-3">
                       <div className="flex items-center space-x-1">
                         <MapPin className="w-4 h-4" />
-                        <span>{event.location}</span>
+                        <span className='line-clamp-1'>{event.location}</span>
                       </div>
                       <div className='flex gap-4'>
                       <div className="flex items-center space-x-1">
@@ -155,23 +151,21 @@ export default function EventsPage() {
                       </div>
                       <div className="flex items-center space-x-2">
                     <Calendar className="w-4 h-4" />
-                    <span>{formatDate(event.date)}</span>
+                    <span className='line-clamp-1'>{formatDate(event.date)}</span>
                   </div>
                       </div>
                     </div>
-                    
-                    <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-2">
+                  </div>
+                  </div>
+                    <div className='mt-2'>
+                      <h3 className="font-bold font-playfair text-gray-900 text-lg mb-2 leading-tight group-hover:text-purple-700 transition-colors duration-300 line-clamp-1">
+                        {event.title}
+                      </h3>
+                      <p className="text-gray-700 text-sm leading-relaxed line-clamp-2">
                       {event.description}
                     </p>
-                    
-                    {isUpcoming(event.date) && (
-                      <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-md">
-                        <span>Learn More</span>
-                        <ChevronRight className="w-4 h-4" />
-                      </div>
-                    )}
-                  </div>
-                </div>
+                    </div>
+                
               </div>
             </Link>
           ))}
@@ -214,16 +208,9 @@ export default function EventsPage() {
                   </div>
                 </div>
                 
-                <p className="text-gray-700 text-sm leading-relaxed mb-6 line-clamp-2">
+                <p className="text-gray-700 text-sm leading-relaxed line-clamp-2">
                   {event.description}
                 </p>
-                
-                {isUpcoming(event.date) && (
-                  <div className="w-full inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-md group-hover:shadow-lg">
-                    <span>Learn More</span>
-                    <ChevronRight className="w-4 h-4" />
-                  </div>
-                )}
               </div>
             </Link>
           ))}

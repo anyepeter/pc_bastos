@@ -17,6 +17,7 @@ interface Member {
     address: string;
   };
   founded: string;
+  logo: string;
 }
 
 interface MemberDetailClientProps {
@@ -46,6 +47,31 @@ export default function MemberDetailClient({ member }: MemberDetailClientProps) 
               {member.denomination}
             </h1>
             <p className="text-xl text-purple-100 font-inter leading-relaxed">Founded in {member.founded} • {member.location}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Floating Logo Badge - Apple-inspired Design (Mobile-First) */}
+      <div className="relative max-w-7xl mx-auto -mt-12 sm:-mt-10 md:-mt-20">
+        <div className={`transform transition-all duration-1000 ease-out delay-200 scale-100 opacity-100`}>
+          <div className="flex justify-center">
+            <div className="relative group">
+
+              {/* Logo container */}
+              <div className="relative bg-transparent">
+                <div className="">
+                  {/* Mobile-first sizing: 96px → 128px → 160px → 192px */}
+                  <div className="relative w-48 h-48 mx-auto">
+                    <img
+                      src={member.logo}
+                      alt={`${member.denomination} logo`}
+                      className="w-full h-full object-contain transform transition-transform duration-500 group-hover:scale-105"
+                    />
+                    {/* Subtle shine effect */}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

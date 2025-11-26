@@ -74,7 +74,7 @@ const WelcomeSection = () => {
           <div className="relative">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src="/images/hero-image.jpg"
+                src="/images/logo5.jpg"
                 alt="Church community"
                 className="w-full h-96 lg:h-[500px] object-cover"
               />

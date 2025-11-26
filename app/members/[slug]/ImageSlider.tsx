@@ -18,7 +18,7 @@ export default function ImageSlider({ images, alt }: ImageSliderProps) {
   }
 
   return (
-    <div className="relative overflow-hidden rounded-3xl shadow-2xl">
+    <div className="relative overflow-hidden shadow-2xl">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={0}

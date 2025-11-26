@@ -1,8 +1,13 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter, Playfair_Display, Poppins } from 'next/font/google';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
+import { ClerkProvider,SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton, } from '@clerk/nextjs';
+import StoreProvider from '@/components/StoreProvider';
+
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
@@ -23,10 +28,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} ${poppins.variable} font-sans antialiased`}>
-        <main>{children}</main>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={`${inter.variable} ${playfair.variable} ${poppins.variable} font-sans antialiased`}>
+          <StoreProvider>
+            <main>{children}</main>
+          </StoreProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

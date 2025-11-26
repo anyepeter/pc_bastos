@@ -14,7 +14,8 @@ const membersData = {
     ],
     history: "The Anglican Church in Cameroon has been a cornerstone of Christian faith since its establishment. With deep roots in Anglican tradition, it has served the community with dedication and spiritual guidance for decades.",
     contact: { phone: "+237 233 42 15 67", email: "contact@ea-cameroon.org", address: "BP 1234, Douala, Cameroon" },
-    founded: "1922"
+    founded: "1922",
+    logo: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop&auto=format"
   },
   cbc: {
     denomination: "Cameroon Baptist Convention (CBC)",
@@ -27,7 +28,9 @@ const membersData = {
     ],
     history: "The Cameroon Baptist Convention stands as one of the oldest and most influential Protestant denominations in Cameroon, with a rich heritage of evangelism, education, and community development.",
     contact: { phone: "+237 233 36 12 45", email: "info@cbc-cameroon.org", address: "BP 5678, Bamenda, Cameroon" },
-    founded: "1884"
+    founded: "1884",
+    logo: "/images/cbc.jpg"
+
   },
   eec: {
     denomination: "Eglise Evangélique du Cameroun (EEC)",
@@ -40,7 +43,8 @@ const membersData = {
     ],
     history: "L'Eglise Evangélique du Cameroun has been a beacon of evangelical faith, committed to spreading the Gospel and serving communities across Cameroon with unwavering dedication.",
     contact: { phone: "+237 233 42 78 90", email: "contact@eec-cameroon.org", address: "BP 9012, Douala, Cameroon" },
-    founded: "1957"
+    founded: "1957",
+    logo: "/images/eec.jpg"
   },
   eelc: {
     denomination: "Eglise Evangélique Luthérienne du Cameroun (EELC)",
@@ -53,7 +57,8 @@ const membersData = {
     ],
     history: "The Lutheran Church in Cameroon has maintained its Lutheran heritage while adapting to local contexts, providing spiritual guidance and community services throughout the northern regions.",
     contact: { phone: "+237 222 25 34 56", email: "info@eelc-cameroon.org", address: "BP 3456, Ngaoundéré, Cameroon" },
-    founded: "1923"
+    founded: "1923",
+    logo: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop&auto=format"
   },
   eflc: {
     denomination: "Eglise Fraternelle Luthérienne du Cameroun (EFLC)",
@@ -66,7 +71,8 @@ const membersData = {
     ],
     history: "The Fraternal Lutheran Church of Cameroon emphasizes brotherhood and community fellowship, serving the northern regions with dedication to Lutheran principles and local engagement.",
     contact: { phone: "+237 222 27 45 67", email: "contact@eflc-cameroon.org", address: "BP 7890, Garoua, Cameroon" },
-    founded: "1960"
+    founded: "1960",
+    logo: "/images/eflc.jpg"
   },
   epc: {
     denomination: "Eglise Presbytérienne Camerounaise (E P C)",
@@ -79,7 +85,8 @@ const membersData = {
     ],
     history: "L'Eglise Presbytérienne Camerounaise has been instrumental in education and social development, maintaining strong Presbyterian traditions while serving diverse communities.",
     contact: { phone: "+237 222 22 12 34", email: "info@epc-cameroon.org", address: "BP 1357, Yaoundé, Cameroon" },
-    founded: "1957"
+    founded: "1957",
+    logo: "/images/epc.jpg"
   },
   epa: {
     denomination: "Eglise Protestante Africaine (EPA)",
@@ -92,7 +99,8 @@ const membersData = {
     ],
     history: "The African Protestant Church represents indigenous Protestant Christianity, blending traditional African values with Protestant theology to serve local communities.",
     contact: { phone: "+237 233 45 67 89", email: "contact@epa-cameroon.org", address: "BP 2468, Lokolot, Cameroon" },
-    founded: "1934"
+    founded: "1934",
+    logo: "/images/epa.jpg"
   },
   nbc: {
     denomination: "Native Baptist Church (NBC)",
@@ -105,7 +113,8 @@ const membersData = {
     ],
     history: "The Native Baptist Church has deep roots in Baptist tradition while embracing local cultural contexts, serving communities with evangelical fervor and social commitment.",
     contact: { phone: "+237 233 33 56 78", email: "info@nbc-cameroon.org", address: "BP 1111, Douala, Cameroon" },
-    founded: "1898"
+    founded: "1898",
+    logo: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop&auto=format"
   },
   pcc: {
     denomination: "Presbyterian Church in Cameroon (PCC)",
@@ -118,7 +127,8 @@ const membersData = {
     ],
     history: "The Presbyterian Church in Cameroon has been a pillar of education and healthcare, maintaining strong Presbyterian governance while adapting to Cameroonian contexts.",
     contact: { phone: "+237 233 32 23 45", email: "contact@pcc-cameroon.org", address: "BP 2222, Buea, Cameroon" },
-    founded: "1886"
+    founded: "1886",
+    logo: "/images/pcc.jpg"
   },
   uebc: {
     
@@ -132,7 +142,8 @@ const membersData = {
     ],
     history: "L'Union des Eglises Baptistes du Cameroun unites Baptist churches across the nation, promoting Baptist principles and coordinating evangelical and social activities.",
     contact: { phone: "+237 233 42 34 56", email: "info@uebc-cameroon.org", address: "BP 3333, Douala, Cameroon" },
-    founded: "1952"
+    founded: "1952",
+    logo: "/images/uebc.jpg"
   },
   ueec: {
     denomination: "Union des Eglises Evangéliques du Cameroun (UEEC)",
@@ -145,7 +156,8 @@ const membersData = {
     ],
     history: "L'Union des Eglises Evangéliques du Cameroun coordinates evangelical churches in the northern regions, emphasizing unity in diversity and community service.",
     contact: { phone: "+237 222 29 45 67", email: "contact@ueec-cameroon.org", address: "BP 4444, Maroua, Cameroon" },
-    founded: "1965"
+    founded: "1965",
+    logo: "/images/ueec.jpg"
   },
   mpe: {
     denomination: "FULL GOSPEL Mission (Mission du plein Evangile)(MPE)",
@@ -158,7 +170,8 @@ const membersData = {
     ],
     history: "The Full Gospel Mission emphasizes the complete Gospel message with signs, wonders, and miracles, serving communities with Pentecostal fervor and social engagement.",
     contact: { phone: "+237 222 22 67 89", email: "info@mpe-cameroon.org", address: "BP 5555, Yaoundé, Cameroon" },
-    founded: "1963"
+    founded: "1963",
+    logo: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop&auto=format"
   }
 };
 

@@ -60,20 +60,12 @@ const HeroSection = () => {
           <Link href="/events/1" className="bg-white/80 border border-white/50 rounded shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 transform group cursor-pointer">
             <div className="p-4">
               <div className="flex items-center justify-between mb-4">
+                <div className='flex items-center justify-between gap-4'>
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex flex-col items-center justify-center text-white shadow-lg">
                   <span className="text-xs font-medium">SEP</span>
                   <span className="text-lg font-bold">20</span>
                 </div>
-                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
-                  Upcoming
-                </span>
-              </div>
-              
-              <h3 className="font-bold font-playfair text-gray-900 text-xl mb-3 leading-tight group-hover:text-purple-700 transition-colors duration-300 line-clamp-1">
-                Spiritually Reborn As God's Children
-              </h3>
-              
-              <div className="space-y-2 text-sm text-gray-600">
+                <div className="space-y-2 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4 text-purple-500" />
                   <span>September 20, 2024</span>
@@ -85,13 +77,16 @@ const HeroSection = () => {
                   <span>8:00 PM</span>
                 </div>
               </div>
+              </div>
+
+                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
+                  Upcoming
+                </span>
+              </div>
               
-              {/* <Link href="/events/1" className="w-full inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-md group-hover:shadow-lg">
-                <span>Learn More</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </Link> */}
+              <h3 className="font-bold font-playfair text-gray-900 text-xl leading-tight group-hover:text-purple-700 transition-colors duration-300 line-clamp-1">
+                Spiritually Reborn As God's Children
+              </h3>
             </div>
           </Link>
 
@@ -99,20 +94,12 @@ const HeroSection = () => {
           <Link href="/events/2" className="bg-white/80 border border-white/50 rounded shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 transform group cursor-pointer">
             <div className="p-4">
               <div className="flex items-center justify-between mb-4">
+                <div className='flex items-center justify-between gap-4'>
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex flex-col items-center justify-center text-white shadow-lg">
                   <span className="text-xs font-medium">OCT</span>
                   <span className="text-lg font-bold">27</span>
                 </div>
-                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
-                  Upcoming
-                </span>
-              </div>
-              
-              <h3 className="font-bold font-playfair text-gray-900 text-xl mb-3 leading-tight group-hover:text-purple-700 transition-colors duration-300">
-                Grace Church Jesus Hymn Song
-              </h3>
-              
-              <div className="space-y-2 text-sm text-gray-600">
+                <div className="space-y-2 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4 text-purple-500" />
                   <span>October 27, 2024</span>
@@ -124,13 +111,15 @@ const HeroSection = () => {
                   <span>12:00 PM</span>
                 </div>
               </div>
+              </div>
+                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
+                  Upcoming
+                </span>
+              </div>
               
-              {/* <Link href="/events/2" className="w-full inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-md group-hover:shadow-lg">
-                <span>Learn More</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </Link> */}
+              <h3 className="font-bold font-playfair text-gray-900 text-xl leading-tight group-hover:text-purple-700 transition-colors duration-300">
+                Grace Church Jesus Hymn Song
+              </h3>
             </div>
           </Link>
         </div>

@@ -113,10 +113,10 @@ export default function ContactPage() {
                   <div className="text-center sm:text-left">
                     <h3 className="text-xl font-semibold text-gray-900 group-hover:text-primary transition-colors duration-300">Visit Us</h3>
                     <p className="text-gray-600">
-                      Presbyterian Church<br />
+                      CEPCA<br />
                       Bastos, Yaoundé, Cameroon
                     </p>
-                    <a href="https://www.google.com/maps/search/Presbyterian+Church+Bastos+Yaound%C3%A9+Cameroon" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 font-medium transition-colors duration-300">
+                    <a href="https://maps.app.goo.gl/ehjxm8QprKj2Jpv16" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 font-medium transition-colors duration-300">
                       Get Directions →
                     </a>
                   </div>
@@ -330,7 +330,7 @@ We're located in Bastos, Yaoundé, serving the Presbyterian community with faith
             </div>
             <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="https://www.google.com/maps/dir//Presbyterian+Church,+Bastos,+Yaoundé,+Cameroon"
+                href="https://maps.app.goo.gl/ehjxm8QprKj2Jpv16"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-block"
@@ -338,7 +338,7 @@ We're located in Bastos, Yaoundé, serving the Presbyterian community with faith
                 Get Directions
               </a>
               <a
-                href="https://www.google.com/maps/place/Presbyterian+Church,+Bastos,+Yaoundé,+Cameroon"
+                href="https://maps.app.goo.gl/ehjxm8QprKj2Jpv16"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="border border-primary text-primary hover:bg-primary hover:text-white px-6 py-3 rounded-lg font-medium transition-colors inline-block"
