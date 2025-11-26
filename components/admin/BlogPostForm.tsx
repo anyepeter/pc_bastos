@@ -15,13 +15,14 @@ import { createBlogPost, updateBlogPost } from '@/app/actions/blog';
 import { generateSlug } from '@/lib/blog-utils';
 import { toast } from 'sonner';
 import { Loader2, Save } from 'lucide-react';
-
+import { Translation } from '@/lib/translations';
+import { JsonValue } from '@prisma/client/runtime/library';
 
 interface BlogPost {
   id?: string;
-  title: string;
+  title: Translation | JsonValue | string;
   slug: string;
-  description: string;
+  description: Translation | JsonValue | string;
   imageUrl: string | null;
   published: boolean;
 }
@@ -31,46 +32,60 @@ interface BlogPostFormProps {
   isEditing?: boolean;
 }
 
+// Helper to convert JsonValue to Translation
+function toTranslation(value: Translation | JsonValue | string | undefined): Translation {
+  if (!value) {
+    return { en: '', fr: '' };
+  }
+  if (typeof value === 'string') {
+    return { en: value, fr: value };
+  }
+  if (typeof value === 'object' && value !== null && 'en' in value && 'fr' in value) {
+    return value as Translation;
+  }
+  return { en: '', fr: '' };
+}
+
 export function BlogPostForm({ post, isEditing = false }: BlogPostFormProps) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
-  const [formData, setFormData] = useState<BlogPost>({
+  const [currentLang, setCurrentLang] = useState<'en' | 'fr'>('en');
+  const [title, setTitle] = useState<Translation>(toTranslation(post?.title));
+  const [description, setDescription] = useState<Translation>(toTranslation(post?.description));
+  const [formData, setFormData] = useState({
     id: post?.id,
-    title: post?.title || '',
     slug: post?.slug || '',
-    description: post?.description || '',
     imageUrl: post?.imageUrl || null,
     published: post?.published || false,
   });
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(isEditing);
 
-  // Auto-generate slug from title
+  // Auto-generate slug from English title
   useEffect(() => {
-    if (!slugManuallyEdited && formData.title) {
+    if (!slugManuallyEdited && title.en) {
       setFormData((prev) => ({
         ...prev,
-        slug: generateSlug(formData.title),
+        slug: generateSlug(title.en),
       }));
     }
-  }, [formData.title, slugManuallyEdited]);
+  }, [title.en, slugManuallyEdited]);
 
   const handleSubmit = async (e: React.FormEvent, publish?: boolean) => {
     e.preventDefault();
     setIsSaving(true);
 
     // Validate form
-    if (!formData.title || !formData.slug || !formData.description) {
-      toast.error('Please fill in all required fields');
+    if (!title.en || !title.fr || !formData.slug || !description.en || !description.fr) {
+      toast.error('Please fill in all required fields in both English and French');
       setIsSaving(false);
       return;
     }
 
-    // Language detection moved to server action
-    console.log('Submitting blog post...');
-
-
     const dataToSubmit = {
-      ...formData,
+      title,
+      slug: formData.slug,
+      description,
+      imageUrl: formData.imageUrl,
       published: publish !== undefined ? publish : formData.published,
     };
 
@@ -105,10 +120,28 @@ export function BlogPostForm({ post, isEditing = false }: BlogPostFormProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main content */}
         <div className="lg:col-span-2 space-y-6">
+          {/* Language selector */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Language</CardTitle>
+              <CardDescription>
+                Select the language you want to edit
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Tabs value={currentLang} onValueChange={(val) => setCurrentLang(val as 'en' | 'fr')}>
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="en">English</TabsTrigger>
+                  <TabsTrigger value="fr">Français</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </CardContent>
+          </Card>
+
           {/* Title */}
           <Card>
             <CardHeader>
-              <CardTitle>Title</CardTitle>
+              <CardTitle>Title ({currentLang === 'en' ? 'English' : 'Français'})</CardTitle>
               <CardDescription>
                 Enter a clear, descriptive title for your blog post
               </CardDescription>
@@ -116,10 +149,10 @@ export function BlogPostForm({ post, isEditing = false }: BlogPostFormProps) {
             <CardContent>
               <Input
                 type="text"
-                placeholder="Enter blog post title..."
-                value={formData.title}
+                placeholder={currentLang === 'en' ? 'Enter blog post title...' : 'Entrez le titre du blog...'}
+                value={title[currentLang]}
                 onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
+                  setTitle({ ...title, [currentLang]: e.target.value })
                 }
                 required
                 className="text-lg"
@@ -155,7 +188,7 @@ export function BlogPostForm({ post, isEditing = false }: BlogPostFormProps) {
           {/* Content */}
           <Card>
             <CardHeader>
-              <CardTitle>Content</CardTitle>
+              <CardTitle>Content ({currentLang === 'en' ? 'English' : 'Français'})</CardTitle>
               <CardDescription>
                 Write your blog post content in Markdown format
               </CardDescription>
@@ -168,10 +201,10 @@ export function BlogPostForm({ post, isEditing = false }: BlogPostFormProps) {
                 </TabsList>
                 <TabsContent value="edit" className="mt-4">
                   <Textarea
-                    placeholder="Write your blog post content here... (Markdown supported)"
-                    value={formData.description}
+                    placeholder={currentLang === 'en' ? 'Write your blog post content here... (Markdown supported)' : 'Écrivez le contenu de votre blog ici... (Markdown supporté)'}
+                    value={description[currentLang]}
                     onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
+                      setDescription({ ...description, [currentLang]: e.target.value })
                     }
                     required
                     className="min-h-[400px] font-mono text-sm"
@@ -182,7 +215,7 @@ export function BlogPostForm({ post, isEditing = false }: BlogPostFormProps) {
                   </p>
                 </TabsContent>
                 <TabsContent value="preview" className="mt-4">
-                  <MarkdownPreview content={formData.description} />
+                  <MarkdownPreview content={description[currentLang]} />
                 </TabsContent>
               </Tabs>
             </CardContent>
