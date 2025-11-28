@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, Heart, Calendar, Users, Phone, ChevronDown, ChevronUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import LanguageSelector from './LanguageSelector';
 
 const Navigation = ({scroll = false}: {scroll?: boolean}) => {
   const { t } = useTranslation();
@@ -179,13 +180,15 @@ const Navigation = ({scroll = false}: {scroll?: boolean}) => {
                 )}
               </div>
             ))}
+            <LanguageSelector />
             <Link href="/give" className={getDonateButtonStyles()}>
               {t('common.donate')}
             </Link>
           </div>
 
           {/* Mobile menu button */}
-          <div className="lg:hidden">
+          <div className="lg:hidden flex items-center space-x-3">
+            <LanguageSelector />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={getMobileMenuButtonStyles()}
