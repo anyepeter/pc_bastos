@@ -1,0 +1,236 @@
+{
+  "common": {
+    "cepca": "CEPCA",
+    "donate": "Faire un Don",
+    "learnMore": "En Savoir Plus",
+    "viewAll": "Voir Tout",
+    "getDirections": "Obtenir l'Itinéraire",
+    "readMore": "Lire Plus",
+    "listen": "Écouter",
+    "viewDetails": "Voir les Détails",
+    "sendMessage": "Envoyer le Message",
+    "sending": "Envoi en cours...",
+    "upcoming": "À Venir",
+    "complete": "Terminé"
+  },
+  "navbar": {
+    "aboutUs": "À Propos",
+    "ourMissionVision": "Notre Mission & Vision",
+    "leadership": "Direction",
+    "ourHistory": "Notre Histoire",
+    "cepcaStructures": "Structures CEPCA",
+    "members": "Membres",
+    "sermons": "Sermons",
+    "activities": "Activités",
+    "charity": "Charité",
+    "workshopsTrainings": "Ateliers/Formations",
+    "news": "Actualités",
+    "futureEvents": "Événements à venir",
+    "announcements": "Annonces",
+    "blogs": "Blogs",
+    "contactUs": "Nous Contacter"
+  },
+  "footer": {
+    "tagline": "Conseil des Églises Protestantes",
+    "description": "Construire des communautés de foi à travers le Cameroun par l'unité, le service et la croissance spirituelle.",
+    "servingSince": "Au service avec amour depuis 1957",
+    "quickLinks": "Liens Rapides",
+    "getInTouch": "Nous Contacter",
+    "followUs": "Suivez-Nous",
+    "copyright": "© 2025 CEPCA. Tous droits réservés.",
+    "phone": "+237 242 657 608",
+    "email": "generalsecretarycepca@gmail.com",
+    "address": "Yaoundé, B.P. 491 Rue Ceper, Elig-Essono",
+    "members": "Membres",
+    "contact": "Contact",
+    "about": "À Propos"
+  },
+  "hero": {
+    "title": "ÊTRE ÉGLISE ENSEMBLE",
+    "description": "Jésus est saint, aimant et digne de toute notre adoration et dévotion. Vous ressentirez le ciel dans notre communauté de grâce. Rejoignez-nous et louez le Seigneur Jésus.",
+    "contactUs": "Nous Contacter",
+    "donateNow": "Faire un Don"
+  },
+  "welcome": {
+    "tagline": "Bienvenue au CEPCA",
+    "title": "Être Église",
+    "titleHighlight": "Ensemble",
+    "description": "Le Conseil des Églises Protestantes du Cameroun (CEPCA) est une organisation œcuménique représentant 12 églises membres, 13 millions de croyants et 15 500 congrégations. Nous sommes unis dans notre mission de guérison, d'éducation et de développement communautaire holistique à travers le Cameroun.",
+    "healthcare": {
+      "title": "Soins de Santé",
+      "description": "350 hôpitaux et centres de santé fournissant des soins de qualité à travers le Cameroun."
+    },
+    "education": {
+      "title": "Éducation",
+      "description": "1 580 écoles et 15 universités éduquant plus de 500 000 étudiants annuellement."
+    },
+    "spiritualLeadership": {
+      "title": "Direction Spirituelle",
+      "description": "Au service de 13 millions de croyants à travers 15 500 congrégations dans tout le pays."
+    },
+    "learnMore": "En Savoir Plus Sur Nous",
+    "supportOurWork": "Soutenir Notre Travail",
+    "stats": {
+      "memberChurches": "Églises Membres",
+      "believers": "Croyants"
+    }
+  },
+  "missionVision": {
+    "title": "Mission & Vision",
+    "subtitle": "\"Être Église Ensemble\" - Unis dans l'objectif, divers dans l'expression",
+    "vision": {
+      "title": "Notre Vision",
+      "description1": "Bien que nous puissions différer les uns des autres, il reste vrai que par l'œuvre du Saint-Esprit et le respect des principes démocratiques, nous pouvons tous parler un langage commun—le langage de l'amour.",
+      "description2": "Le CEPCA renforce notre sentiment commun d'appartenance en tant qu'Églises unies pour défendre une cause commune. Ce n'est plus une simple juxtaposition de dénominations, mais une véritable institution œcuménique engagée à faire avancer les intérêts protestants—une vision d'intégration.",
+      "quote": "\"Que pouvons-nous accomplir ensemble?\""
+    },
+    "mission": {
+      "title": "Notre Mission",
+      "description": "Notre mission renouvelée se concentre sur la guérison, la libération et le développement holistique de la personne humaine.",
+      "health": {
+        "title": "Santé",
+        "description": "Fournir des soins de qualité et un service compatissant, lutter contre le VIH/SIDA, le paludisme, la tuberculose et améliorer la santé communautaire."
+      },
+      "education": {
+        "title": "Éducation",
+        "description": "Poursuivre l'héritage des missions chrétiennes, former des citoyens compétents qui respectent l'éthique chrétienne partout où ils servent."
+      },
+      "pastoral": {
+        "title": "Ministère Pastoral",
+        "description": "Rester une voix prophétique, se tenir aux côtés de ceux qui sont en détresse et parler à travers divers médias et contextes de culte."
+      }
+    },
+    "corePrinciples": {
+      "title": "Nos Principes Fondamentaux",
+      "principle1": "Confesse Jésus-Christ comme le seul Seigneur et Sauveur",
+      "principle2": "Reconnaît les Saintes Écritures comme la seule norme de foi",
+      "principle3": "Confesse le Credo des Apôtres",
+      "principle4": "Travaille en étroite collaboration avec les églises membres pour atteindre les objectifs"
+    }
+  },
+  "objectives": {
+    "title": "Nos Objectifs",
+    "subtitle": "Travailler ensemble pour renforcer et unir les églises protestantes à travers le Cameroun",
+    "objective1": "Témoigner de l'unité profonde du protestantisme au Cameroun",
+    "objective2": "Développer et coordonner les efforts conjoints d'évangélisation et de service chrétien",
+    "objective3": "Promouvoir la vie chrétienne à travers des projets sociaux et économiques communs",
+    "objective4": "Coordonner les événements protestants conjoints à travers le Cameroun",
+    "objective5": "Représenter le protestantisme camerounais auprès des autorités publiques",
+    "objective6": "Exprimer la 'Voix des Protestants' sur les questions d'intérêt public et éthique",
+    "ctaDescription": "En savoir plus sur l'histoire, la structure et les églises membres du CEPCA",
+    "learnMore": "En Savoir Plus Sur Nous"
+  },
+  "charity": {
+    "title": "Nos",
+    "titleHighlight": "Programmes de Charité",
+    "subtitle": "Transformer des vies par une sensibilisation compatissante et un développement communautaire durable",
+    "fundsUsed": "Fonds Utilisés",
+    "of": "sur",
+    "viewDetails": "Voir les Détails",
+    "viewAllPrograms": "Voir Tous les Programmes"
+  },
+  "contact": {
+    "pageTitle": "Entrer en",
+    "pageTitleHighlight": "Contact",
+    "pageSubtitle": "Nous aimerions avoir de vos nouvelles ! Que vous planifiez votre première visite, ayez besoin de prière ou souhaitiez en savoir plus sur notre famille d'église.",
+    "weAreHere": "Nous Sommes Là Pour Vous",
+    "description": "Notre équipe est prête à répondre à vos questions, à prier avec vous ou à vous aider à franchir votre prochaine étape dans la foi. N'hésitez pas à nous contacter !",
+    "visitUs": {
+      "title": "Visitez-Nous",
+      "address": "CEPCA\nBastos, Yaoundé, Cameroun",
+      "getDirections": "Obtenir l'Itinéraire →"
+    },
+    "callUs": {
+      "title": "Appelez-Nous",
+      "hours": "Lundi - Vendredi: 9h00 - 17h00\nUrgence: Disponible 24h/24 et 7j/7"
+    },
+    "emailUs": {
+      "title": "Envoyez-nous un Email",
+      "response": "Nous répondons généralement dans les 24 heures"
+    },
+    "whatsapp": {
+      "title": "Contactez-nous sur WhatsApp",
+      "quickResponses": "Réponses rapides via WhatsApp"
+    },
+    "form": {
+      "title": "Envoyez-nous un Message",
+      "subtitle": "Nous aimerions avoir de vos nouvelles. Remplissez le formulaire ci-dessous et nous vous contacterons !",
+      "fullName": "Nom Complet",
+      "emailAddress": "Adresse Email",
+      "phoneNumber": "Numéro de Téléphone",
+      "subject": "Sujet",
+      "message": "Message",
+      "namePlaceholder": "Votre nom complet",
+      "emailPlaceholder": "votre.email@exemple.com",
+      "phonePlaceholder": "671 23 45 67",
+      "subjectPlaceholder": "De quoi aimeriez-vous discuter ?",
+      "messagePlaceholder": "Dites-nous comment nous pouvons vous aider...",
+      "required": "*"
+    },
+    "prayer": {
+      "title": "Besoin de Prière ?",
+      "description": "Notre équipe de prière s'engage à élever vos besoins devant Dieu. Aucune demande n'est trop grande ou trop petite - nous sommes là pour prier avec vous.",
+      "submitRequest": "Soumettre une Demande de Prière"
+    },
+    "map": {
+      "title": "Trouvez-Nous",
+      "description": "Nous sommes situés à Bastos, Yaoundé, au service de la communauté presbytérienne avec foi et fraternité.",
+      "viewOnGoogleMaps": "Voir sur Google Maps"
+    }
+  },
+  "about": {
+    "pageTitle": "À Propos du CEPCA",
+    "pageSubtitle": "Le Conseil des Églises Protestantes du Cameroun - Unir les Églises dans la foi, le service et le développement communautaire",
+    "history": {
+      "title": "Notre Histoire",
+      "description": "La vague de mouvements d'indépendance qui a perturbé la Fédération Évangélique de l'Afrique Équatoriale Française a conduit à la création de la FEMEC en 1969, qui a ensuite évolué en CEPCA.",
+      "preview": "Le CEPCA est né du besoin de coordonner les Églises Protestantes au Cameroun après l'indépendance. Le premier Secrétaire Général, le Rév. Eugène MALLO, a coordonné les activités à travers le Comité de l'Éducation et de la Santé."
+    },
+    "missionVision": {
+      "title": "Mission & Vision",
+      "description": "Notre mission se concentre sur la guérison, la libération et le développement holistique. Notre vision est l'intégration par le langage de l'amour, unissant les Églises pour défendre une cause commune.",
+      "preview": "Le CEPCA renforce notre sentiment commun d'appartenance en tant qu'Églises unies. À travers le Saint-Esprit et les principes démocratiques, nous parlons le langage commun de l'amour."
+    },
+    "departments": {
+      "title": "Départements",
+      "description": "Le CEPCA fonctionne à travers des départements spécialisés notamment la Santé, l'Éducation, les Affaires Sociales et Féminines, le Témoignage Chrétien, la Jeunesse, l'Information et la Communication.",
+      "preview": "Nos départements coordonnent les activités à travers les églises membres, des services de santé et d'éducation aux programmes pour les jeunes et aux initiatives de communication."
+    },
+    "structure": {
+      "title": "Structure du CEPCA",
+      "description": "Notre structure organisationnelle comprend l'Assemblée Générale, le Comité Exécutif et les Commissions spécialisées qui assurent une gouvernance et une coordination efficaces.",
+      "preview": "L'Assemblée Générale sert d'organe de décision suprême, se réunissant tous les deux ans pour définir la politique et l'orientation générales."
+    },
+    "impact": {
+      "title": "Notre Impact",
+      "memberChurches": "Églises Membres",
+      "believers": "Croyants",
+      "educationalInstitutions": "Institutions Éducatives",
+      "healthCenters": "Centres de Santé"
+    }
+  },
+  "sermons": {
+    "pageTitle": "Sermons",
+    "pageSubtitle": "Messages inspirants de nos leaders spirituels à travers les églises membres",
+    "duration": "min",
+    "listen": "Écouter",
+    "download": "Télécharger"
+  },
+  "blogList": {
+    "pageTitle": "Blogs",
+    "pageSubtitle": {
+      "en": "Histoires inspirantes et réflexions spirituelles de notre communauté",
+      "fr": "Histoires inspirantes et réflexions spirituelles de notre communauté"
+    },
+    "noPostsAvailable": "Aucun article de blog disponible pour le moment. Revenez bientôt !",
+    "categories": {
+      "faith": "Foi",
+      "community": "Communauté",
+      "hope": "Espoir",
+      "service": "Service"
+    }
+  },
+  "blogDetail": {
+    "notFound": "Article de blog introuvable."
+  }
+}

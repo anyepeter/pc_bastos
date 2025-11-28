@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { getPublishedBlogPosts, getPublishedBlogPostBySlug, PublicBlogPost } from '@/app/actions/blog-public';
 import { Language } from '@/lib/translations';
+import i18n from '@/lib/i18n';
 
 interface BlogState {
   posts: PublicBlogPost[];
@@ -121,8 +122,9 @@ const blogSlice = createSlice({
     // Set language
     setLanguage: (state, action: PayloadAction<Language>) => {
       state.language = action.payload;
-      // Save to localStorage
+      // Sync with i18next
       if (typeof window !== 'undefined') {
+        i18n.changeLanguage(action.payload);
         localStorage.setItem('language', action.payload);
       }
     },

@@ -1,0 +1,236 @@
+{
+  "common": {
+    "cepca": "CEPCA",
+    "donate": "Donate",
+    "learnMore": "Learn More",
+    "viewAll": "View All",
+    "getDirections": "Get Directions",
+    "readMore": "Read More",
+    "listen": "Listen",
+    "viewDetails": "View Details",
+    "sendMessage": "Send Message",
+    "sending": "Sending...",
+    "upcoming": "Upcoming",
+    "complete": "Complete"
+  },
+  "navbar": {
+    "aboutUs": "About Us",
+    "ourMissionVision": "Our Mission & Vision",
+    "leadership": "Leadership",
+    "ourHistory": "Our History",
+    "cepcaStructures": "CEPCA Structures",
+    "members": "Members",
+    "sermons": "Sermons",
+    "activities": "Activities",
+    "charity": "Charity",
+    "workshopsTrainings": "Workshops/Trainings",
+    "news": "News",
+    "futureEvents": "Future events",
+    "announcements": "Announcements",
+    "blogs": "Blogs",
+    "contactUs": "Contact Us"
+  },
+  "footer": {
+    "tagline": "Council of Protestant Churches",
+    "description": "Building faith communities across Cameroon through unity, service, and spiritual growth.",
+    "servingSince": "Serving with love since 1957",
+    "quickLinks": "Quick Links",
+    "getInTouch": "Get In Touch",
+    "followUs": "Follow Us",
+    "copyright": "© 2025 CEPCA. All rights reserved.",
+    "phone": "+237 242 657 608",
+    "email": "generalsecretarycepca@gmail.com",
+    "address": "Yaoundé, P.O. Box 491 Rue Ceper, Elig-Essono",
+    "members": "Members",
+    "contact": "Contact",
+    "about": "About"
+  },
+  "hero": {
+    "title": "BEING CHURCH TOGETHER",
+    "description": "Jesus is holy, loving, and worthy of all our worship and devotion. You will feel heaven in our Grace Community Church. Join us and Praise the Lord Jesus.",
+    "contactUs": "Contact Us",
+    "donateNow": "Donate Now"
+  },
+  "welcome": {
+    "tagline": "Welcome to CEPCA",
+    "title": "Being Church",
+    "titleHighlight": "Together",
+    "description": "The Council of Protestant Churches of Cameroon (CEPCA) is an ecumenical organization representing 12 member churches, 13 million believers, and 15,500 congregations. We are united in our mission of healing, education, and holistic community development across Cameroon.",
+    "healthcare": {
+      "title": "Healthcare",
+      "description": "350 hospitals and health centers providing quality care across Cameroon."
+    },
+    "education": {
+      "title": "Education",
+      "description": "1,580 schools and 15 universities educating over 500,000 students annually."
+    },
+    "spiritualLeadership": {
+      "title": "Spiritual Leadership",
+      "description": "Serving 13 million believers through 15,500 congregations nationwide."
+    },
+    "learnMore": "Learn More About Us",
+    "supportOurWork": "Support Our Work",
+    "stats": {
+      "memberChurches": "Member Churches",
+      "believers": "Believers"
+    }
+  },
+  "missionVision": {
+    "title": "Mission & Vision",
+    "subtitle": "\"Being Church Together\" - United in purpose, diverse in expression",
+    "vision": {
+      "title": "Our Vision",
+      "description1": "While we may differ from one another, it remains true that through the work of the Holy Spirit and respect for democratic principles, we can all speak a common language—the language of love.",
+      "description2": "CEPCA strengthens our shared sense of belonging as Churches united in defending a common cause. This is no longer a mere juxtaposition of denominations, but a true ecumenical institution committed to advancing Protestant interests—a vision of integration.",
+      "quote": "\"What can we accomplish together?\""
+    },
+    "mission": {
+      "title": "Our Mission",
+      "description": "Our renewed mission focuses on healing, liberation, and the holistic development of the human person.",
+      "health": {
+        "title": "Health",
+        "description": "Providing quality care and compassionate service, combating HIV/AIDS, malaria, tuberculosis, and improving community health."
+      },
+      "education": {
+        "title": "Education",
+        "description": "Continuing the legacy of Christian missions, training competent citizens who uphold Christian ethics wherever they serve."
+      },
+      "pastoral": {
+        "title": "Pastoral Ministry",
+        "description": "Remaining a prophetic voice, standing beside those in distress and speaking through diverse media and worship contexts."
+      }
+    },
+    "corePrinciples": {
+      "title": "Our Core Principles",
+      "principle1": "Confesses Jesus Christ as the only Lord and Savior",
+      "principle2": "Recognizes the Holy Scriptures as the sole standard of faith",
+      "principle3": "Confesses the Apostles' Creed",
+      "principle4": "Works closely with member churches to achieve objectives"
+    }
+  },
+  "objectives": {
+    "title": "Our Objectives",
+    "subtitle": "Working together to strengthen and unite Protestant churches across Cameroon",
+    "objective1": "Bear witness to the profound unity of Protestantism in Cameroon",
+    "objective2": "Develop and coordinate joint efforts in evangelism and Christian service",
+    "objective3": "Promote Christian life through common social and economic projects",
+    "objective4": "Coordinate joint Protestant events across Cameroon",
+    "objective5": "Represent Cameroonian Protestantism before public authorities",
+    "objective6": "Express the 'Voice of Protestants' on matters of public and ethical concern",
+    "ctaDescription": "Learn more about CEPCA's history, structure, and member churches",
+    "learnMore": "Learn More About Us"
+  },
+  "charity": {
+    "title": "Our",
+    "titleHighlight": "Charity Programs",
+    "subtitle": "Transforming lives through compassionate outreach and sustainable community development",
+    "fundsUsed": "Funds Used",
+    "of": "of",
+    "viewDetails": "View Details",
+    "viewAllPrograms": "View All Programs"
+  },
+  "contact": {
+    "pageTitle": "Get in",
+    "pageTitleHighlight": "Touch",
+    "pageSubtitle": "We'd love to hear from you! Whether you're planning your first visit, need prayer, or want to learn more about our church family.",
+    "weAreHere": "We're Here for You",
+    "description": "Our team is ready to answer your questions, pray with you, or help you take your next step in faith. Don't hesitate to reach out!",
+    "visitUs": {
+      "title": "Visit Us",
+      "address": "CEPCA\nBastos, Yaoundé, Cameroon",
+      "getDirections": "Get Directions →"
+    },
+    "callUs": {
+      "title": "Call Us",
+      "hours": "Monday - Friday: 9:00 AM - 5:00 PM\nEmergency: Available 24/7"
+    },
+    "emailUs": {
+      "title": "Email Us",
+      "response": "We typically respond within 24 hours"
+    },
+    "whatsapp": {
+      "title": "Contact on WhatsApp",
+      "quickResponses": "Quick responses via WhatsApp"
+    },
+    "form": {
+      "title": "Send Us a Message",
+      "subtitle": "We'd love to hear from you. Fill out the form below and we'll be in touch!",
+      "fullName": "Full Name",
+      "emailAddress": "Email Address",
+      "phoneNumber": "Phone Number",
+      "subject": "Subject",
+      "message": "Message",
+      "namePlaceholder": "Your full name",
+      "emailPlaceholder": "your.email@example.com",
+      "phonePlaceholder": "671 23 45 67",
+      "subjectPlaceholder": "What would you like to discuss?",
+      "messagePlaceholder": "Tell us how we can help you...",
+      "required": "*"
+    },
+    "prayer": {
+      "title": "Need Prayer?",
+      "description": "Our prayer team is committed to lifting up your needs before God. No request is too big or too small - we're here to pray with you.",
+      "submitRequest": "Submit Prayer Request"
+    },
+    "map": {
+      "title": "Find Us",
+      "description": "We're located in Bastos, Yaoundé, serving the Presbyterian community with faith and fellowship.",
+      "viewOnGoogleMaps": "View on Google Maps"
+    }
+  },
+  "about": {
+    "pageTitle": "About CEPCA",
+    "pageSubtitle": "The Council of Protestant Churches of Cameroon - Uniting Churches in faith, service, and community development",
+    "history": {
+      "title": "Our History",
+      "description": "The wave of independence movements that disrupted the Evangelical Federation of French Equatorial Africa led to the creation of FEMEC in 1969, which later evolved into CEPCA.",
+      "preview": "CEPCA was born from the need to coordinate Protestant Churches in Cameroon after independence. The first General Secretary, Rev. Eugène MALLO, coordinated activities through the Education and Health Committee."
+    },
+    "missionVision": {
+      "title": "Mission & Vision",
+      "description": "Our mission focuses on healing, liberation, and holistic development. Our vision is integration through the language of love, uniting Churches in defending a common cause.",
+      "preview": "CEPCA strengthens our shared sense of belonging as Churches united. Through the Holy Spirit and democratic principles, we speak the common language of love."
+    },
+    "departments": {
+      "title": "Departments",
+      "description": "CEPCA operates through specialized departments including Health, Education, Women and Social Affairs, Christian Witness, Youth, Information and Communication.",
+      "preview": "Our departments coordinate activities across member churches, from health services and education to youth programs and communication initiatives."
+    },
+    "structure": {
+      "title": "CEPCA Structure",
+      "description": "Our organizational structure includes the General Assembly, Executive Committee, and specialized Commissions that ensure effective governance and coordination.",
+      "preview": "The General Assembly serves as our supreme decision-making body, meeting every two years to define overall policy and direction."
+    },
+    "impact": {
+      "title": "Our Impact",
+      "memberChurches": "Member Churches",
+      "believers": "Believers",
+      "educationalInstitutions": "Educational Institutions",
+      "healthCenters": "Health Centers"
+    }
+  },
+  "sermons": {
+    "pageTitle": "Sermons",
+    "pageSubtitle": "Inspiring messages from our spiritual leaders across member churches",
+    "duration": "min",
+    "listen": "Listen",
+    "download": "Download"
+  },
+  "blogList": {
+    "pageTitle": "Blogs",
+    "pageSubtitle": {
+      "en": "Inspiring stories and spiritual insights from our community",
+      "fr": "Histoires inspirantes et réflexions spirituelles de notre communauté"
+    },
+    "noPostsAvailable": "No blog posts available at the moment. Check back soon!",
+    "categories": {
+      "faith": "Faith",
+      "community": "Community",
+      "hope": "Hope",
+      "service": "Service"
+    }
+  },
+  "blogDetail": {
+    "notFound": "Blog post not found."
+  }
+}
