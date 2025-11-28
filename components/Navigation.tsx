@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, Heart, Calendar, Users, Phone, ChevronDown, ChevronUp } from 'lucide-react';
+import LanguageSelector from './LanguageSelector';
 
 const Navigation = ({scroll = false}: {scroll?: boolean}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -180,13 +181,19 @@ const Navigation = ({scroll = false}: {scroll?: boolean}) => {
                 )}
               </div>
             ))}
+            {/* Language Selector */}
+            <LanguageSelector />
             <Link href="/give" className={getDonateButtonStyles()}>
               Donate
             </Link>
           </div>
 
           {/* Mobile menu button */}
-          <div className="lg:hidden">
+          <div className="lg:hidden flex items-center space-x-3">
+            {/* Language Selector for Mobile */}
+            <div className="scale-90">
+              <LanguageSelector />
+            </div>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={getMobileMenuButtonStyles()}
