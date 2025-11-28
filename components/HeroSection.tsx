@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { Calendar, Heart } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const HeroSection = () => {
+  const { t } = useTranslation();
   return (
     <section className="relative min-h-screen flex flex-col justify-center overflow-hidden">
       {/* Background Image */}
@@ -27,12 +29,12 @@ const HeroSection = () => {
 
         {/* Main Heading */}
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
-        BEING CHURCH TOGETHER
+        {t('hero.title')}
         </h1>
 
         {/* Description */}
         <p className="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed">
-          Jesus is holy, loving, and worthy of all our worship and devotion. You will feel heaven in our Grace Community Church. Join us and Praise the Lord Jesus.
+          {t('hero.description')}
         </p>
 
         {/* CTA Buttons */}
@@ -41,14 +43,14 @@ const HeroSection = () => {
             href="/contact"
             className="border hover:bg-purple-700 text-white px-10 py-4 font-semibold transition-all duration-300 inline-block rounded shadow-lg hover:shadow-xl transform hover:scale-105"
           >
-            Contact Us
+            {t('hero.contactUs')}
           </Link>
           <Link
             href="/donate"
             className="bg-green-600 text-white px-10 py-4 font-semibold transition-all duration-300 inline-flex items-center gap-2 rounded shadow-lg hover:shadow-xl transform hover:scale-105"
           >
             <Heart className="w-5 h-5" />
-            Donate Now
+            {t('hero.donateNow')}
           </Link>
         </div>
       </div>
@@ -80,7 +82,7 @@ const HeroSection = () => {
               </div>
 
                 <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
-                  Upcoming
+                  {t('common.upcoming')}
                 </span>
               </div>
               
@@ -113,7 +115,7 @@ const HeroSection = () => {
               </div>
               </div>
                 <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
-                  Upcoming
+                  {t('common.upcoming')}
                 </span>
               </div>
               

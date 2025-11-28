@@ -1,14 +1,12 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 
 // Import translation files
 import enTranslation from '@/public/locales/en/translation.json';
 import frTranslation from '@/public/locales/fr/translation.json';
 
-// Configure i18next
+// Configure i18next - Redux controls the language, not browser detection
 i18n
-  .use(LanguageDetector) // Detect user language
   .use(initReactI18next) // Pass i18n instance to react-i18next
   .init({
     resources: {
@@ -19,15 +17,9 @@ i18n
         translation: frTranslation,
       },
     },
+    lng: 'en', // Default language (will be overridden by Redux)
     fallbackLng: 'en', // Fallback language
     debug: false, // Set to true for debugging
-
-    // Language detection options
-    detection: {
-      order: ['localStorage', 'navigator'], // Check localStorage first, then browser settings
-      caches: ['localStorage'], // Cache language selection in localStorage
-      lookupLocalStorage: 'language', // Key to use in localStorage
-    },
 
     interpolation: {
       escapeValue: false, // React already escapes values

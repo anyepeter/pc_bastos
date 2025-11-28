@@ -1,8 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Heart } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+  const { t } = useTranslation();
   return (
     <footer className="bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 text-white relative overflow-hidden">
       {/* Background Pattern */}
@@ -26,45 +30,45 @@ const Footer = () => {
                 />
               </div>
               <div>
-                <h3 className="text-2xl font-playfair font-bold tracking-tight">CEPCA</h3>
-                <p className="text-purple-200 text-sm font-poppins">Council of Protestant Churches</p>
+                <h3 className="text-2xl font-playfair font-bold tracking-tight">{t('common.cepca')}</h3>
+                <p className="text-purple-200 text-sm font-poppins">{t('footer.tagline')}</p>
               </div>
             </div>
             <p className="text-purple-100 leading-relaxed font-inter">
-              Building faith communities across Cameroon through unity, service, and spiritual growth.
+              {t('footer.description')}
             </p>
             <div className="flex items-center space-x-2 text-purple-200">
               <Heart className="w-4 h-4 text-pink-300 animate-pulse" />
-              <span className="text-sm font-poppins">Serving with love since 1957</span>
+              <span className="text-sm font-poppins">{t('footer.servingSince')}</span>
             </div>
           </div>
 
           {/* Quick Links */}
           <div className="space-y-6">
-            <h4 className="text-xl font-playfair font-semibold text-white">Quick Links</h4>
+            <h4 className="text-xl font-playfair font-semibold text-white">{t('footer.quickLinks')}</h4>
             <nav className="grid grid-cols-2 gap-3">
               <Link href="/members" className="group flex items-center space-x-2 text-purple-200 hover:text-white transition-all duration-300 font-poppins">
                 <span className="w-1 h-1 bg-purple-400 rounded-full group-hover:w-2 transition-all duration-300"></span>
-                <span>Members</span>
+                <span>{t('footer.members')}</span>
               </Link>
               <Link href="/blogs" className="group flex items-center space-x-2 text-purple-200 hover:text-white transition-all duration-300 font-poppins">
                 <span className="w-1 h-1 bg-purple-400 rounded-full group-hover:w-2 transition-all duration-300"></span>
-                <span>Blogs</span>
+                <span>{t('navbar.blogs')}</span>
               </Link>
               <Link href="/contact" className="group flex items-center space-x-2 text-purple-200 hover:text-white transition-all duration-300 font-poppins">
                 <span className="w-1 h-1 bg-purple-400 rounded-full group-hover:w-2 transition-all duration-300"></span>
-                <span>Contact</span>
+                <span>{t('footer.contact')}</span>
               </Link>
               <Link href="/about" className="group flex items-center space-x-2 text-purple-200 hover:text-white transition-all duration-300 font-poppins">
                 <span className="w-1 h-1 bg-purple-400 rounded-full group-hover:w-2 transition-all duration-300"></span>
-                <span>About</span>
+                <span>{t('footer.about')}</span>
               </Link>
             </nav>
           </div>
 
           {/* Contact & Social */}
           <div className="space-y-6">
-            <h4 className="text-xl font-playfair font-semibold text-white">Get In Touch</h4>
+            <h4 className="text-xl font-playfair font-semibold text-white">{t('footer.getInTouch')}</h4>
             <div className="space-y-4">
               <a href="https://wa.me/237242657608" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 group hover:bg-white/5 p-2 rounded-lg transition-colors duration-300">
                 <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center group-hover:bg-green-500/30 transition-colors duration-300">
@@ -88,7 +92,7 @@ const Footer = () => {
             
             {/* Social Media */}
             <div className="space-y-3">
-              <p className="text-purple-200 font-poppins text-sm">Follow Us</p>
+              <p className="text-purple-200 font-poppins text-sm">{t('footer.followUs')}</p>
               <div className="flex space-x-3">
                 <a href="#" className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 hover:scale-110 transition-all duration-300 group">
                   <Facebook className="w-5 h-5 text-purple-200 group-hover:text-white" />
@@ -106,7 +110,7 @@ const Footer = () => {
 
         {/* Bottom Section */}
         <div className="border-t border-white/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <p className="text-purple-200 text-sm font-poppins">&copy; 2025 CEPCA. All rights reserved.</p>
+          <p className="text-purple-200 text-sm font-poppins">{t('footer.copyright')}</p>
         </div>
       </div>
     </footer>

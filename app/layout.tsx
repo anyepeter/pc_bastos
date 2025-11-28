@@ -7,6 +7,7 @@ import { ClerkProvider,SignInButton,
   SignedOut,
   UserButton, } from '@clerk/nextjs';
 import StoreProvider from '@/components/StoreProvider';
+import I18nProvider from '@/components/I18nProvider';
 
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -32,7 +33,9 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${inter.variable} ${playfair.variable} ${poppins.variable} font-sans antialiased`}>
           <StoreProvider>
-            <main>{children}</main>
+            <I18nProvider>
+              <main>{children}</main>
+            </I18nProvider>
           </StoreProvider>
         </body>
       </html>

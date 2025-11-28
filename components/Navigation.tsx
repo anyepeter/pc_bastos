@@ -4,9 +4,10 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, Heart, Calendar, Users, Phone, ChevronDown, ChevronUp } from 'lucide-react';
-import LanguageSelector from './LanguageSelector';
+import { useTranslation } from 'react-i18next';
 
 const Navigation = ({scroll = false}: {scroll?: boolean}) => {
+  const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdowns, setOpenDropdowns] = useState<string[]>([]);
   const [isScrolled, setIsScrolled] = useState(scroll);
@@ -15,13 +16,12 @@ const Navigation = ({scroll = false}: {scroll?: boolean}) => {
     const handleScroll = () => {
       if (!scroll){
         setIsScrolled(window.scrollY > 10);
-        console.log('Scrolling enabled');
       }
     };
-    
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [scroll]);
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -35,14 +35,13 @@ const Navigation = ({scroll = false}: {scroll?: boolean}) => {
   }, [isMenuOpen]);
 
   const toggleDropdown = (itemName: string) => {
-    setOpenDropdowns(prev => 
+    setOpenDropdowns(prev =>
       prev.includes(itemName) ? [] : [itemName]
     );
   };
 
   const closeMenu = () => setIsMenuOpen(false);
 
-  // Consolidated styling functions to reduce repetitive code
   const getNavbarStyles = () => {
     const isActive = isScrolled || isMenuOpen;
     return `fixed w-full top-0 z-50 transition-all duration-300 ${
@@ -59,8 +58,8 @@ const Navigation = ({scroll = false}: {scroll?: boolean}) => {
 
   const getDesktopLinkStyles = () => {
     return `font-medium font-poppins transition-colors duration-200 flex items-center tracking-wide ${
-      isScrolled 
-        ? 'text-gray-700 hover:text-purple-600' 
+      isScrolled
+        ? 'text-gray-700 hover:text-purple-600'
         : 'text-white hover:text-white/80 drop-shadow'
     }`;
   };
@@ -77,27 +76,26 @@ const Navigation = ({scroll = false}: {scroll?: boolean}) => {
     const isActive = isScrolled || isMenuOpen;
     return `transition-colors duration-200 p-3 rounded-md touch-manipulation ${
       isActive
-        ? 'text-gray-700 hover:text-purple-600 hover:bg-purple-50 active:bg-purple-100' 
+        ? 'text-gray-700 hover:text-purple-600 hover:bg-purple-50 active:bg-purple-100'
         : 'text-white hover:text-white/80 hover:bg-white/10 active:bg-white/20 drop-shadow backdrop-blur-sm'
     }`;
   };
 
-  // Common mobile menu item styles
   const mobileMenuItemStyles = "block text-gray-700 hover:text-purple-600 active:text-purple-700 font-medium py-3 hover:bg-purple-50 active:bg-purple-100 px-3 rounded-lg touch-manipulation";
   const mobileSubMenuItemStyles = "block text-sm text-gray-600 hover:text-purple-600 active:text-purple-700 py-3 hover:bg-purple-50 active:bg-purple-100 px-3 rounded-lg touch-manipulation";
 
   const menuItems = [
-    { 
-      name: 'About Us', href: '/about',
+    {
+      name: t('navbar.aboutUs'), href: '/about',
       submenu: [
-        { name: 'Our Mission & Vision', href: '/about/mission-vision' },
-        { name: 'Leadership', href: '/about/departments' },
-        { name: 'Our History', href: '/about/history' },
-        { name: 'CEPCA Structures', href: '/about/structure' },
+        { name: t('navbar.ourMissionVision'), href: '/about/mission-vision' },
+        { name: t('navbar.leadership'), href: '/about/departments' },
+        { name: t('navbar.ourHistory'), href: '/about/history' },
+        { name: t('navbar.cepcaStructures'), href: '/about/structure' },
       ]
     },
-    { 
-      name: 'Members', href: '#',
+    {
+      name: t('navbar.members'), href: '#',
       submenu: [
         { name: 'Eglise Anglicane (EA)', href: '/members/ea' },
         { name: 'Cameroon Baptist Convention (CBC)', href: '/members/cbc' },
@@ -113,28 +111,28 @@ const Navigation = ({scroll = false}: {scroll?: boolean}) => {
         { name: 'FULL GOSPEL Mission (Mission du plein Evangile)(MPE)', href: '/members/mpe' }
       ]
     },
-    { 
-      name: 'Sermons', 
+    {
+      name: t('navbar.sermons'),
       href: '/sermons'
     },
-    { 
-      name: 'Activities', 
+    {
+      name: t('navbar.activities'),
       href: '#',
       submenu: [
-        { name: 'Charity', href: '/charity' },
-        { name: 'Workshops/Trainings', href: '/workshops' },
+        { name: t('navbar.charity'), href: '/charity' },
+        { name: t('navbar.workshopsTrainings'), href: '/workshops' },
       ]
     },
     {
-      name: 'News', 
+      name: t('navbar.news'),
       href: '#',
       submenu: [
-        { name: "Future events", href: '/events' },
-        { name: 'Announcements', href: '/announcements' },
+        { name: t('navbar.futureEvents'), href: '/events' },
+        { name: t('navbar.announcements'), href: '/announcements' },
       ]
     },
-    { name: 'Blogs', href: '/blogs' },
-    { name: 'Contact Us', href: '/contact' },
+    { name: t('navbar.blogs'), href: '/blogs' },
+    { name: t('navbar.contactUs'), href: '/contact' },
   ];
 
   return (
@@ -153,7 +151,7 @@ const Navigation = ({scroll = false}: {scroll?: boolean}) => {
               />
             </div>
             <div>
-              <h1 className={getLogoTextStyles()}>CEPCA</h1>
+              <h1 className={getLogoTextStyles()}>{t('common.cepca')}</h1>
             </div>
           </Link>
 
@@ -181,19 +179,13 @@ const Navigation = ({scroll = false}: {scroll?: boolean}) => {
                 )}
               </div>
             ))}
-            {/* Language Selector */}
-            <LanguageSelector />
             <Link href="/give" className={getDonateButtonStyles()}>
-              Donate
+              {t('common.donate')}
             </Link>
           </div>
 
           {/* Mobile menu button */}
-          <div className="lg:hidden flex items-center space-x-3">
-            {/* Language Selector for Mobile */}
-            <div className="scale-90">
-              <LanguageSelector />
-            </div>
+          <div className="lg:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={getMobileMenuButtonStyles()}
@@ -204,7 +196,7 @@ const Navigation = ({scroll = false}: {scroll?: boolean}) => {
         </div>
       </div>
 
-      {/* Mobile Navigation - Fixed positioning to stay under navbar */}
+      {/* Mobile Navigation */}
       {isMenuOpen && (
         <div className="lg:hidden fixed inset-x-0 top-[3.9rem] sm:top-[4.9rem] bottom-0 z-10 bg-white/95 backdrop-blur-md flex flex-col">
           <div className="flex-1 overflow-y-auto px-4 py-4">
@@ -252,7 +244,7 @@ const Navigation = ({scroll = false}: {scroll?: boolean}) => {
               ))}
             </div>
           </div>
-          
+
           {/* Fixed donate button at bottom */}
           <div className="p-4">
             <Link
@@ -260,7 +252,7 @@ const Navigation = ({scroll = false}: {scroll?: boolean}) => {
               className="block bg-green-600 hover:bg-green-700 active:bg-green-800 text-white px-4 py-3 rounded-lg font-medium text-center touch-manipulation"
               onClick={closeMenu}
             >
-              Donate
+              {t('common.donate')}
             </Link>
           </div>
         </div>
