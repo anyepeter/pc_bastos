@@ -181,25 +181,154 @@
   "about": {
     "pageTitle": "About CEPCA",
     "pageSubtitle": "The Council of Protestant Churches of Cameroon - Uniting Churches in faith, service, and community development",
+    "learnMore": "Learn More",
     "history": {
       "title": "Our History",
       "description": "The wave of independence movements that disrupted the Evangelical Federation of French Equatorial Africa led to the creation of FEMEC in 1969, which later evolved into CEPCA.",
-      "preview": "CEPCA was born from the need to coordinate Protestant Churches in Cameroon after independence. The first General Secretary, Rev. Eugène MALLO, coordinated activities through the Education and Health Committee."
+      "preview": "CEPCA was born from the need to coordinate Protestant Churches in Cameroon after independence. The first General Secretary, Rev. Eugène MALLO, coordinated activities through the Education and Health Committee.",
+      "pageTitle": "Our History",
+      "pageSubtitle": "The journey of Protestant unity in Cameroon",
+      "theBeginning": "The Beginning",
+      "beginningText1": "The wave of independence movements that disrupted and questioned the continuity of the Evangelical Federation of French Equatorial Africa—which had been responsible for coordinating educational, health, and rural activities as well as radio broadcasting—together with the decision of the Churches and Evangelical Missions working in French Equatorial Africa to withdraw from the Federation, led to the creation of FEMEC (Federation of Evangelical Churches and Missions of Cameroon) in 1969.",
+      "beginningText2": "Its first General Secretary, Rev. Eugène MALLO (Director of the Bible Society), coordinated activities through the Education and Health Committee and the Radio Studio.",
+      "thePreamble": "The Preamble",
+      "preambleText1": "The Protestant Churches of Cameroon acknowledge themselves as integral parts of the Universal Church, the Body of Christ. They are determined to fulfill the cherished wish of our Lord Jesus Christ, as expressed in John 17:21: \"I pray that they may all be one.\"",
+      "preambleText2": "To this end, the Churches decided to establish an Ecumenical Organization responsible for promoting and defending Christianity, and for guiding and coordinating their common actions.",
+      "evolutionToCepca": "Evolution to CEPCA",
+      "evolutionText1": "CEPCA has both a spiritual and social calling. It is apolitical. Since 2009, it has been open to the admission of other Protestant Churches, expanding its reach and influence across Cameroon.",
+      "evolutionText2": "Today, CEPCA stands as a testament to the power of unity in diversity, bringing together twelve member churches under the banner of Christian love and service to the community.",
+      "keyMilestones": "Key Milestones",
+      "milestone1969": "Creation of FEMEC (Federation of Evangelical Churches and Missions of Cameroon)",
+      "milestone1970s": "Establishment of Education and Health Committees",
+      "milestone2009": "Opening to admission of other Protestant Churches",
+      "milestoneToday": "12 member churches serving 13+ million believers"
     },
     "missionVision": {
       "title": "Mission & Vision",
       "description": "Our mission focuses on healing, liberation, and holistic development. Our vision is integration through the language of love, uniting Churches in defending a common cause.",
-      "preview": "CEPCA strengthens our shared sense of belonging as Churches united. Through the Holy Spirit and democratic principles, we speak the common language of love."
+      "preview": "CEPCA strengthens our shared sense of belonging as Churches united. Through the Holy Spirit and democratic principles, we speak the common language of love.",
+      "pageTitle": "Mission & Vision",
+      "pageSubtitle": "Our calling to heal, liberate, and develop through Christian unity",
+      "ourVision": "Our Vision",
+      "visionText1": "While we may differ from one another, it remains true that through the work of the Holy Spirit and respect for democratic principles, we can all speak a common language—the language of love.",
+      "visionText2": "CEPCA strengthens our shared sense of belonging as Churches united in defending a common cause. With the Council, this is no longer a mere juxtaposition of denominations, but a true ecumenical institution committed to advancing Protestant interests—a vision of integration.",
+      "visionQuote": "\"What can we accomplish together?\"",
+      "ourMission": "Our Mission",
+      "missionText": "This renewed mission calls for a reorientation of our agenda. It focuses on healing, liberation, and the holistic development of the human person.",
+      "healthTitle": "Health",
+      "healthText": "Our institutions must provide quality care and compassionate service. Priority areas include combating HIV/AIDS, malaria, tuberculosis, and improving community health.",
+      "educationTitle": "Education",
+      "educationText": "Continuing the legacy of Christian missions, we remain committed to training competent citizens who uphold Christian ethics wherever they serve.",
+      "pastoralTitle": "Pastoral Ministry",
+      "pastoralText": "These ensure we remain a prophetic voice within our communities, standing beside those in distress and speaking through diverse media and worship contexts.",
+      "corePrinciples": "Core Principles",
+      "principle1": "Confesses Jesus Christ as the only Lord and Savior",
+      "principle2": "Recognizes the Holy Scriptures as the sole standard of faith, doctrine, and discipline",
+      "principle3": "Confesses the Apostles' Creed",
+      "principle4": "Works closely with member churches to achieve objectives",
+      "ourMotto": "Our Motto",
+      "motto": "\"Being Church Together\""
     },
     "departments": {
       "title": "Departments",
       "description": "CEPCA operates through specialized departments including Health, Education, Women and Social Affairs, Christian Witness, Youth, Information and Communication.",
-      "preview": "Our departments coordinate activities across member churches, from health services and education to youth programs and communication initiatives."
+      "preview": "Our departments coordinate activities across member churches, from health services and education to youth programs and communication initiatives.",
+      "pageTitle": "Our Departments",
+      "pageSubtitle": "Specialized services coordinating activities across member churches",
+      "departmentCoordination": "Department Coordination",
+      "regionalOffices": "Regional Offices",
+      "regionalOfficesText": "Departments operate from strategic locations across Cameroon",
+      "commissions": "Commissions",
+      "commissionsText": "Each department has a commission for planning and monitoring",
+      "coordination": "Coordination",
+      "coordinationText": "Regular meetings ensure effective collaboration between departments",
+      "saf": {
+        "name": "Administrative and Financial Service (SAF)",
+        "location": "Yaoundé Headquarters",
+        "description": "Centralizes all income and expenditures of CEPCA; prepares annual financial statements and inventory reports.",
+        "short": "Admin & Finance"
+      },
+      "ds": {
+        "name": "Department of Health (DS)",
+        "location": "Douala Regional Office",
+        "description": "Coordinates public health activities of member churches; represents church medical works before the Government, particularly the Ministry of Public Health.",
+        "short": "Health"
+      },
+      "oepp": {
+        "name": "Department of Education (OEPP)",
+        "location": "Yaoundé Education Center",
+        "description": "Coordinates the educational work of member churches; develops mid- and long-term policies for Protestant private education.",
+        "short": "Education"
+      },
+      "dfas": {
+        "name": "Department of Women and Social Affairs (DFAS)",
+        "location": "Bamenda Regional Office",
+        "description": "Highlights the role of women in Church and society; prepares women for effective participation within their churches and the Cameroonian community.",
+        "short": "Women & Social"
+      },
+      "dtc": {
+        "name": "Department of Christian Witness (DTC)",
+        "location": "Garoua Regional Office",
+        "description": "Coordinates evangelism planning; organizes theological reflection meetings; assists departments in developing appropriate evangelistic strategies.",
+        "short": "Christian Witness"
+      },
+      "dj": {
+        "name": "Department of Youth (DJ)",
+        "location": "Buea Youth Center",
+        "description": "Trains young people for active participation in church and society; develops tools for civic and moral education; identifies common challenges and interests.",
+        "short": "Youth"
+      },
+      "dic": {
+        "name": "Department of Information and Communication (DIC)",
+        "location": "Yaoundé Media Center",
+        "description": "Handles all communication within CEPCA; produces and broadcasts Protestant radio and TV programs; assists member churches with event coverage.",
+        "short": "Information"
+      },
+      "bured": {
+        "name": "Bureau for Research and Development Studies (BURED)",
+        "location": "Yaoundé Research Center",
+        "description": "Promotes CEPCA's and its member churches' participation in national development and socio-economic issues.",
+        "short": "Research"
+      }
     },
     "structure": {
       "title": "CEPCA Structure",
       "description": "Our organizational structure includes the General Assembly, Executive Committee, and specialized Commissions that ensure effective governance and coordination.",
-      "preview": "The General Assembly serves as our supreme decision-making body, meeting every two years to define overall policy and direction."
+      "preview": "The General Assembly serves as our supreme decision-making body, meeting every two years to define overall policy and direction.",
+      "pageTitle": "CEPCA Structure",
+      "pageSubtitle": "Organizational framework ensuring effective governance and coordination",
+      "organizationalChart": "Organizational Chart",
+      "generalAssembly": "General Assembly",
+      "generalAssemblyShort": "Supreme Decision-Making Body",
+      "meetsEvery2Years": "Meets every 2 years",
+      "generalAssemblyLong": "Supreme decision-making body, meets once every two years, defines overall policy.",
+      "generalAssemblyFull": "Supreme decision-making body that meets once every two years to define overall policy and strategic direction for CEPCA.",
+      "executiveCommittee": "Executive Committee",
+      "executiveCommitteeShort": "Policy Execution",
+      "meetsTwiceYearly": "Meets twice yearly",
+      "executiveCommitteeLong": "Executes CEPCA's policies. Meets twice a year under the President's convening. Includes 11 Church Leaders, the General Secretary, Executive Secretaries of Departments, and the Head of Administration and Finance (SAF).",
+      "executiveCommitteeFull": "Executes CEPCA's policies and meets twice a year under the President's convening.",
+      "commissionsTitle": "Commissions",
+      "commissionsFull": "Each department has a commission responsible for planning and monitoring programs.",
+      "definesPolicy": "Defines organizational policies",
+      "electsLeadership": "Elects leadership positions",
+      "approvesPlans": "Approves strategic plans",
+      "reviewsPerformance": "Reviews organizational performance",
+      "churchLeaders": "11 Church Leaders",
+      "generalSecretary": "General Secretary",
+      "executiveSecretaries": "Executive Secretaries",
+      "headOfAdmin": "Head of Administration (SAF)",
+      "programPlanning": "Program planning",
+      "activityMonitoring": "Activity monitoring",
+      "resourceAllocation": "Resource allocation",
+      "performanceEvaluation": "Performance evaluation",
+      "headquartersInfo": "Headquarters Information",
+      "address": "Address",
+      "addressText": "Yaoundé, P.O. Box 491 – Rue Ceper, Elig-Essono",
+      "logo": "Logo",
+      "logoDescription": "The map of Cameroon with a cross inside, set against green, violet, and white backgrounds",
+      "motto": "Motto",
+      "mottoText": "\"Being Church Together\""
     },
     "impact": {
       "title": "Our Impact",
@@ -212,9 +341,12 @@
   "sermons": {
     "pageTitle": "Sermons",
     "pageSubtitle": "Inspiring messages from our spiritual leaders across member churches",
+    "latest": "Latest",
+    "homepageSubtitle": "Listen to our recent messages and grow in your faith journey. All sermons are available for streaming and download.",
     "duration": "min",
     "listen": "Listen",
-    "download": "Download"
+    "download": "Download",
+    "loading": "Loading..."
   },
   "blogList": {
     "pageTitle": "Blogs",
@@ -232,5 +364,87 @@
   },
   "blogDetail": {
     "notFound": "Blog post not found."
+  },
+  "members": {
+    "pageTitle": "Our Member",
+    "pageTitleHighlight": "Churches",
+    "pageSubtitle": "Twelve Protestant denominations united in faith, service, and community development across Cameroon",
+    "memberChurches": "Member Churches",
+    "founded": "Founded",
+    "location": "Location",
+    "leadership": "Leadership",
+    "history": "History",
+    "contactInformation": "Contact Information",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "memberNotFound": "Member not found",
+    "returnToMembers": "Return to Members",
+    "viewDetails": "View Details",
+    "exploreAllMembers": "Explore All Members",
+    "unitedInFaith": "United in Faith, Diverse in Expression",
+    "servingTogether": "Serving together since 1957 to strengthen Protestant unity and advance community development across Cameroon.",
+    "churches": {
+      "ea": {
+        "denomination": "Anglican Church (EA)",
+        "leader": "Bishop Mgr. DIBO BLANGWE Thomas",
+        "history": "The Anglican Church in Cameroon has been a cornerstone of Christian faith since its establishment. With deep roots in Anglican tradition, it has served the community with dedication and spiritual guidance for decades."
+      },
+      "cbc": {
+        "denomination": "Cameroon Baptist Convention (CBC)",
+        "leader": "National President Rev. Dr TEKE John Ekema",
+        "history": "The Cameroon Baptist Convention stands as one of the oldest and most influential Protestant denominations in Cameroon, with a rich heritage of evangelism, education, and community development."
+      },
+      "eec": {
+        "denomination": "Evangelical Church of Cameroon (EEC)",
+        "leader": "President Rev. BILLA MBENGA Alexandre",
+        "history": "The Evangelical Church of Cameroon has been a beacon of evangelical faith, committed to spreading the Gospel and serving communities across Cameroon with unwavering dedication."
+      },
+      "eelc": {
+        "denomination": "Evangelical Lutheran Church of Cameroon (EELC)",
+        "leader": "National Bishop Mgr. BAIGUEL Jean",
+        "history": "The Lutheran Church in Cameroon has maintained its Lutheran heritage while adapting to local contexts, providing spiritual guidance and community services throughout the northern regions."
+      },
+      "eflc": {
+        "denomination": "Fraternal Lutheran Church of Cameroon (EFLC)",
+        "leader": "President Rev. DEBSIA DABA Alvius",
+        "history": "The Fraternal Lutheran Church of Cameroon emphasizes brotherhood and community fellowship, serving the northern regions with dedication to Lutheran principles and local engagement."
+      },
+      "epc": {
+        "denomination": "Presbyterian Church of Cameroon (EPC)",
+        "leader": "General Secretary Rev. ABESSOLO ZE",
+        "history": "The Presbyterian Church of Cameroon has been instrumental in education and social development, maintaining strong Presbyterian traditions while serving diverse communities."
+      },
+      "epa": {
+        "denomination": "African Protestant Church (EPA)",
+        "leader": "General Secretary Rev MFOM Jules Perigord",
+        "history": "The African Protestant Church represents indigenous Protestant Christianity, blending traditional African values with Protestant theology to serve local communities."
+      },
+      "nbc": {
+        "denomination": "Native Baptist Church (NBC)",
+        "leader": "National President Rev. Dr NSOGA Job Salomon Moderator",
+        "history": "The Native Baptist Church has deep roots in Baptist tradition while embracing local cultural contexts, serving communities with evangelical fervor and social commitment."
+      },
+      "pcc": {
+        "denomination": "Presbyterian Church in Cameroon (PCC)",
+        "leader": "Rt. Rev MIKI Hans ABIA Rt. Vice",
+        "history": "The Presbyterian Church in Cameroon has been a pillar of education and healthcare, maintaining strong Presbyterian governance while adapting to Cameroonian contexts."
+      },
+      "uebc": {
+        "denomination": "Union of Baptist Churches of Cameroon (UEBC)",
+        "leader": "President Rev. EDOUBE Ernest",
+        "history": "The Union of Baptist Churches of Cameroon unites Baptist churches across the nation, promoting Baptist principles and coordinating evangelical and social activities."
+      },
+      "ueec": {
+        "denomination": "Union of Evangelical Churches of Cameroon (UEEC)",
+        "leader": "President Rev. HAMADINA Salomon",
+        "history": "The Union of Evangelical Churches of Cameroon coordinates evangelical churches in the northern regions, emphasizing unity in diversity and community service."
+      },
+      "mpe": {
+        "denomination": "Full Gospel Mission (MPE)",
+        "leader": "General Superintendent Rev. SOKENG ALAIN Clément",
+        "history": "The Full Gospel Mission emphasizes the complete Gospel message with signs, wonders, and miracles, serving communities with Pentecostal fervor and social engagement."
+      }
+    }
   }
 }

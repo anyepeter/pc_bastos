@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import { Calendar, Users, Building } from 'lucide-react';
 import PageLayout from '@/components/PageLayout';
 import BackButton from '@/components/BackButton';
+import { useTranslation } from 'react-i18next';
 
 export default function HistoryPage() {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -29,10 +31,10 @@ export default function HistoryPage() {
               isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
             }`}>
               <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-6">
-                Our History
+                {t('about.history.pageTitle')}
               </h1>
               <p className="text-xl text-blue-100 font-inter max-w-3xl mx-auto leading-relaxed">
-                The journey of Protestant unity in Cameroon
+                {t('about.history.pageSubtitle')}
               </p>
             </div>
           </div>
@@ -49,7 +51,7 @@ export default function HistoryPage() {
                   <Calendar className="w-6 h-6 text-purple-600" />
                 </div>
                 <h2 className="text-3xl font-bold font-playfair text-gray-900">
-                  The Beginning
+                  {t('about.history.theBeginning')}
                 </h2>
               </div>
 
@@ -61,11 +63,11 @@ export default function HistoryPage() {
 
               <div className="prose prose-lg max-w-none">
                 <p className="text-lg text-gray-700 font-inter leading-relaxed mb-6">
-                  The wave of independence movements that disrupted and questioned the continuity of the Evangelical Federation of French Equatorial Africa—which had been responsible for coordinating educational, health, and rural activities as well as radio broadcasting—together with the decision of the Churches and Evangelical Missions working in French Equatorial Africa to withdraw from the Federation, led to the creation of FEMEC (Federation of Evangelical Churches and Missions of Cameroon) in 1969.
+                  {t('about.history.beginningText1')}
                 </p>
 
                 <p className="text-lg text-gray-700 font-inter leading-relaxed mb-6">
-                  Its first General Secretary, Rev. Eugène MALLO (Director of the Bible Society), coordinated activities through the Education and Health Committee and the Radio Studio.
+                  {t('about.history.beginningText2')}
                 </p>
               </div>
             </div>
@@ -76,7 +78,7 @@ export default function HistoryPage() {
                   <Users className="w-6 h-6 text-purple-600" />
                 </div>
                 <h2 className="text-3xl font-bold font-playfair text-gray-900">
-                  The Preamble
+                  {t('about.history.thePreamble')}
                 </h2>
               </div>
 
@@ -88,11 +90,11 @@ export default function HistoryPage() {
 
               <div className="prose prose-lg max-w-none">
                 <p className="text-lg text-gray-700 font-inter leading-relaxed mb-6">
-                  The Protestant Churches of Cameroon acknowledge themselves as integral parts of the Universal Church, the Body of Christ. They are determined to fulfill the cherished wish of our Lord Jesus Christ, as expressed in John 17:21: "I pray that they may all be one."
+                  {t('about.history.preambleText1')}
                 </p>
 
                 <p className="text-lg text-gray-700 font-inter leading-relaxed mb-6">
-                  To this end, the Churches decided to establish an Ecumenical Organization responsible for promoting and defending Christianity, and for guiding and coordinating their common actions.
+                  {t('about.history.preambleText2')}
                 </p>
               </div>
             </div>
@@ -103,7 +105,7 @@ export default function HistoryPage() {
                   <Building className="w-6 h-6 text-purple-600" />
                 </div>
                 <h2 className="text-3xl font-bold font-playfair text-gray-900">
-                  Evolution to CEPCA
+                  {t('about.history.evolutionToCepca')}
                 </h2>
               </div>
 
@@ -115,35 +117,35 @@ export default function HistoryPage() {
 
               <div className="prose prose-lg max-w-none">
                 <p className="text-lg text-gray-700 font-inter leading-relaxed mb-6">
-                  CEPCA has both a spiritual and social calling. It is apolitical. Since 2009, it has been open to the admission of other Protestant Churches, expanding its reach and influence across Cameroon.
+                  {t('about.history.evolutionText1')}
                 </p>
 
                 <p className="text-lg text-gray-700 font-inter leading-relaxed mb-6">
-                  Today, CEPCA stands as a testament to the power of unity in diversity, bringing together twelve member churches under the banner of Christian love and service to the community.
+                  {t('about.history.evolutionText2')}
                 </p>
               </div>
             </div>
 
             <div className="bg-gray-50 p-8 mt-12">
               <h3 className="text-2xl font-bold font-playfair text-gray-900 mb-6 text-center">
-                Key Milestones
+                {t('about.history.keyMilestones')}
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
                   <div className="bg-purple-600 text-white px-3 py-1 font-bold">1969</div>
-                  <div className="text-gray-700 font-inter">Creation of FEMEC (Federation of Evangelical Churches and Missions of Cameroon)</div>
+                  <div className="text-gray-700 font-inter">{t('about.history.milestone1969')}</div>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="bg-purple-600 text-white px-3 py-1 font-bold">1970s</div>
-                  <div className="text-gray-700 font-inter">Establishment of Education and Health Committees</div>
+                  <div className="text-gray-700 font-inter">{t('about.history.milestone1970s')}</div>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="bg-purple-600 text-white px-3 py-1 font-bold">2009</div>
-                  <div className="text-gray-700 font-inter">Opening to admission of other Protestant Churches</div>
+                  <div className="text-gray-700 font-inter">{t('about.history.milestone2009')}</div>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="bg-purple-600 text-white px-3 py-1 font-bold">Today</div>
-                  <div className="text-gray-700 font-inter">12 member churches serving 13+ million believers</div>
+                  <div className="text-gray-700 font-inter">{t('about.history.milestoneToday')}</div>
                 </div>
               </div>
             </div>

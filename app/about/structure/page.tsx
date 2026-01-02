@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import { Users, Crown, Building, FileText } from 'lucide-react';
 import PageLayout from '@/components/PageLayout';
 import BackButton from '@/components/BackButton';
+import { useTranslation } from 'react-i18next';
 
 export default function StructurePage() {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [animateChart, setAnimateChart] = useState(false);
 
@@ -34,10 +36,10 @@ export default function StructurePage() {
               isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
             }`}>
               <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-6">
-                CEPCA Structure
+                {t('about.structure.pageTitle')}
               </h1>
               <p className="text-xl text-blue-100 font-inter max-w-3xl mx-auto leading-relaxed">
-                Organizational framework ensuring effective governance and coordination
+                {t('about.structure.pageSubtitle')}
               </p>
             </div>
           </div>
@@ -49,7 +51,7 @@ export default function StructurePage() {
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
           }`}>
             <h2 className="text-3xl font-bold font-playfair text-gray-900 mb-12 text-center">
-              Organizational Chart
+              {t('about.structure.organizationalChart')}
             </h2>
             
             <div className="relative">
@@ -60,10 +62,10 @@ export default function StructurePage() {
                 }`}>
                   <div className="group bg-gray-200 text-gray-800 p-6 text-center min-w-64 hover:scale-100 hover:z-10 transition-all duration-300 cursor-pointer relative rounded-lg shadow-lg">
                     <Crown className="w-8 h-8 mx-auto mb-2" />
-                    <h3 className="text-xl font-bold mb-2">General Assembly</h3>
-                    <p className="text-sm group-hover:hidden transition-opacity duration-300">Supreme Decision-Making Body</p>
-                    <p className="text-xs mt-1 group-hover:hidden transition-opacity duration-300">Meets every 2 years</p>
-                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">Supreme decision-making body, meets once every two years, defines overall policy.</p>
+                    <h3 className="text-xl font-bold mb-2">{t('about.structure.generalAssembly')}</h3>
+                    <p className="text-sm group-hover:hidden transition-opacity duration-300">{t('about.structure.generalAssemblyShort')}</p>
+                    <p className="text-xs mt-1 group-hover:hidden transition-opacity duration-300">{t('about.structure.meetsEvery2Years')}</p>
+                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">{t('about.structure.generalAssemblyLong')}</p>
                   </div>
                 </div>
 
@@ -76,10 +78,10 @@ export default function StructurePage() {
                 }`}>
                   <div className="group bg-gray-200 text-gray-800 p-6 text-center min-w-64 hover:scale-100 hover:z-10 transition-all duration-300 cursor-pointer relative rounded-lg shadow-lg">
                     <Users className="w-8 h-8 mx-auto mb-2" />
-                    <h3 className="text-xl font-bold mb-2">Executive Committee</h3>
-                    <p className="text-sm group-hover:hidden transition-opacity duration-300">Policy Execution</p>
-                    <p className="text-xs mt-1 group-hover:hidden transition-opacity duration-300">Meets twice yearly</p>
-                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">Executes CEPCA's policies. Meets twice a year under the President's convening. Includes 11 Church Leaders, the General Secretary, Executive Secretaries of Departments, and the Head of Administration and Finance (SAF).</p>
+                    <h3 className="text-xl font-bold mb-2">{t('about.structure.executiveCommittee')}</h3>
+                    <p className="text-sm group-hover:hidden transition-opacity duration-300">{t('about.structure.executiveCommitteeShort')}</p>
+                    <p className="text-xs mt-1 group-hover:hidden transition-opacity duration-300">{t('about.structure.meetsTwiceYearly')}</p>
+                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">{t('about.structure.executiveCommitteeLong')}</p>
                   </div>
                 </div>
 
@@ -93,26 +95,26 @@ export default function StructurePage() {
                   <div className="group bg-gray-200 text-gray-800 p-4 text-center hover:scale-110 hover:z-10 transition-all duration-300 cursor-pointer relative rounded-lg shadow-lg">
                     <Building className="w-6 h-6 mx-auto mb-2" />
                     <h4 className="font-bold mb-1">SAF</h4>
-                    <p className="text-xs group-hover:hidden transition-opacity duration-300">Admin & Finance</p>
-                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">Centralizes all income and expenditures of CEPCA; prepares annual financial statements and inventory reports.</p>
+                    <p className="text-xs group-hover:hidden transition-opacity duration-300">{t('about.departments.saf.short')}</p>
+                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">{t('about.departments.saf.description')}</p>
                   </div>
                   <div className="group bg-gray-200 text-gray-800 p-4 text-center hover:scale-110 hover:z-10 transition-all duration-300 cursor-pointer relative rounded-lg shadow-lg">
                     <Building className="w-6 h-6 mx-auto mb-2" />
                     <h4 className="font-bold mb-1">DS</h4>
-                    <p className="text-xs group-hover:hidden transition-opacity duration-300">Health</p>
-                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">Coordinates public health activities of member churches; represents church medical works before the Government, particularly the Ministry of Public Health.</p>
+                    <p className="text-xs group-hover:hidden transition-opacity duration-300">{t('about.departments.ds.short')}</p>
+                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">{t('about.departments.ds.description')}</p>
                   </div>
                   <div className="group bg-gray-200 text-gray-800 p-4 text-center hover:scale-110 hover:z-10 transition-all duration-300 cursor-pointer relative rounded-lg shadow-lg">
                     <Building className="w-6 h-6 mx-auto mb-2" />
                     <h4 className="font-bold mb-1">OEPP</h4>
-                    <p className="text-xs group-hover:hidden transition-opacity duration-300">Education</p>
-                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">Coordinates the educational work of member churches; develops mid- and long-term policies for Protestant private education.</p>
+                    <p className="text-xs group-hover:hidden transition-opacity duration-300">{t('about.departments.oepp.short')}</p>
+                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">{t('about.departments.oepp.description')}</p>
                   </div>
                   <div className="group bg-gray-200 text-gray-800 p-4 text-center hover:scale-110 hover:z-10 transition-all duration-300 cursor-pointer relative rounded-lg shadow-lg">
                     <Building className="w-6 h-6 mx-auto mb-2" />
                     <h4 className="font-bold mb-1">DFAS</h4>
-                    <p className="text-xs group-hover:hidden transition-opacity duration-300">Women & Social</p>
-                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">Highlights the role of women in Church and society; prepares women for effective participation within their churches and the Cameroonian community; trains them in leadership and management.</p>
+                    <p className="text-xs group-hover:hidden transition-opacity duration-300">{t('about.departments.dfas.short')}</p>
+                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">{t('about.departments.dfas.description')}</p>
                   </div>
                 </div>
 
@@ -122,26 +124,26 @@ export default function StructurePage() {
                   <div className="group bg-gray-200 text-gray-800 p-4 text-center hover:scale-110 hover:z-10 transition-all duration-300 cursor-pointer relative rounded-lg shadow-lg">
                     <Building className="w-6 h-6 mx-auto mb-2" />
                     <h4 className="font-bold mb-1">DTC</h4>
-                    <p className="text-xs group-hover:hidden transition-opacity duration-300">Christian Witness</p>
-                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">Coordinates evangelism planning; organizes theological reflection meetings; assists departments in developing appropriate evangelistic strategies.</p>
+                    <p className="text-xs group-hover:hidden transition-opacity duration-300">{t('about.departments.dtc.short')}</p>
+                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">{t('about.departments.dtc.description')}</p>
                   </div>
                   <div className="group bg-gray-200 text-gray-800 p-4 text-center hover:scale-110 hover:z-10 transition-all duration-300 cursor-pointer relative rounded-lg shadow-lg">
                     <Building className="w-6 h-6 mx-auto mb-2" />
                     <h4 className="font-bold mb-1">DJ</h4>
-                    <p className="text-xs group-hover:hidden transition-opacity duration-300">Youth</p>
-                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">Trains young people for active participation in church and society; develops tools for civic and moral education; identifies common challenges and interests.</p>
+                    <p className="text-xs group-hover:hidden transition-opacity duration-300">{t('about.departments.dj.short')}</p>
+                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">{t('about.departments.dj.description')}</p>
                   </div>
                   <div className="group bg-gray-200 text-gray-800 p-4 text-center hover:scale-110 hover:z-10 transition-all duration-300 cursor-pointer relative rounded-lg shadow-lg">
                     <Building className="w-6 h-6 mx-auto mb-2" />
                     <h4 className="font-bold mb-1">DIC</h4>
-                    <p className="text-xs group-hover:hidden transition-opacity duration-300">Information</p>
-                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">Handles all communication within CEPCA; produces and broadcasts Protestant radio and TV programs; assists member churches and departments with event coverage and live transmission.</p>
+                    <p className="text-xs group-hover:hidden transition-opacity duration-300">{t('about.departments.dic.short')}</p>
+                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">{t('about.departments.dic.description')}</p>
                   </div>
                   <div className="group bg-gray-200 text-gray-800 p-4 text-center hover:scale-110 hover:z-10 transition-all duration-300 cursor-pointer relative rounded-lg shadow-lg">
                     <Building className="w-6 h-6 mx-auto mb-2" />
                     <h4 className="font-bold mb-1">BURED</h4>
-                    <p className="text-xs group-hover:hidden transition-opacity duration-300">Research</p>
-                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">Promotes CEPCA's and its member churches' participation in national development and socio-economic issues.</p>
+                    <p className="text-xs group-hover:hidden transition-opacity duration-300">{t('about.departments.bured.short')}</p>
+                    <p className="text-xs hidden group-hover:block transition-opacity duration-300">{t('about.departments.bured.description')}</p>
                   </div>
                 </div>
               </div>
@@ -158,17 +160,17 @@ export default function StructurePage() {
                     <Crown className="w-6 h-6 text-purple-600" />
                   </div>
                   <h3 className="text-xl font-bold font-playfair text-gray-900">
-                    General Assembly
+                    {t('about.structure.generalAssembly')}
                   </h3>
                 </div>
                 <p className="text-gray-700 font-inter leading-relaxed mb-4">
-                  Supreme decision-making body that meets once every two years to define overall policy and strategic direction for CEPCA.
+                  {t('about.structure.generalAssemblyFull')}
                 </p>
                 <ul className="space-y-2 text-sm text-gray-600">
-                  <li>• Defines organizational policies</li>
-                  <li>• Elects leadership positions</li>
-                  <li>• Approves strategic plans</li>
-                  <li>• Reviews organizational performance</li>
+                  <li>• {t('about.structure.definesPolicy')}</li>
+                  <li>• {t('about.structure.electsLeadership')}</li>
+                  <li>• {t('about.structure.approvesPlans')}</li>
+                  <li>• {t('about.structure.reviewsPerformance')}</li>
                 </ul>
               </div>
             </div>
@@ -182,17 +184,17 @@ export default function StructurePage() {
                     <Users className="w-6 h-6 text-blue-600" />
                   </div>
                   <h3 className="text-xl font-bold font-playfair text-gray-900">
-                    Executive Committee
+                    {t('about.structure.executiveCommittee')}
                   </h3>
                 </div>
                 <p className="text-gray-700 font-inter leading-relaxed mb-4">
-                  Executes CEPCA's policies and meets twice a year under the President's convening.
+                  {t('about.structure.executiveCommitteeFull')}
                 </p>
                 <ul className="space-y-2 text-sm text-gray-600">
-                  <li>• 11 Church Leaders</li>
-                  <li>• General Secretary</li>
-                  <li>• Executive Secretaries</li>
-                  <li>• Head of Administration (SAF)</li>
+                  <li>• {t('about.structure.churchLeaders')}</li>
+                  <li>• {t('about.structure.generalSecretary')}</li>
+                  <li>• {t('about.structure.executiveSecretaries')}</li>
+                  <li>• {t('about.structure.headOfAdmin')}</li>
                 </ul>
               </div>
             </div>
@@ -206,17 +208,17 @@ export default function StructurePage() {
                     <FileText className="w-6 h-6 text-green-600" />
                   </div>
                   <h3 className="text-xl font-bold font-playfair text-gray-900">
-                    Commissions
+                    {t('about.structure.commissionsTitle')}
                   </h3>
                 </div>
                 <p className="text-gray-700 font-inter leading-relaxed mb-4">
-                  Each department has a commission responsible for planning and monitoring programs.
+                  {t('about.structure.commissionsFull')}
                 </p>
                 <ul className="space-y-2 text-sm text-gray-600">
-                  <li>• Program planning</li>
-                  <li>• Activity monitoring</li>
-                  <li>• Resource allocation</li>
-                  <li>• Performance evaluation</li>
+                  <li>• {t('about.structure.programPlanning')}</li>
+                  <li>• {t('about.structure.activityMonitoring')}</li>
+                  <li>• {t('about.structure.resourceAllocation')}</li>
+                  <li>• {t('about.structure.performanceEvaluation')}</li>
                 </ul>
               </div>
             </div>
@@ -226,27 +228,27 @@ export default function StructurePage() {
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
           }`}>
             <h3 className="text-2xl font-bold font-playfair text-gray-900 mb-6 text-center">
-              Headquarters Information
+              {t('about.structure.headquartersInfo')}
             </h3>
             <div className="text-center space-y-4">
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">Address</h4>
-                <p className="text-gray-700 font-inter">Yaoundé, P.O. Box 491 – Rue Ceper, Elig-Essono</p>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('about.structure.address')}</h4>
+                <p className="text-gray-700 font-inter">{t('about.structure.addressText')}</p>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">Logo</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('about.structure.logo')}</h4>
                 <div className="flex justify-center mb-2">
-                  <img 
+                  <img
                     src="/images/logo_CEPCA.png"
-                    alt="CEPCA Logo - Map of Cameroon with cross" 
+                    alt="CEPCA Logo - Map of Cameroon with cross"
                     className="w-24 h-24 object-contain rounded-lg shadow-md"
                   />
                 </div>
-                <p className="text-gray-700 font-inter text-sm">The map of Cameroon with a cross inside, set against green, violet, and white backgrounds</p>
+                <p className="text-gray-700 font-inter text-sm">{t('about.structure.logoDescription')}</p>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">Motto</h4>
-                <p className="text-xl font-playfair italic text-purple-600">"Being Church Together"</p>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('about.structure.motto')}</h4>
+                <p className="text-xl font-playfair italic text-purple-600">{t('about.structure.mottoText')}</p>
               </div>
             </div>
           </div>

@@ -1,14 +1,19 @@
+'use client';
+
 import { Globe, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 
 const ObjectivesSection = () => {
+  const { t } = useTranslation();
+
   const objectives = [
-    "Bear witness to the profound unity of Protestantism in Cameroon",
-    "Develop and coordinate joint efforts in evangelism and Christian service",
-    "Promote Christian life through common social and economic projects",
-    "Coordinate joint Protestant events across Cameroon",
-    "Represent Cameroonian Protestantism before public authorities",
-    "Express the 'Voice of Protestants' on matters of public and ethical concern"
+    t('objectives.objective1'),
+    t('objectives.objective2'),
+    t('objectives.objective3'),
+    t('objectives.objective4'),
+    t('objectives.objective5'),
+    t('objectives.objective6')
   ];
 
   return (
@@ -17,10 +22,10 @@ const ObjectivesSection = () => {
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-            Our Objectives
+            {t('objectives.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Working together to strengthen and unite Protestant churches across Cameroon
+            {t('objectives.subtitle')}
           </p>
         </div>
 
@@ -40,13 +45,13 @@ const ObjectivesSection = () => {
           {/* CTA Button */}
           <div className="text-center pt-6 border-t border-gray-200">
             <p className="text-gray-600 mb-4">
-              Learn more about CEPCA's history, structure, and member churches
+              {t('objectives.ctaDescription')}
             </p>
             <Link
               href="/about"
               className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-purple-400"
             >
-              Learn More About Us
+              {t('objectives.learnMore')}
               <ArrowRight className="w-5 h-5" />
             </Link>
           </div>

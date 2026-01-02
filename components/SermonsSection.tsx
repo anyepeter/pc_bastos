@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import { Play, Download, Calendar, Loader2, X } from 'lucide-react';
 import Link from 'next/link';
 import AudioPlayer from './AudioPlayer';
+import { useTranslation } from 'react-i18next';
 
 
 const SermonsSection = () => {
+  const { t } = useTranslation();
   const [activePlayerId, setActivePlayerId] = useState<number | null>(null);
   const [loadingAudio, setLoadingAudio] = useState<number | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
@@ -79,11 +81,10 @@ const SermonsSection = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-6">
-            Latest <span className="text-primary">Sermons</span>
+            {t('sermons.latest')} <span className="text-primary">{t('sermons.pageTitle')}</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Listen to our recent messages and grow in your faith journey. 
-            All sermons are available for streaming and download.
+            {t('sermons.homepageSubtitle')}
           </p>
         </div>
 
@@ -100,7 +101,7 @@ const SermonsSection = () => {
                 
                 <div className="absolute top-4 right-4">
                   <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
-                    {sermon.duration}
+                    {sermon.duration.replace(' min', ` ${t('sermons.duration')}`)}
                   </span>
                 </div>
                 
@@ -139,15 +140,15 @@ const SermonsSection = () => {
                     ) : loadingAudio === sermon.id ? (
                       <button className="flex-1 bg-purple-600 text-white py-2 px-4 rounded-lg font-medium flex items-center justify-center space-x-2">
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Loading...</span>
+                        <span>{t('sermons.loading')}</span>
                       </button>
                     ) : (
-                      <button 
+                      <button
                         onClick={() => handleListenClick(sermon.id)}
                         className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg font-medium transition-colors duration-300 flex items-center justify-center space-x-2"
                       >
                         <Play className="w-4 h-4" fill="currentColor" />
-                        <span>Listen</span>
+                        <span>{t('sermons.listen')}</span>
                       </button>
                     )
                   }
@@ -162,7 +163,7 @@ const SermonsSection = () => {
 
         <div className="text-center">
           <Link href="/sermons" className="inline-block bg-accent hover:bg-accent/90 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
-            View All Sermons
+            {t('common.viewAll')} {t('navbar.sermons')}
           </Link>
         </div>
       </div>

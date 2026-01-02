@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Heart, Users, Droplets, Utensils, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 
 const charityData = [
   {
@@ -38,6 +39,7 @@ const charityData = [
 ];
 
 export default function CharitySection() {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [visibleCards, setVisibleCards] = useState<number[]>([]);
 
@@ -62,10 +64,10 @@ export default function CharitySection() {
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
         }`}>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-6">
-            Our <span className="text-purple-600">Charity Programs</span>
+            {t('charity.title')} <span className="text-purple-600">{t('charity.titleHighlight')}</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Transforming lives through compassionate outreach and sustainable community development
+            {t('charity.subtitle')}
           </p>
         </div>
 
@@ -114,23 +116,23 @@ export default function CharitySection() {
                   
                   <div className="space-y-4">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Funds Used</span>
-                      <span className="font-semibold text-gray-900">{program.amountUsed} of {program.totalGoal}</span>
+                      <span className="text-gray-500">{t('charity.fundsUsed')}</span>
+                      <span className="font-semibold text-gray-900">{program.amountUsed} {t('charity.of')} {program.totalGoal}</span>
                     </div>
-                    
+
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
+                      <div
                         className="bg-gradient-to-r from-green-500 to-purple-500 h-2 rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${progressPercentage}%` }}
                       ></div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-blue-600">
-                        {progressPercentage}% Complete
+                        {progressPercentage}% {t('common.complete')}
                       </span>
                       <div className="flex items-center space-x-2 text-teal-600 group-hover:translate-x-1 transition-transform">
-                        <span className="text-sm font-semibold">View Details</span>
+                        <span className="text-sm font-semibold">{t('charity.viewDetails')}</span>
                         <ArrowRight className="w-4 h-4" />
                       </div>
                     </div>
@@ -145,7 +147,7 @@ export default function CharitySection() {
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
         }`}>
           <Link href="/charity" className="inline-block bg-green-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
-            View All Programs
+            {t('charity.viewAllPrograms')}
           </Link>
         </div>
       </div>

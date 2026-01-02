@@ -5,49 +5,51 @@ import { ArrowRight, Calendar, Users, Building, Layers } from 'lucide-react';
 import Link from 'next/link';
 import PageLayout from '@/components/PageLayout';
 import HomeButton from '@/components/homeButton';
-
-const aboutSections = [
-  {
-    id: 'history',
-    title: 'Our History',
-    icon: Calendar,
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&auto=format',
-    description: 'The wave of independence movements that disrupted the Evangelical Federation of French Equatorial Africa led to the creation of FEMEC in 1969, which later evolved into CEPCA.',
-    preview: 'CEPCA was born from the need to coordinate Protestant Churches in Cameroon after independence. The first General Secretary, Rev. Eugène MALLO, coordinated activities through the Education and Health Committee.',
-    href: '/about/history'
-  },
-  {
-    id: 'mission-vision',
-    title: 'Mission & Vision',
-    icon: Users,
-    image: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=600&fit=crop&auto=format',
-    description: 'Our mission focuses on healing, liberation, and holistic development. Our vision is integration through the language of love, uniting Churches in defending a common cause.',
-    preview: 'CEPCA strengthens our shared sense of belonging as Churches united. Through the Holy Spirit and democratic principles, we speak the common language of love.',
-    href: '/about/mission-vision'
-  },
-  {
-    id: 'departments',
-    title: 'Departments',
-    icon: Building,
-    image: 'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=800&h=600&fit=crop&auto=format',
-    description: 'CEPCA operates through specialized departments including Health, Education, Women and Social Affairs, Christian Witness, Youth, Information and Communication.',
-    preview: 'Our departments coordinate activities across member churches, from health services and education to youth programs and communication initiatives.',
-    href: '/about/departments'
-  },
-  {
-    id: 'structure',
-    title: 'CEPCA Structure',
-    icon: Layers,
-    image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop&auto=format',
-    description: 'Our organizational structure includes the General Assembly, Executive Committee, and specialized Commissions that ensure effective governance and coordination.',
-    preview: 'The General Assembly serves as our supreme decision-making body, meeting every two years to define overall policy and direction.',
-    href: '/about/structure'
-  }
-];
+import { useTranslation } from 'react-i18next';
 
 export default function AboutPage() {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [visibleCards, setVisibleCards] = useState<string[]>([]);
+
+  const aboutSections = [
+    {
+      id: 'history',
+      title: t('about.history.title'),
+      icon: Calendar,
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&auto=format',
+      description: t('about.history.description'),
+      preview: t('about.history.preview'),
+      href: '/about/history'
+    },
+    {
+      id: 'mission-vision',
+      title: t('about.missionVision.title'),
+      icon: Users,
+      image: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=600&fit=crop&auto=format',
+      description: t('about.missionVision.description'),
+      preview: t('about.missionVision.preview'),
+      href: '/about/mission-vision'
+    },
+    {
+      id: 'departments',
+      title: t('about.departments.title'),
+      icon: Building,
+      image: 'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=800&h=600&fit=crop&auto=format',
+      description: t('about.departments.description'),
+      preview: t('about.departments.preview'),
+      href: '/about/departments'
+    },
+    {
+      id: 'structure',
+      title: t('about.structure.title'),
+      icon: Layers,
+      image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop&auto=format',
+      description: t('about.structure.description'),
+      preview: t('about.structure.preview'),
+      href: '/about/structure'
+    }
+  ];
 
   useEffect(() => {
     setIsVisible(true);
@@ -74,10 +76,10 @@ export default function AboutPage() {
               isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
             }`}>
               <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-6">
-                About CEPCA
+                {t('about.pageTitle')}
               </h1>
               <p className="text-xl text-blue-100 font-inter max-w-4xl mx-auto leading-relaxed">
-                The Council of Protestant Churches of Cameroon - Uniting Churches in faith, service, and community development
+                {t('about.pageSubtitle')}
               </p>
             </div>
           </div>
@@ -130,7 +132,7 @@ export default function AboutPage() {
                         href={section.href}
                         className="inline-flex items-center space-x-2 bg-purple-600 text-white px-6 py-3 font-semibold hover:bg-purple-700 transition-colors group"
                       >
-                        <span>Learn More</span>
+                        <span>{t('about.learnMore')}</span>
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </Link>
                     </div>
@@ -145,24 +147,24 @@ export default function AboutPage() {
           }`}>
             <div className="bg-gray-50 p-8 lg:p-12">
               <h2 className="text-3xl font-bold font-playfair text-gray-900 mb-6">
-                Our Impact
+                {t('about.impact.title')}
               </h2>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-purple-600 mb-2">12</div>
-                  <div className="text-gray-600 font-inter">Member Churches</div>
+                  <div className="text-gray-600 font-inter">{t('about.impact.memberChurches')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-purple-600 mb-2">13M+</div>
-                  <div className="text-gray-600 font-inter">Believers</div>
+                  <div className="text-gray-600 font-inter">{t('about.impact.believers')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-purple-600 mb-2">1,580</div>
-                  <div className="text-gray-600 font-inter">Educational Institutions</div>
+                  <div className="text-gray-600 font-inter">{t('about.impact.educationalInstitutions')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-purple-600 mb-2">350</div>
-                  <div className="text-gray-600 font-inter">Health Centers</div>
+                  <div className="text-gray-600 font-inter">{t('about.impact.healthCenters')}</div>
                 </div>
               </div>
             </div>

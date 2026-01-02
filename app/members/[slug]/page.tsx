@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import MemberDetailClient from './MemberDetailClient';
 import PageLayout from '@/components/PageLayout';
+import MemberNotFound from './MemberNotFound';
 
 const membersData = {
   ea: {
@@ -15,7 +16,7 @@ const membersData = {
     history: "The Anglican Church in Cameroon has been a cornerstone of Christian faith since its establishment. With deep roots in Anglican tradition, it has served the community with dedication and spiritual guidance for decades.",
     contact: { phone: "+237 233 42 15 67", email: "contact@ea-cameroon.org", address: "BP 1234, Douala, Cameroon" },
     founded: "1922",
-    logo: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop&auto=format"
+    logo: "/images/ea.jpeg"
   },
   cbc: {
     denomination: "Cameroon Baptist Convention (CBC)",
@@ -58,7 +59,7 @@ const membersData = {
     history: "The Lutheran Church in Cameroon has maintained its Lutheran heritage while adapting to local contexts, providing spiritual guidance and community services throughout the northern regions.",
     contact: { phone: "+237 222 25 34 56", email: "info@eelc-cameroon.org", address: "BP 3456, Ngaoundéré, Cameroon" },
     founded: "1923",
-    logo: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop&auto=format"
+    logo: "/images/eelc.jpeg"
   },
   eflc: {
     denomination: "Eglise Fraternelle Luthérienne du Cameroun (EFLC)",
@@ -171,7 +172,7 @@ const membersData = {
     history: "The Full Gospel Mission emphasizes the complete Gospel message with signs, wonders, and miracles, serving communities with Pentecostal fervor and social engagement.",
     contact: { phone: "+237 222 22 67 89", email: "info@mpe-cameroon.org", address: "BP 5555, Yaoundé, Cameroon" },
     founded: "1963",
-    logo: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop&auto=format"
+    logo: "/images/full.jpg"
   }
 };
 
@@ -186,18 +187,15 @@ export default function MemberDetailPage({ params }: { params: { slug: string } 
 
   if (!member) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100 pt-20 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Member not found</h1>
-          <Link href="/members" className="text-purple-600 hover:text-purple-700">Return to Members</Link>
-        </div>
-      </div>
+      <PageLayout>
+        <MemberNotFound />
+      </PageLayout>
     );
   }
 
   return (
     <PageLayout>
-      <MemberDetailClient member={member} />
+      <MemberDetailClient member={member} slug={params.slug} />
     </PageLayout>
   );
 }
