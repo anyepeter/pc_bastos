@@ -28,14 +28,15 @@
     "futureEvents": "Événements à venir",
     "announcements": "Annonces",
     "blogs": "Blogs",
-    "contactUs": "Nous Contacter"
+    "contactUs": "Contact",
+    "departements": "Départements"
   },
   "footer": {
     "tagline": "Conseil des Églises Protestantes",
     "description": "Construire des communautés de foi à travers le Cameroun par l'unité, le service et la croissance spirituelle.",
     "servingSince": "Au service avec amour depuis 1957",
     "quickLinks": "Liens Rapides",
-    "getInTouch": "Nous Contacter",
+    "getInTouch": "Contact",
     "followUs": "Suivez-Nous",
     "copyright": "© 2025 CEPCA. Tous droits réservés.",
     "phone": "+237 242 657 608",
@@ -391,9 +392,9 @@
         "history": "L'Église Anglicane du Cameroun a été une pierre angulaire de la foi chrétienne depuis son établissement. Avec des racines profondes dans la tradition anglicane, elle a servi la communauté avec dévouement et guidance spirituelle pendant des décennies."
       },
       "cbc": {
-        "denomination": "Convention Baptiste du Cameroun (CBC)",
+        "denomination": "Cameroon Baptist Convention (CBC)",
         "leader": "Président National Rév. Dr TEKE John Ekema",
-        "history": "La Convention Baptiste du Cameroun se dresse comme l'une des plus anciennes et influentes dénominations protestantes du Cameroun, avec un riche héritage d'évangélisation, d'éducation et de développement communautaire."
+        "history": "La Cameroon Baptist Convention (CBC) se dresse comme l'une des plus anciennes et influentes dénominations protestantes du Cameroun, avec un riche héritage d'évangélisation, d'éducation et de développement communautaire."
       },
       "eec": {
         "denomination": "Église Évangélique du Cameroun (EEC)",
@@ -421,14 +422,14 @@
         "history": "L'Église Protestante Africaine représente le christianisme protestant indigène, mélangeant les valeurs africaines traditionnelles avec la théologie protestante pour servir les communautés locales."
       },
       "nbc": {
-        "denomination": "Église Baptiste Indigène (NBC)",
+        "denomination": "Native Baptist Church (NBC)",
         "leader": "Président National Rév. Dr NSOGA Job Salomon Modérateur",
-        "history": "L'Église Baptiste Indigène a des racines profondes dans la tradition baptiste tout en embrassant les contextes culturels locaux, servant les communautés avec ferveur évangélique et engagement social."
+        "history": "Native Baptist Church (NBC) a des racines profondes dans la tradition baptiste tout en embrassant les contextes culturels locaux, servant les communautés avec ferveur évangélique et engagement social."
       },
       "pcc": {
-        "denomination": "Église Presbytérienne du Cameroun (PCC)",
+        "denomination": "Presbyterian Church in Cameroon (PCC)",
         "leader": "Rt. Rév MIKI Hans ABIA Rt. Vice",
-        "history": "L'Église Presbytérienne du Cameroun a été un pilier de l'éducation et des soins de santé, maintenant une forte gouvernance presbytérienne tout en s'adaptant aux contextes camerounais."
+        "history": "Presbyterian Church in Cameroon a été un pilier de l'éducation et des soins de santé, maintenant une forte gouvernance presbytérienne tout en s'adaptant aux contextes camerounais."
       },
       "uebc": {
         "denomination": "Union des Églises Baptistes du Cameroun (UEBC)",

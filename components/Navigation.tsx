@@ -113,8 +113,8 @@ const Navigation = ({scroll = false}: {scroll?: boolean}) => {
       ]
     },
     {
-      name: t('navbar.sermons'),
-      href: '/sermons'
+      name: t('navbar.departements'),
+      href: '/departments'
     },
     {
       name: t('navbar.activities'),

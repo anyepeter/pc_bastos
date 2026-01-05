@@ -26,7 +26,7 @@ export default function Home() {
       <ObjectivesSection />
 
       {/* Recent Sermons/Messages */}
-      <SermonsSection />
+      {/* <SermonsSection /> */}
 
             {/* Charity Programs */}
             <CharitySection />
