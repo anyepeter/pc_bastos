@@ -4,7 +4,8 @@ import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { deleteImage } from './upload';
-import { Translation } from '@/lib/translations';
+import { Translation, normalizeTranslation, readTranslation } from '@/lib/translations';
+import { AccessError, requireSuperAdmin } from '@/lib/auth/roles';
 
 export interface BlogPostInput {
   title: Translation;
@@ -19,6 +20,31 @@ export interface ActionResult {
   error?: string;
   data?: any;
 }
+
+/**
+ * Validate the bilingual payload.
+ *
+ * English is always required because it is the fallback language everywhere
+ * (see `getTranslatedText`). French is only required to publish, so an editor
+ * can save an English draft first and add the translation afterwards.
+ */
+function validateBlogPostInput(data: BlogPostInput): string | null {
+  if (!data.title?.en?.trim()) return 'The English title is required';
+  if (!data.description?.en?.trim()) return 'The English content is required';
+  if (!data.slug?.trim()) return 'The URL slug is required';
+
+  if (data.published) {
+    if (!data.title?.fr?.trim()) {
+      return 'The French title is required before this post can be published';
+    }
+    if (!data.description?.fr?.trim()) {
+      return 'The French content is required before this post can be published';
+    }
+  }
+
+  return null;
+}
+
 
 /**
  * Get all blog posts
@@ -84,14 +110,11 @@ export async function getBlogPostBySlug(slug: string) {
 export async function createBlogPost(data: BlogPostInput): Promise<ActionResult> {
 
   try {
-    // Validate required fields
-    if (!data.title || !data.slug || !data.description) {
-      return { success: false, error: 'Missing required fields' };
-    }
+    await requireSuperAdmin();
 
-    // Validate translations
-    if (!data.title.en || !data.title.fr || !data.description.en || !data.description.fr) {
-      return { success: false, error: 'Both English and French translations are required' };
+    const validationError = validateBlogPostInput(data);
+    if (validationError) {
+      return { success: false, error: validationError };
     }
 
     // Check if slug already exists
@@ -105,9 +128,9 @@ export async function createBlogPost(data: BlogPostInput): Promise<ActionResult>
 
     const post = await prisma.blogPost.create({
       data: {
-        title: data.title as any, // Prisma will store as JSON
-        slug: data.slug,
-        description: data.description as any, // Prisma will store as JSON
+        title: normalizeTranslation(data.title) as any, // Prisma will store as JSON
+        slug: data.slug.trim(),
+        description: normalizeTranslation(data.description) as any, // Prisma will store as JSON
         imageUrl: data.imageUrl,
         published: data.published,
       },
@@ -118,6 +141,7 @@ export async function createBlogPost(data: BlogPostInput): Promise<ActionResult>
 
     return { success: true, data: post };
   } catch (error) {
+    if (error instanceof AccessError) return { success: false, error: error.message };
     console.error('Error creating blog post:', error);
     return { success: false, error: 'Failed to create blog post' };
   }
@@ -128,14 +152,11 @@ export async function createBlogPost(data: BlogPostInput): Promise<ActionResult>
  */
 export async function updateBlogPost(id: string, data: BlogPostInput): Promise<ActionResult> {
   try {
-    // Validate required fields
-    if (!data.title || !data.slug || !data.description) {
-      return { success: false, error: 'Missing required fields' };
-    }
+    await requireSuperAdmin();
 
-    // Validate translations
-    if (!data.title.en || !data.title.fr || !data.description.en || !data.description.fr) {
-      return { success: false, error: 'Both English and French translations are required' };
+    const validationError = validateBlogPostInput(data);
+    if (validationError) {
+      return { success: false, error: validationError };
     }
 
     // Check if post exists
@@ -166,9 +187,9 @@ export async function updateBlogPost(id: string, data: BlogPostInput): Promise<A
     const post = await prisma.blogPost.update({
       where: { id },
       data: {
-        title: data.title as any, // Prisma will store as JSON
-        slug: data.slug,
-        description: data.description as any, // Prisma will store as JSON
+        title: normalizeTranslation(data.title) as any, // Prisma will store as JSON
+        slug: data.slug.trim(),
+        description: normalizeTranslation(data.description) as any, // Prisma will store as JSON
         imageUrl: data.imageUrl,
         published: data.published,
       },
@@ -180,6 +201,7 @@ export async function updateBlogPost(id: string, data: BlogPostInput): Promise<A
 
     return { success: true, data: post };
   } catch (error) {
+    if (error instanceof AccessError) return { success: false, error: error.message };
     console.error('Error updating blog post:', error);
     return { success: false, error: 'Failed to update blog post' };
   }
@@ -190,6 +212,8 @@ export async function updateBlogPost(id: string, data: BlogPostInput): Promise<A
  */
 export async function deleteBlogPost(id: string): Promise<ActionResult> {
   try {
+    await requireSuperAdmin();
+
     const post = await prisma.blogPost.findUnique({
       where: { id },
     });
@@ -212,6 +236,7 @@ export async function deleteBlogPost(id: string): Promise<ActionResult> {
 
     return { success: true };
   } catch (error) {
+    if (error instanceof AccessError) return { success: false, error: error.message };
     console.error('Error deleting blog post:', error);
     return { success: false, error: 'Failed to delete blog post' };
   }
@@ -222,12 +247,28 @@ export async function deleteBlogPost(id: string): Promise<ActionResult> {
  */
 export async function togglePublishStatus(id: string): Promise<ActionResult> {
   try {
+    await requireSuperAdmin();
+
     const post = await prisma.blogPost.findUnique({
       where: { id },
     });
 
     if (!post) {
       return { success: false, error: 'Blog post not found' };
+    }
+
+    // Going from draft -> published requires a complete French translation,
+    // same rule the editor enforces.
+    if (!post.published) {
+      const title = readTranslation(post.title);
+      const description = readTranslation(post.description);
+
+      if (!title.fr.trim() || !description.fr.trim()) {
+        return {
+          success: false,
+          error: 'Add the French translation before publishing this post',
+        };
+      }
     }
 
     const updatedPost = await prisma.blogPost.update({
@@ -242,6 +283,7 @@ export async function togglePublishStatus(id: string): Promise<ActionResult> {
 
     return { success: true, data: updatedPost };
   } catch (error) {
+    if (error instanceof AccessError) return { success: false, error: error.message };
     console.error('Error toggling publish status:', error);
     return { success: false, error: 'Failed to update publish status' };
   }

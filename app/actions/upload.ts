@@ -26,6 +26,15 @@ export async function uploadImage(formData: FormData): Promise<UploadResult> {
       return { success: false, error: 'No file provided' };
     }
 
+    // Callers pass a subfolder ('events', 'charity', …) so uploads stay sorted.
+    // `deleteImage` derives the public_id from the leading "church/" segment,
+    // so every folder must stay under it.
+    const requestedFolder = String(formData.get('folder') || 'blog').replace(
+      /[^a-z0-9-_]/gi,
+      ''
+    );
+    const folder = `church/${requestedFolder || 'blog'}`;
+
     // Validate file type
     const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     if (!validTypes.includes(file.type)) {
@@ -46,7 +55,7 @@ export async function uploadImage(formData: FormData): Promise<UploadResult> {
     const result = await new Promise<any>((resolve, reject) => {
       cloudinary.uploader.upload_stream(
         {
-          folder: 'church/blog',
+          folder,
           resource_type: 'auto',
           transformation: [
             { width: 1200, height: 630, crop: 'limit' },

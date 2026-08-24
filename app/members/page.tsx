@@ -1,10 +1,24 @@
 import PageLayout from '@/components/PageLayout';
-import MembersClient from './MembersClient';
+import MembersClient, { PublicChurch } from './MembersClient';
+import { getPublishedChurches } from '@/app/actions/churches';
 
-export default function MembersPage() {
+export default async function MembersPage() {
+  const result = await getPublishedChurches();
+  const rows = result.success ? result.data || [] : [];
+
+  const churches: PublicChurch[] = rows.map((row: any) => ({
+    id: row.id,
+    slug: row.slug,
+    denomination: row.denomination,
+    leader: row.leader,
+    location: row.location,
+    founded: row.founded,
+    logo: row.logo,
+  }));
+
   return (
     <PageLayout>
-      <MembersClient />
+      <MembersClient churches={churches} />
     </PageLayout>
   );
 }

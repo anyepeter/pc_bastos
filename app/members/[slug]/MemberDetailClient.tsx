@@ -4,31 +4,41 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MapPin, User, Phone, Mail, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import ImageSlider from './ImageSlider';
+import { useAppSelector } from '@/store/hooks';
+import { getTranslatedText } from '@/lib/translations';
 
-interface Member {
-  denomination: string;
-  leader: string;
-  location: string;
+export interface PublicChurchDetail {
+  id: string;
+  slug: string;
+  denomination: unknown;
+  leader: unknown;
+  location: unknown;
+  history: unknown;
   images: string[];
-  history: string;
-  contact: {
-    phone: string;
-    email: string;
-    address: string;
-  };
-  founded: string;
-  logo: string;
+  founded: string | null;
+  logo: string | null;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  website: string | null;
 }
 
 interface MemberDetailClientProps {
-  member: Member;
-  slug: string;
+  member: PublicChurchDetail;
 }
 
-export default function MemberDetailClient({ member, slug }: MemberDetailClientProps) {
+export default function MemberDetailClient({ member }: MemberDetailClientProps) {
   const { t } = useTranslation();
+  const language = useAppSelector((state) => state.blog.language);
   const [isVisible, setIsVisible] = useState(false);
+
+  const denomination = getTranslatedText(member.denomination as any, language);
+  const leader = getTranslatedText(member.leader as any, language);
+  const location = getTranslatedText(member.location as any, language);
+  const history = getTranslatedText(member.history as any, language);
 
   useEffect(() => {
     setIsVisible(true);
@@ -47,9 +57,9 @@ export default function MemberDetailClient({ member, slug }: MemberDetailClientP
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 md:pt-32 pb-12 md:pb-16">
           <div className={`transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
             <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-4 bg-gradient-to-r from-white to-purple-100 bg-clip-text text-transparent">
-              {t(`members.churches.${slug}.denomination`)}
+              {denomination}
             </h1>
-            <p className="text-xl text-purple-100 font-inter leading-relaxed">{t('members.founded')} {member.founded} • {member.location}</p>
+            <p className="text-xl text-purple-100 font-inter leading-relaxed">{t('members.founded')} {member.founded} • {location}</p>
           </div>
         </div>
       </div>
@@ -66,8 +76,8 @@ export default function MemberDetailClient({ member, slug }: MemberDetailClientP
                   {/* Mobile-first sizing: 96px → 128px → 160px → 192px */}
                   <div className="relative w-48 h-48 mx-auto">
                     <img
-                      src={member.logo}
-                      alt={`${member.denomination} logo`}
+                      src={member.logo || '/images/logo_CEPCA.png'}
+                      alt={`${denomination} logo`}
                       className="w-full h-full object-contain transform transition-transform duration-500 group-hover:scale-105"
                     />
                     {/* Subtle shine effect */}
@@ -82,13 +92,17 @@ export default function MemberDetailClient({ member, slug }: MemberDetailClientP
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div className={`transform transition-all duration-1000 ease-out delay-300 group ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            <ImageSlider images={member.images} alt={member.denomination} />
+            {member.images.length > 0 && (
+              <ImageSlider images={member.images} alt={denomination} />
+            )}
           </div>
 
           <div className={`space-y-8 transform transition-all duration-1000 ease-out delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/50">
               <h2 className="text-2xl font-bold font-playfair bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">{t('members.history')}</h2>
-              <p className="text-gray-700 leading-relaxed font-inter">{t(`members.churches.${slug}.history`)}</p>
+              <div className="prose max-w-none font-inter text-gray-700">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{history}</ReactMarkdown>
+              </div>
             </div>
 
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/50">
@@ -98,7 +112,7 @@ export default function MemberDetailClient({ member, slug }: MemberDetailClientP
                 </div>
                 <div>
                   <h3 className="text-xl font-bold font-playfair text-gray-900 mb-2">{t('members.leadership')}</h3>
-                  <p className="text-gray-700 font-inter">{t(`members.churches.${slug}.leader`)}</p>
+                  <p className="text-gray-700 font-inter">{leader}</p>
                 </div>
               </div>
             </div>
@@ -110,7 +124,7 @@ export default function MemberDetailClient({ member, slug }: MemberDetailClientP
                 </div>
                 <div>
                   <h3 className="text-xl font-bold font-playfair text-gray-900 mb-2">{t('members.location')}</h3>
-                  <p className="text-gray-700 font-inter">{member.location}</p>
+                  <p className="text-gray-700 font-inter">{location}</p>
                 </div>
               </div>
             </div>
@@ -127,7 +141,7 @@ export default function MemberDetailClient({ member, slug }: MemberDetailClientP
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-gray-600">{t('members.phone')}</p>
-                  <p className="text-gray-800 font-inter">{member.contact.phone}</p>
+                  <p className="text-gray-800 font-inter">{member.phone || '—'}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
@@ -136,7 +150,7 @@ export default function MemberDetailClient({ member, slug }: MemberDetailClientP
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-gray-600">{t('members.email')}</p>
-                  <p className="text-gray-800 font-inter">{member.contact.email}</p>
+                  <p className="text-gray-800 font-inter">{member.email || '—'}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
@@ -145,7 +159,7 @@ export default function MemberDetailClient({ member, slug }: MemberDetailClientP
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-gray-600">{t('members.address')}</p>
-                  <p className="text-gray-800 font-inter">{member.contact.address}</p>
+                  <p className="text-gray-800 font-inter">{member.address || '—'}</p>
                 </div>
               </div>
             </div>

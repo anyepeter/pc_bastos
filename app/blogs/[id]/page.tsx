@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 import PageLayout from '@/components/PageLayout';
 import BlogDetailClient from './BlogDetailClient';
 import { getPublishedBlogPostBySlug, getPublishedBlogPosts } from '@/app/actions/blog-public';
-import StoreProvider from '@/components/StoreProvider';
 
 // Generate static params for all published blog posts
 export async function generateStaticParams() {
@@ -27,9 +26,10 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
 
   return (
     <PageLayout>
-      <StoreProvider initialCurrentPost={result.data}>
-        <BlogDetailClient />
-      </StoreProvider>
+      {/* No StoreProvider here — the root layout already provides one. A second
+          one would put the nav's LanguageSelector and this page on different
+          stores, so switching language would never reach the post. */}
+      <BlogDetailClient post={result.data} />
     </PageLayout>
   );
 }

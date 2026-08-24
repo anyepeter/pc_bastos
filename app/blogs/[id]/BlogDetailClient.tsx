@@ -2,21 +2,35 @@
 
 import { useState, useEffect } from 'react';
 import { Calendar } from 'lucide-react';
-import { useAppSelector } from '@/store/hooks';
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { setCurrentPost } from '@/store/blogSlice';
+import type { PublicBlogPost } from '@/app/actions/blog-public';
 import { getTranslatedText } from '@/lib/translations';
 import { format } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
-interface BlogDetailClientProps {}
+interface BlogDetailClientProps {
+  /** Server-fetched post. Rendered directly so the page never flashes empty. */
+  post: PublicBlogPost;
+}
 
-export default function BlogDetailClient({}: BlogDetailClientProps) {
+export default function BlogDetailClient({ post }: BlogDetailClientProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const currentPost = useAppSelector((state) => state.blog.currentPost);
+  const dispatch = useAppDispatch();
+  // Language comes from the shared root store, the same one the nav's
+  // LanguageSelector writes to — that is what makes switching work here.
   const language = useAppSelector((state) => state.blog.language);
+  const currentPost = post;
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  // Keep the store in sync so the post is cached for later navigations.
+  useEffect(() => {
+    dispatch(setCurrentPost(post));
+  }, [dispatch, post]);
 
   if (!currentPost) {
     return (
@@ -60,7 +74,9 @@ export default function BlogDetailClient({}: BlogDetailClientProps) {
             />
             <div className="pt-8 sm:pt-10">
               <div className="prose prose-lg max-w-none">
-                <ReactMarkdown>{translatedDescription}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {translatedDescription}
+                </ReactMarkdown>
               </div>
             </div>
           </div>

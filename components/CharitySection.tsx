@@ -1,141 +1,125 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Heart, Users, Droplets, Utensils, ArrowRight } from 'lucide-react';
+import { ArrowRight, MapPin, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
+import { useAppSelector } from '@/store/hooks';
+import { getTranslatedText } from '@/lib/translations';
+import type { PublicCharityProgram } from '@/app/charity/CharityClient';
 
-const charityData = [
-  {
-    id: 1,
-    title: 'Education Support Program',
-    description: 'Providing scholarships and educational resources to underprivileged children in our community.',
-    icon: Heart,
-    image: 'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=800&h=600&fit=crop&auto=format',
-    amountUsed: '$45,000',
-    totalGoal: '$60,000',
-    beneficiaries: '120 students'
-  },
-  {
-    id: 2,
-    title: 'Healthcare Outreach',
-    description: 'Free medical checkups and health awareness programs for rural communities.',
-    icon: Users,
-    image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=600&fit=crop&auto=format',
-    amountUsed: '$32,500',
-    totalGoal: '$50,000',
-    beneficiaries: '800 people'
-  },
-  {
-    id: 3,
-    title: 'Clean Water Project',
-    description: 'Building wells and water purification systems in underserved areas.',
-    icon: Droplets,
-    image: 'https://images.unsplash.com/photo-1541544181051-e46607bc22a4?w=800&h=600&fit=crop&auto=format',
-    amountUsed: '$78,000',
-    totalGoal: '$100,000',
-    beneficiaries: '15 communities'
-  }
-];
+interface CharitySectionProps {
+  /** Published programs, fetched by the page. The section hides itself when empty. */
+  programs: PublicCharityProgram[];
+}
 
-export default function CharitySection() {
+export default function CharitySection({ programs }: CharitySectionProps) {
   const { t } = useTranslation();
+  const language = useAppSelector((state) => state.blog.language);
   const [isVisible, setIsVisible] = useState(false);
-  const [visibleCards, setVisibleCards] = useState<number[]>([]);
+  const [visibleCards, setVisibleCards] = useState<string[]>([]);
 
   useEffect(() => {
     setIsVisible(true);
     const timer = setTimeout(() => {
-      setVisibleCards(charityData.map(charity => charity.id));
-    }, 500);
+      setVisibleCards(programs.map((program) => program.id));
+    }, 400);
     return () => clearTimeout(timer);
-  }, []);
+  }, [programs]);
 
-  const getProgressPercentage = (used: string, total: string) => {
-    const usedAmount = parseFloat(used.replace(/[$,]/g, ''));
-    const totalAmount = parseFloat(total.replace(/[$,]/g, ''));
-    return Math.round((usedAmount / totalAmount) * 100);
-  };
+  // Nothing published yet — don't render an empty band on the home page.
+  if (programs.length === 0) return null;
 
   return (
-    <section className="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`text-center mb-12 transform transition-all duration-1000 ease-out ${
-          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-        }`}>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-6">
-            {t('charity.title')} <span className="text-purple-600">{t('charity.titleHighlight')}</span>
+    <section className="bg-gradient-to-b from-white to-gray-50 py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div
+          className={`mb-14 text-center transform transition-all duration-1000 ease-out ${
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+          }`}
+        >
+          <h2 className="font-serif text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl">
+            {t('charity.title')}{' '}
+            <span className="text-purple-600">{t('charity.titleHighlight')}</span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="mx-auto mt-5 max-w-3xl text-lg text-gray-600">
             {t('charity.subtitle')}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-12">
-          {charityData.map((program, index) => {
-            const IconComponent = program.icon;
-            const progressPercentage = getProgressPercentage(program.amountUsed, program.totalGoal);
-            
+        <div className="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-3">
+          {programs.slice(0, 3).map((program, index) => {
+            const title = getTranslatedText(program.title as any, language);
+            const description = getTranslatedText(program.description as any, language);
+            const impact = getTranslatedText(program.impact as any, language);
+            const beneficiaries = getTranslatedText(program.beneficiaries as any, language);
+            const location = getTranslatedText(program.location as any, language);
+            const cover = program.images[0];
+
             return (
               <Link
                 key={program.id}
-                href={`/charity/${program.id}`}
-                className={`group block bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform overflow-hidden border border-gray-100 ${
+                href={`/charity/${program.slug}`}
+                className={`group flex flex-col overflow-hidden rounded-3xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] ring-1 ring-gray-900/5 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_24px_48px_-12px_rgba(13,148,136,0.25)] ${
                   visibleCards.includes(program.id)
                     ? 'translate-y-0 opacity-100'
-                    : 'translate-y-12 opacity-0'
+                    : 'translate-y-10 opacity-0'
                 }`}
-                style={{ transitionDelay: `${index * 200}ms` }}
+                style={{ transitionDelay: `${index * 150}ms` }}
               >
-                <div className="relative h-56 overflow-hidden">
-                  <img
-                    src={program.image}
-                    alt={program.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <div className="flex items-center justify-between">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
-                        <IconComponent className="w-5 h-5 text-blue-600" />
-                      </div>
-                      <div className="bg-white/90 backdrop-blur-sm rounded-full px-3 py-1">
-                        <span className="text-sm font-semibold text-gray-800">{program.beneficiaries}</span>
-                      </div>
-                    </div>
-                  </div>
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  {cover ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={cover}
+                      alt={title}
+                      className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]"
+                    />
+                  ) : (
+                    <div className="h-full w-full bg-gradient-to-br from-teal-500 via-cyan-500 to-emerald-500" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+
+                  {beneficiaries && (
+                    // right-4 + max-w-fit keeps the chip inside the card and
+                    // lets a long value ellipsis instead of clipping mid-word.
+                    <span className="absolute bottom-4 left-4 right-4 inline-flex max-w-fit items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-gray-800 shadow-sm backdrop-blur">
+                      <Users className="h-3.5 w-3.5 shrink-0 text-teal-600" />
+                      <span className="truncate">{beneficiaries}</span>
+                    </span>
+                  )}
                 </div>
 
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold font-playfair text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">
-                    {program.title}
+                <div className="flex flex-1 flex-col p-5 sm:p-7">
+                  {impact && (
+                    <p className="mb-3 truncate text-xs font-semibold uppercase tracking-[0.16em] text-teal-600">
+                      {impact}
+                    </p>
+                  )}
+
+                  <h3 className="line-clamp-2 font-playfair text-xl font-bold leading-snug text-gray-900 transition-colors duration-300 group-hover:text-teal-700 sm:text-2xl">
+                    {title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed font-inter mb-6 line-clamp-2">
-                    {program.description}
+
+                  <p className="mt-3 line-clamp-3 flex-1 font-inter leading-relaxed text-gray-600">
+                    {description}
                   </p>
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">{t('charity.fundsUsed')}</span>
-                      <span className="font-semibold text-gray-900">{program.amountUsed} {t('charity.of')} {program.totalGoal}</span>
-                    </div>
 
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-gradient-to-r from-green-500 to-purple-500 h-2 rounded-full transition-all duration-1000 ease-out"
-                        style={{ width: `${progressPercentage}%` }}
-                      ></div>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-blue-600">
-                        {progressPercentage}% {t('common.complete')}
+                  {/* Both halves stay on a single line; the location gives up
+                      space first, and each ellipsises rather than wrapping. */}
+                  <div className="mt-6 flex items-center justify-between gap-3 border-t border-gray-100 pt-5">
+                    {location ? (
+                      <span className="flex min-w-0 flex-1 items-center gap-1.5 text-sm text-gray-500">
+                        <MapPin className="h-4 w-4 shrink-0 text-teal-500" />
+                        <span className="truncate">{location}</span>
                       </span>
-                      <div className="flex items-center space-x-2 text-teal-600 group-hover:translate-x-1 transition-transform">
-                        <span className="text-sm font-semibold">{t('charity.viewDetails')}</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </div>
-                    </div>
+                    ) : (
+                      <span className="flex-1" />
+                    )}
+                    <span className="flex min-w-0 max-w-[60%] shrink-0 items-center gap-2 text-sm font-semibold text-teal-700">
+                      <span className="truncate">{t('charity.viewDetails')}</span>
+                      <ArrowRight className="h-4 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
+                    </span>
                   </div>
                 </div>
               </Link>
@@ -143,11 +127,17 @@ export default function CharitySection() {
           })}
         </div>
 
-        <div className={`text-center transform transition-all duration-1000 ease-out delay-1000 ${
-          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-        }`}>
-          <Link href="/charity" className="inline-block bg-green-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
+        <div
+          className={`text-center transform transition-all duration-1000 ease-out delay-700 ${
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+          }`}
+        >
+          <Link
+            href="/charity"
+            className="inline-flex items-center gap-2 rounded-full bg-green-600 px-8 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:bg-green-700 hover:shadow-xl"
+          >
             {t('charity.viewAllPrograms')}
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </div>

@@ -1,26 +1,47 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Calendar, X } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { fetchBlogPosts, invalidateCache } from '@/store/blogSlice';
+import { fetchBlogPosts, invalidateCache, setPosts } from '@/store/blogSlice';
+import type { PublicBlogPost } from '@/app/actions/blog-public';
 import { getTranslatedText } from '@/lib/translations';
-import LanguageSelector from './LanguageSelector';
 
-export default function BlogListClient() {
+interface BlogListClientProps {
+  /** Server-fetched posts, used until the shared store is hydrated. */
+  initialPosts?: PublicBlogPost[];
+}
+
+export default function BlogListClient({ initialPosts = [] }: BlogListClientProps) {
   const dispatch = useAppDispatch();
-  const { posts, loading, error, language } = useAppSelector((state) => state.blog);
+  // Reads from the shared root store, the same one the nav's LanguageSelector
+  // writes to — that is what makes switching language re-render the posts.
+  const { posts: storePosts, loading, error, language } = useAppSelector(
+    (state) => state.blog
+  );
 
   const [visibleBlogs, setVisibleBlogs] = useState<string[]>([]);
   const [headerVisible, setHeaderVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const hydratedRef = useRef(false);
 
-  // Fetch posts on mount (will use cache if available)
+  // Render server data straight away, then follow the store once it is seeded.
+  const posts = storePosts.length > 0 ? storePosts : initialPosts;
+
+  // Seed the store with the server-rendered posts on first mount; only fall
+  // back to a client fetch when the server gave us nothing.
   useEffect(() => {
-    dispatch(fetchBlogPosts());
-  }, [dispatch]);
+    if (hydratedRef.current) return;
+    hydratedRef.current = true;
+
+    if (initialPosts.length > 0) {
+      dispatch(setPosts(initialPosts));
+    } else {
+      dispatch(fetchBlogPosts());
+    }
+  }, [dispatch, initialPosts]);
 
   useEffect(() => {
     const headerTimer = setTimeout(() => {
@@ -114,7 +135,9 @@ export default function BlogListClient() {
     );
   }
 
-  if (error) {
+  // Only take over the page when there is nothing to show; a failed background
+  // refresh should not hide posts the server already rendered.
+  if (error && posts.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="text-white relative overflow-hidden pt-12">
@@ -196,9 +219,6 @@ export default function BlogListClient() {
             <div className={`transform transition-all duration-700 ease-out ${
               headerVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
             }`}>
-              <div className="flex justify-center mb-4">
-                <LanguageSelector />
-              </div>
               <h1 className="text-4xl sm:text-6xl font-bold font-playfair text-white mb-4 tracking-tight">
                 {language === 'fr' ? 'Blogs' : 'Blogs'}
               </h1>

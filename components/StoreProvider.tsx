@@ -3,31 +3,22 @@
 import { useRef } from 'react';
 import { Provider } from 'react-redux';
 import { makeStore, AppStore } from '@/store/store';
-import { setPosts, setCurrentPost } from '@/store/blogSlice';
-import type { PublicBlogPost } from '@/app/actions/blog-public';
 
-interface StoreProviderProps {
-  children: React.ReactNode;
-  initialBlogPosts?: PublicBlogPost[];
-  initialCurrentPost?: PublicBlogPost;
-}
-
-export default function StoreProvider({ children, initialBlogPosts, initialCurrentPost }: StoreProviderProps) {
+/**
+ * Mounted once, in the root layout.
+ *
+ * Do NOT nest a second one inside a page. The store holds the selected
+ * language, so a nested provider gives the navigation's LanguageSelector and
+ * the page content two separate stores and language switching stops working.
+ * To pass server-fetched data in, hand it to the client component as a prop
+ * and let that component dispatch it (see BlogListClient / BlogDetailClient).
+ */
+export default function StoreProvider({ children }: { children: React.ReactNode }) {
   const storeRef = useRef<AppStore>();
 
   if (!storeRef.current) {
     // Create the store instance the first time this renders
     storeRef.current = makeStore();
-
-    // Initialize the store with server-side data if available
-    if (initialBlogPosts && initialBlogPosts.length > 0) {
-      storeRef.current.dispatch(setPosts(initialBlogPosts));
-    }
-
-    // Initialize current post if provided
-    if (initialCurrentPost) {
-      storeRef.current.dispatch(setCurrentPost(initialCurrentPost));
-    }
   }
 
   return <Provider store={storeRef.current}>{children}</Provider>;

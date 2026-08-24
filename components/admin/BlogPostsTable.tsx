@@ -19,24 +19,61 @@ import { DeleteDialog } from './DeleteDialog';
 import { deleteBlogPost, togglePublishStatus } from '@/app/actions/blog';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { Language, readTranslation } from '@/lib/translations';
 
 interface BlogPost {
   id: string;
-  title: any;
+  title: unknown;
   slug: string;
-  description: any;
+  description: unknown;
   imageUrl: string | null;
   published: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Helper to get text from title/description (could be string or Translation object)
-const getText = (field: any): string => {
-  if (typeof field === 'string') return field;
-  if (field && typeof field === 'object' && field.en) return field.en;
-  return '';
-};
+// Title/description are JSON columns holding { en, fr } — never render them directly.
+const getText = (field: unknown): string => readTranslation(field).en;
+
+/** True when both the title and the content exist for that language. */
+const isLanguageComplete = (post: BlogPost, language: Language): boolean =>
+  readTranslation(post.title)[language].trim().length > 0 &&
+  readTranslation(post.description)[language].trim().length > 0;
+
+/**
+ * A draft can only go live once French is done — unpublishing is always allowed.
+ * Mirrors the rule enforced in `togglePublishStatus`.
+ */
+const canTogglePublish = (post: BlogPost): boolean =>
+  post.published || isLanguageComplete(post, 'fr');
+
+/** EN / FR chips showing which translations a post already has. */
+function TranslationBadges({ post }: { post: BlogPost }) {
+  return (
+    <div className="flex items-center gap-1">
+      {(['en', 'fr'] as Language[]).map((language) => {
+        const complete = isLanguageComplete(post, language);
+        return (
+          <span
+            key={language}
+            title={
+              complete
+                ? `${language.toUpperCase()} translation complete`
+                : `${language.toUpperCase()} translation missing`
+            }
+            className={`inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+              complete
+                ? 'bg-green-100 text-green-700'
+                : 'bg-amber-100 text-amber-700 line-through decoration-amber-400'
+            }`}
+          >
+            {language}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
 
 interface BlogPostsTableProps {
   posts: BlogPost[];
@@ -100,6 +137,7 @@ export function BlogPostsTable({ posts }: BlogPostsTableProps) {
               <TableRow>
                 <TableHead className="w-20">Image</TableHead>
                 <TableHead>Title</TableHead>
+                <TableHead>Languages</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Created</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -132,6 +170,9 @@ export function BlogPostsTable({ posts }: BlogPostsTableProps) {
                     </div>
                   </TableCell>
                   <TableCell>
+                    <TranslationBadges post={post} />
+                  </TableCell>
+                  <TableCell>
                     <Badge
                       variant={post.published ? 'default' : 'secondary'}
                       className={
@@ -152,8 +193,16 @@ export function BlogPostsTable({ posts }: BlogPostsTableProps) {
                         variant="ghost"
                         size="icon"
                         onClick={() => handleTogglePublish(post.id)}
-                        disabled={togglingPublish === post.id}
-                        title={post.published ? 'Unpublish' : 'Publish'}
+                        disabled={
+                          togglingPublish === post.id || !canTogglePublish(post)
+                        }
+                        title={
+                          !canTogglePublish(post)
+                            ? 'Add the French translation before publishing'
+                            : post.published
+                            ? 'Unpublish'
+                            : 'Publish'
+                        }
                       >
                         {post.published ? (
                           <EyeOff className="h-4 w-4" />
@@ -191,7 +240,7 @@ export function BlogPostsTable({ posts }: BlogPostsTableProps) {
                 <div className="relative w-20 h-20 rounded overflow-hidden flex-shrink-0">
                   <Image
                     src={post.imageUrl}
-                    alt={post.title}
+                    alt={getText(post.title)}
                     fill
                     className="object-cover"
                     unoptimized
@@ -204,10 +253,10 @@ export function BlogPostsTable({ posts }: BlogPostsTableProps) {
               )}
               <div className="flex-1 min-w-0">
                 <h3 className="font-medium text-gray-900 truncate">
-                  {post.title}
+                  {getText(post.title)}
                 </h3>
                 <p className="text-sm text-gray-500 truncate">/{post.slug}</p>
-                <div className="mt-2 flex items-center space-x-2">
+                <div className="mt-2 flex items-center flex-wrap gap-2">
                   <Badge
                     variant={post.published ? 'default' : 'secondary'}
                     className={
@@ -218,6 +267,7 @@ export function BlogPostsTable({ posts }: BlogPostsTableProps) {
                   >
                     {post.published ? 'Published' : 'Draft'}
                   </Badge>
+                  <TranslationBadges post={post} />
                   <span className="text-xs text-gray-500">
                     {new Date(post.createdAt).toLocaleDateString()}
                   </span>
@@ -229,7 +279,12 @@ export function BlogPostsTable({ posts }: BlogPostsTableProps) {
                 variant="outline"
                 size="sm"
                 onClick={() => handleTogglePublish(post.id)}
-                disabled={togglingPublish === post.id}
+                disabled={togglingPublish === post.id || !canTogglePublish(post)}
+                title={
+                  !canTogglePublish(post)
+                    ? 'Add the French translation before publishing'
+                    : undefined
+                }
                 className="flex-1"
               >
                 {post.published ? (

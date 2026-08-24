@@ -7,27 +7,41 @@ import {
   LayoutDashboard,
   FileText,
   Calendar,
+  Megaphone,
+  GraduationCap,
+  HeartHandshake,
+  Church,
   Mic,
-  Settings,
   X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import type { AppRole } from '@/lib/auth/roles';
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  role: AppRole;
+  email: string | null;
 }
 
-const navigation = [
+/** Council secretariat — everything. */
+const SUPER_ADMIN_NAV = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Blog Posts', href: '/admin/blog', icon: FileText },
   { name: 'Events', href: '/admin/events', icon: Calendar },
+  { name: 'Announcements', href: '/admin/announcements', icon: Megaphone },
+  { name: 'Workshops', href: '/admin/workshops', icon: GraduationCap },
+  { name: 'Charity', href: '/admin/charity', icon: HeartHandshake },
   { name: 'Sermons', href: '/admin/sermons', icon: Mic },
-  { name: 'Settings', href: '/admin/settings', icon: Settings },
+  { name: 'Member Churches', href: '/admin/churches', icon: Church },
 ];
 
-export function Sidebar({ isOpen, onClose }: SidebarProps) {
+/** A member church only ever sees its own page. */
+const CHURCH_NAV = [{ name: 'My Church', href: '/admin/my-church', icon: Church }];
+
+export function Sidebar({ isOpen, onClose, role, email }: SidebarProps) {
   const pathname = usePathname();
+  const navigation = role === 'super_admin' ? SUPER_ADMIN_NAV : CHURCH_NAV;
 
   return (
     <>
@@ -49,11 +63,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="flex flex-col h-full">
           {/* Logo/Header */}
           <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
-            <Link href="/admin" className="flex items-center space-x-2">
+            <Link
+              href={role === 'super_admin' ? '/admin' : '/admin/my-church'}
+              className="flex items-center space-x-2"
+            >
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">C</span>
               </div>
-              <span className="font-semibold text-gray-900">Church Admin</span>
+              <span className="font-semibold text-gray-900">
+                {role === 'super_admin' ? 'Church Admin' : 'My Church'}
+              </span>
             </Link>
             <Button
               variant="ghost"
@@ -93,11 +112,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             })}
           </nav>
 
-          {/* Footer */}
-          <div className="p-4 border-t border-gray-200">
-            <p className="text-xs text-gray-500 text-center">
-              Church Admin Dashboard
+          {/* Footer — who you are signed in as */}
+          <div className="border-t border-gray-200 p-4">
+            <p className="text-xs font-medium text-gray-700">
+              {role === 'super_admin' ? 'Council secretariat' : 'Church account'}
             </p>
+            {email && (
+              <p className="mt-0.5 truncate text-xs text-gray-500" title={email}>
+                {email}
+              </p>
+            )}
           </div>
         </div>
       </aside>

@@ -12,6 +12,8 @@ interface ImageUploadProps {
   onChange: (url: string) => void;
   onRemove: () => void;
   disabled?: boolean;
+  /** Cloudinary subfolder under `church/`, e.g. 'events'. Defaults to 'blog'. */
+  folder?: string;
 }
 
 export function ImageUpload({
@@ -19,6 +21,7 @@ export function ImageUpload({
   onChange,
   onRemove,
   disabled,
+  folder = 'blog',
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -32,6 +35,7 @@ export function ImageUpload({
     try {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('folder', folder);
 
       const result = await uploadImage(formData);
 

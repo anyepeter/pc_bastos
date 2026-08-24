@@ -2,8 +2,11 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BlogPostForm } from '@/components/admin/BlogPostForm';
+import { requireSuperAdminPage } from '@/lib/auth/roles';
 
-export default function CreateBlogPostPage() {
+export default async function CreateBlogPostPage() {
+  await requireSuperAdminPage();
+
   return (
     <div className="space-y-6">
       {/* Page header */}

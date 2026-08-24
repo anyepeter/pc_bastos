@@ -14,6 +14,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Every `Json` field below holds a `{ en, fr }` Translation object.
+// English is always required; French is required before a record can be
+// published. See lib/translations.ts and lib/admin/resource-service.ts.
+
 model BlogPost {
   id          String   @id @default(cuid())
   slug        String   @unique
@@ -26,4 +30,129 @@ model BlogPost {
   published   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+
+  title       Json
+  description Json
+  location    Json
+  category    Json
+
+  date        DateTime
+  time        String?
+  imageUrl    String?
+
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
+}
+
+model Announcement {
+  id          String   @id @default(cuid())
+
+  title       Json
+  description Json
+  fullContent Json
+
+  date        DateTime
+  priority    String   @default("medium") // low | medium | high
+  imageUrl    String?
+
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
+}
+
+model Workshop {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+
+  title           Json
+  description     Json
+  fullDescription Json
+  location        Json
+  duration        Json
+  capacity        Json
+
+  date            DateTime
+  images          String[]
+
+  published       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([date])
+}
+
+model CharityProgram {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+
+  title           Json
+  description     Json
+  fullDescription Json
+  impact          Json
+  beneficiaries   Json
+  location        Json
+
+  date          DateTime?
+  amountUsed    String?
+  totalGoal     String?
+  images        String[]
+
+  published     Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+/// A CEPCA member church. Each one can be handed a login that may edit this
+/// record and nothing else — see lib/auth/roles.ts.
+model MemberChurch {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+
+  denomination Json
+  leader       Json
+  location     Json
+  history      Json
+
+  founded      String?
+  logo         String?
+  images       String[]
+
+  phone        String?
+  email        String?
+  address      String?
+  website      String?
+
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Sermon {
+  id          String   @id @default(cuid())
+
+  title       Json
+  description Json
+  location    Json
+
+  date        DateTime
+  duration    String?
+  videoUrl    String?
+  audioUrl    String?
+  thumbnail   String?
+
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
 }

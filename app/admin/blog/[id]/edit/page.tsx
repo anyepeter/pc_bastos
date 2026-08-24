@@ -4,12 +4,15 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BlogPostForm } from '@/components/admin/BlogPostForm';
 import { getBlogPostById } from '@/app/actions/blog';
+import { requireSuperAdminPage } from '@/lib/auth/roles';
 
 export default async function EditBlogPostPage({
   params,
 }: {
   params: { id: string };
 }) {
+  await requireSuperAdminPage();
+
   const result = await getBlogPostById(params.id);
 
   if (!result.success || !result.data) {

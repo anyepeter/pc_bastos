@@ -3,8 +3,11 @@ import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BlogPostsList } from '@/components/admin/BlogPostsList';
 import { getAllBlogPosts } from '@/app/actions/blog';
+import { requireSuperAdminPage } from '@/lib/auth/roles';
 
 export default async function BlogPostsPage() {
+  await requireSuperAdminPage();
+
   const result = await getAllBlogPosts();
   const posts = result.success ? result.data || [] : [];
 
