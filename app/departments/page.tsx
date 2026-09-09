@@ -1,200 +1,232 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Building, Heart, GraduationCap, Users, Radio, Briefcase, MessageCircle, Search } from 'lucide-react';
-import PageLayout from '@/components/PageLayout';
-import BackButton from '@/components/BackButton';
+import {
+  Building,
+  Heart,
+  GraduationCap,
+  Users,
+  Radio,
+  Briefcase,
+  MessageCircle,
+  Search,
+  MapPin,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import PageLayout from '@/components/PageLayout';
+import PageHero from '@/components/PageHero';
+import PageSection from '@/components/PageSection';
+import SectionHeading from '@/components/SectionHeading';
+import Reveal from '@/components/Reveal';
 
 export default function DepartmentsPage() {
   const { t } = useTranslation();
-  const [isVisible, setIsVisible] = useState(false);
-  const [visibleCards, setVisibleCards] = useState<string[]>([]);
 
+  // Eight departments, differentiated by number, name and place — never by
+  // colour. The page this replaced gave each one a stock photograph and a
+  // coloured chip; the council has no photography, and the per-department
+  // hues were exactly what it objected to.
   const departments = [
     {
       id: 'saf',
       name: t('about.departments.saf.name'),
+      short: t('about.departments.saf.short'),
       icon: Briefcase,
       location: t('about.departments.saf.location'),
       description: t('about.departments.saf.description'),
-      image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop&auto=format'
     },
     {
       id: 'ds',
       name: t('about.departments.ds.name'),
+      short: t('about.departments.ds.short'),
       icon: Heart,
       location: t('about.departments.ds.location'),
       description: t('about.departments.ds.description'),
-      image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&h=400&fit=crop&auto=format'
     },
     {
       id: 'oepp',
       name: t('about.departments.oepp.name'),
+      short: t('about.departments.oepp.short'),
       icon: GraduationCap,
       location: t('about.departments.oepp.location'),
       description: t('about.departments.oepp.description'),
-      image: 'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=600&h=400&fit=crop&auto=format'
     },
     {
       id: 'dfas',
       name: t('about.departments.dfas.name'),
+      short: t('about.departments.dfas.short'),
       icon: Users,
       location: t('about.departments.dfas.location'),
       description: t('about.departments.dfas.description'),
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&h=400&fit=crop&auto=format'
     },
     {
       id: 'dtc',
       name: t('about.departments.dtc.name'),
+      short: t('about.departments.dtc.short'),
       icon: MessageCircle,
       location: t('about.departments.dtc.location'),
       description: t('about.departments.dtc.description'),
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop&auto=format'
     },
     {
       id: 'dj',
       name: t('about.departments.dj.name'),
+      short: t('about.departments.dj.short'),
       icon: Users,
       location: t('about.departments.dj.location'),
       description: t('about.departments.dj.description'),
-      image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&h=400&fit=crop&auto=format'
     },
     {
       id: 'dic',
       name: t('about.departments.dic.name'),
+      short: t('about.departments.dic.short'),
       icon: Radio,
       location: t('about.departments.dic.location'),
       description: t('about.departments.dic.description'),
-      image: 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=600&h=400&fit=crop&auto=format'
     },
     {
       id: 'bured',
       name: t('about.departments.bured.name'),
+      short: t('about.departments.bured.short'),
       icon: Search,
       location: t('about.departments.bured.location'),
       description: t('about.departments.bured.description'),
-      image: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=600&h=400&fit=crop&auto=format'
-    }
+    },
   ];
 
-  useEffect(() => {
-    setIsVisible(true);
-    const timer = setTimeout(() => {
-      setVisibleCards(departments.map(dept => dept.id));
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
+  const coordination = [
+    {
+      id: 'regional-offices',
+      icon: Building,
+      title: t('about.departments.regionalOffices'),
+      body: t('about.departments.regionalOfficesText'),
+    },
+    {
+      id: 'commissions',
+      icon: Users,
+      title: t('about.departments.commissions'),
+      body: t('about.departments.commissionsText'),
+    },
+    {
+      id: 'coordination',
+      icon: MessageCircle,
+      title: t('about.departments.coordination'),
+      body: t('about.departments.coordinationText'),
+    },
+  ];
 
   return (
     <PageLayout>
-      <div className="min-h-screen bg-white">
-        <div className="text-white relative">
-          <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: 'url("https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=1920&h=600&fit=crop&auto=format")'
-            }}
-          />
-          <div className="absolute inset-0 bg-black/70"></div>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-10 md:pb-16 relative z-10">
-            {/* <BackButton /> */}
-            <div className={`text-center transform transition-all duration-1000 ease-out ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            }`}>
-              <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-6">
-                {t('about.departments.pageTitle')}
-              </h1>
-              <p className="text-xl text-blue-100 font-inter max-w-3xl mx-auto leading-relaxed">
-                {t('about.departments.pageSubtitle')}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {departments.map((department, index) => {
-              const IconComponent = department.icon;
-              
-              return (
-                <div
-                  key={department.id}
-                  className={`bg-white border border-gray-200 overflow-hidden transform transition-all duration-1000 ease-out ${
-                    visibleCards.includes(department.id)
-                      ? 'translate-y-0 opacity-100'
-                      : 'translate-y-12 opacity-0'
-                  }`}
-                  style={{ transitionDelay: `${index * 150}ms` }}
+      <PageHero
+        eyebrow={t('navbar.departements')}
+        title={t('about.departments.pageTitle')}
+        lede={t('about.departments.pageSubtitle')}
+        crumbs={[
+          { label: t('navbar.home'), href: '/' },
+          { label: t('navbar.aboutUs'), href: '/about' },
+          { label: t('navbar.departements') },
+        ]}
+      >
+        {/* The short names double as the page's index — eight jump links
+            straight to the matching entry below. Existing copy, no new keys. */}
+        <nav aria-label={t('about.departments.pageTitle')} className="mt-12 border-t border-white/10 pt-7">
+          <ul className="flex flex-wrap gap-2">
+            {departments.map((department, i) => (
+              <li key={department.id}>
+                <a
+                  href={`#${department.id}`}
+                  className="focus-ring inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 font-ui text-sm text-plum-200 transition-colors duration-300 ease-spring hover:border-leaf-300/40 hover:text-leaf-300"
                 >
-                  <div className="relative h-48">
-                    <img
-                      src={department.image}
-                      alt={department.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <div className="bg-white p-2">
-                        <IconComponent className="w-6 h-6 text-purple-600" />
-                      </div>
-                    </div>
-                  </div>
+                  <span className="font-mono text-[0.62rem] tracking-[0.14em] text-plum-400">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  {department.short}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </PageHero>
 
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold font-playfair text-gray-900 mb-3 leading-tight">
-                      {department.name}
-                    </h3>
-                    
-                    <div className="mb-4">
-                      <div className="flex items-center space-x-2 text-sm text-purple-600 mb-2">
-                        <Building className="w-4 h-4" />
-                        <span className="font-medium">{department.location}</span>
-                      </div>
+      {/* The department index. Set as a numbered editorial register rather
+          than a photo grid: name and place on the left, remit on the right,
+          one hairline per entry. */}
+      <PageSection tone="white">
+        <ul className="border-t border-ink-200">
+          {departments.map((department, i) => {
+            const Icon = department.icon;
+
+            return (
+              <Reveal as="li" key={department.id} delay={Math.min(i, 8) * 60}>
+                <article
+                  id={department.id}
+                  className="group grid scroll-mt-28 gap-x-10 gap-y-5 border-b border-ink-200 py-9 transition-colors duration-300 lg:grid-cols-12 lg:py-11"
+                >
+                  <div className="lg:col-span-5">
+                    <div className="flex items-center gap-4">
+                      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white transition-colors duration-300 group-hover:border-leaf-300">
+                        <Icon aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+                      </span>
+                      <span className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-ink-400">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
                     </div>
-                    
-                    <p className="text-gray-700 leading-relaxed font-inter text-sm">
-                      {department.description}
+
+                    <h2 className="mt-6 font-display text-2xl font-semibold leading-tight tracking-tight text-ink-900 transition-colors duration-300 group-hover:text-plum-700 lg:text-[1.7rem]">
+                      {department.name}
+                    </h2>
+
+                    <p className="mt-4 flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-500">
+                      <MapPin aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-ink-400" />
+                      {department.location}
                     </p>
                   </div>
-                </div>
-              );
-            })}
-          </div>
 
-          <div className={`mt-16 transform transition-all duration-1000 ease-out delay-1000 ${
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-          }`}>
-            <div className="bg-gray-50 p-8 lg:p-12">
-              <h2 className="text-3xl font-bold font-playfair text-gray-900 mb-8 text-center">
-                {t('about.departments.departmentCoordination')}
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div className="text-center">
-                  <div className="bg-purple-100 p-4 mb-4 inline-block">
-                    <Building className="w-8 h-8 text-purple-600" />
+                  <p className="max-w-[52ch] text-base leading-relaxed text-ink-600 text-pretty lg:col-span-6 lg:col-start-7 lg:pt-1">
+                    {department.description}
+                  </p>
+                </article>
+              </Reveal>
+            );
+          })}
+        </ul>
+      </PageSection>
+
+      {/* How the eight are held together. The page closes here, on a light ground: the footer is
+          already the closing dark band and paints its own top edge. */}
+      <PageSection tone="tint" className="py-20 lg:py-28">
+        <SectionHeading
+          title={t('about.departments.departmentCoordination')}
+          layout="stack"
+        />
+
+        <ul className="mt-11 grid gap-6 lg:grid-cols-3">
+          {coordination.map((item, i) => {
+            const Icon = item.icon;
+
+            return (
+              <Reveal as="li" key={item.id} delay={Math.min(i, 8) * 60}>
+                <div className="flex h-full flex-col rounded-2xl border border-ink-200 bg-white p-7">
+                  <div className="flex items-start justify-between gap-5">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                      <Icon aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+                    </span>
+                    <span className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-ink-400">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('about.departments.regionalOffices')}</h3>
-                  <p className="text-gray-600 font-inter">{t('about.departments.regionalOfficesText')}</p>
+
+                  <h3 className="mt-6 font-display text-xl font-semibold leading-tight tracking-tight text-ink-900">
+                    {item.title}
+                  </h3>
+
+                  <p className="mt-4 max-w-[48ch] text-base leading-relaxed text-ink-600 text-pretty">
+                    {item.body}
+                  </p>
                 </div>
-                <div className="text-center">
-                  <div className="bg-purple-100 p-4 mb-4 inline-block">
-                    <Users className="w-8 h-8 text-purple-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('about.departments.commissions')}</h3>
-                  <p className="text-gray-600 font-inter">{t('about.departments.commissionsText')}</p>
-                </div>
-                <div className="text-center">
-                  <div className="bg-purple-100 p-4 mb-4 inline-block">
-                    <MessageCircle className="w-8 h-8 text-purple-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('about.departments.coordination')}</h3>
-                  <p className="text-gray-600 font-inter">{t('about.departments.coordinationText')}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+              </Reveal>
+            );
+          })}
+        </ul>
+      </PageSection>
     </PageLayout>
   );
 }

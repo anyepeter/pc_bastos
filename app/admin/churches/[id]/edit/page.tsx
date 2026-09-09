@@ -13,7 +13,8 @@ import {
   createChurch,
   updateChurch,
   listChurchAccounts,
-  inviteChurchAccount,
+  createChurchAccount,
+  resetChurchAccountPassword,
   removeChurchAccount,
 } from '@/app/actions/churches';
 
@@ -61,7 +62,8 @@ export default async function EditChurchPage({
         churchId={row.id}
         churchName={churchName}
         accounts={accounts}
-        onInvite={inviteChurchAccount}
+        onCreate={createChurchAccount}
+        onResetPassword={resetChurchAccountPassword}
         onRemove={removeChurchAccount}
       />
 

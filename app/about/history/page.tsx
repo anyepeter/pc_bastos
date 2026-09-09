@@ -1,157 +1,173 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { Calendar, Users, Building } from 'lucide-react';
-import PageLayout from '@/components/PageLayout';
-import BackButton from '@/components/BackButton';
 import { useTranslation } from 'react-i18next';
+import PageLayout from '@/components/PageLayout';
+import PageHero from '@/components/PageHero';
+import PageSection from '@/components/PageSection';
+import SectionHeading from '@/components/SectionHeading';
+import Reveal from '@/components/Reveal';
 
+/**
+ * The council's history — a long-form, text-only page.
+ *
+ * The three Unsplash photographs this replaced were American church stock; the
+ * council has no photography of 1969 Yaoundé and borrowed imagery would say
+ * nothing true. The page is carried by typography instead: three numbered
+ * chapters at a readable measure, then the milestones as a ruled timeline on a
+ * dark band.
+ */
 export default function HistoryPage() {
   const { t } = useTranslation();
-  const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+  const milestones = [
+    { year: '1969', text: t('about.history.milestone1969') },
+    { year: '1970s', text: t('about.history.milestone1970s') },
+    { year: '2009', text: t('about.history.milestone2009') },
+    // Untranslated in the source copy, and left that way: this is a visual
+    // redesign, and the locale files are off-limits.
+    { year: 'Today', text: t('about.history.milestoneToday') },
+  ];
 
   return (
     <PageLayout>
-      <div className="min-h-screen bg-white">
-        <div className="text-white relative">
-          <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: 'url("https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1920&h=600&fit=crop&auto=format")'
-            }}
-          />
-          <div className="absolute inset-0 bg-black/70"></div>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-10 md:pb-16 relative z-10">
-            {/* <BackButton /> */}
-            <div className={`text-center transform transition-all duration-1000 ease-out ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            }`}>
-              <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-6">
-                {t('about.history.pageTitle')}
-              </h1>
-              <p className="text-xl text-blue-100 font-inter max-w-3xl mx-auto leading-relaxed">
-                {t('about.history.pageSubtitle')}
+      <PageHero
+        eyebrow={t('navbar.aboutUs')}
+        title={t('about.history.pageTitle')}
+        lede={t('about.history.pageSubtitle')}
+        crumbs={[
+          { label: t('navbar.home'), href: '/' },
+          { label: t('navbar.aboutUs'), href: '/about' },
+          { label: t('navbar.ourHistory') },
+        ]}
+      />
+
+      {/* Chapter 01 — the founding. */}
+      <PageSection tone="white">
+        <SectionHeading eyebrow="01" title={t('about.history.theBeginning')} />
+
+        <div className="mt-11 grid gap-8 lg:grid-cols-12 lg:gap-10">
+          <Reveal className="lg:col-span-2">
+            <div className="flex items-center gap-5 lg:block">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                <Calendar aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+              </span>
+              <span
+                aria-hidden="true"
+                className="h-px flex-1 bg-ink-200 lg:mt-6 lg:ml-6 lg:block lg:h-20 lg:w-px"
+              />
+            </div>
+          </Reveal>
+
+          <div className="lg:col-span-9 lg:col-start-4">
+            <Reveal delay={60}>
+              <p className="max-w-[70ch] text-lg leading-[1.75] text-ink-700 text-pretty">
+                {t('about.history.beginningText1')}
               </p>
-            </div>
+            </Reveal>
+
+            <Reveal delay={120}>
+              <p className="mt-7 max-w-[70ch] text-lg leading-[1.75] text-ink-600 text-pretty">
+                {t('about.history.beginningText2')}
+              </p>
+            </Reveal>
           </div>
         </div>
+      </PageSection>
 
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className={`space-y-12 transform transition-all duration-1000 ease-out delay-300 ${
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-          }`}>
-            
-            <div className="space-y-8">
-              <div className="flex items-center space-x-3 mb-8">
-                <div className="bg-purple-100 p-3">
-                  <Calendar className="w-6 h-6 text-purple-600" />
-                </div>
-                <h2 className="text-3xl font-bold font-playfair text-gray-900">
-                  {t('about.history.theBeginning')}
-                </h2>
-              </div>
+      {/* Chapter 02 — the preamble. Its first paragraph is a confession of
+          faith quoting John 17:21, so it is set as a pull quote rather than as
+          another run of body copy. */}
+      <PageSection tone="tint">
+        <SectionHeading eyebrow="02" title={t('about.history.thePreamble')} />
 
-              <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop&auto=format"
-                alt="Historical church gathering"
-                className="w-full h-64 sm:h-80 object-cover mb-8"
+        <div className="mt-11 grid gap-8 lg:grid-cols-12 lg:gap-10">
+          <Reveal className="lg:col-span-2">
+            <div className="flex items-center gap-5 lg:block">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                <Users aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+              </span>
+              <span
+                aria-hidden="true"
+                className="h-px flex-1 bg-ink-200 lg:mt-6 lg:ml-6 lg:block lg:h-20 lg:w-px"
               />
-
-              <div className="prose prose-lg max-w-none">
-                <p className="text-lg text-gray-700 font-inter leading-relaxed mb-6">
-                  {t('about.history.beginningText1')}
-                </p>
-
-                <p className="text-lg text-gray-700 font-inter leading-relaxed mb-6">
-                  {t('about.history.beginningText2')}
-                </p>
-              </div>
             </div>
+          </Reveal>
 
-            <div className="space-y-8">
-              <div className="flex items-center space-x-3 mb-8">
-                <div className="bg-purple-100 p-3">
-                  <Users className="w-6 h-6 text-purple-600" />
-                </div>
-                <h2 className="text-3xl font-bold font-playfair text-gray-900">
-                  {t('about.history.thePreamble')}
-                </h2>
-              </div>
+          <div className="lg:col-span-9 lg:col-start-4">
+            <Reveal delay={60}>
+              <blockquote className="max-w-[54ch] border-l-2 border-plum-300 pl-6 font-display text-[clamp(1.25rem,2.1vw,1.65rem)] leading-[1.5] text-ink-800 text-pretty sm:pl-8">
+                {t('about.history.preambleText1')}
+              </blockquote>
+            </Reveal>
 
-              <img
-                src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=400&fit=crop&auto=format"
-                alt="Church unity"
-                className="w-full h-64 sm:h-80 object-cover mb-8"
-              />
-
-              <div className="prose prose-lg max-w-none">
-                <p className="text-lg text-gray-700 font-inter leading-relaxed mb-6">
-                  {t('about.history.preambleText1')}
-                </p>
-
-                <p className="text-lg text-gray-700 font-inter leading-relaxed mb-6">
-                  {t('about.history.preambleText2')}
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-8">
-              <div className="flex items-center space-x-3 mb-8">
-                <div className="bg-purple-100 p-3">
-                  <Building className="w-6 h-6 text-purple-600" />
-                </div>
-                <h2 className="text-3xl font-bold font-playfair text-gray-900">
-                  {t('about.history.evolutionToCepca')}
-                </h2>
-              </div>
-
-              <img
-                src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=400&fit=crop&auto=format"
-                alt="Modern church building"
-                className="w-full h-64 sm:h-80 object-cover mb-8"
-              />
-
-              <div className="prose prose-lg max-w-none">
-                <p className="text-lg text-gray-700 font-inter leading-relaxed mb-6">
-                  {t('about.history.evolutionText1')}
-                </p>
-
-                <p className="text-lg text-gray-700 font-inter leading-relaxed mb-6">
-                  {t('about.history.evolutionText2')}
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-gray-50 p-8 mt-12">
-              <h3 className="text-2xl font-bold font-playfair text-gray-900 mb-6 text-center">
-                {t('about.history.keyMilestones')}
-              </h3>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-4">
-                  <div className="bg-purple-600 text-white px-3 py-1 font-bold">1969</div>
-                  <div className="text-gray-700 font-inter">{t('about.history.milestone1969')}</div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="bg-purple-600 text-white px-3 py-1 font-bold">1970s</div>
-                  <div className="text-gray-700 font-inter">{t('about.history.milestone1970s')}</div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="bg-purple-600 text-white px-3 py-1 font-bold">2009</div>
-                  <div className="text-gray-700 font-inter">{t('about.history.milestone2009')}</div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="bg-purple-600 text-white px-3 py-1 font-bold">Today</div>
-                  <div className="text-gray-700 font-inter">{t('about.history.milestoneToday')}</div>
-                </div>
-              </div>
-            </div>
+            <Reveal delay={120}>
+              <p className="mt-9 max-w-[70ch] text-lg leading-[1.75] text-ink-600 text-pretty">
+                {t('about.history.preambleText2')}
+              </p>
+            </Reveal>
           </div>
         </div>
-      </div>
+      </PageSection>
+
+      {/* Chapter 03 — the council as it stands. */}
+      <PageSection tone="white">
+        <SectionHeading eyebrow="03" title={t('about.history.evolutionToCepca')} />
+
+        <div className="mt-11 grid gap-8 lg:grid-cols-12 lg:gap-10">
+          <Reveal className="lg:col-span-2">
+            <div className="flex items-center gap-5 lg:block">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                <Building aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+              </span>
+              <span
+                aria-hidden="true"
+                className="h-px flex-1 bg-ink-200 lg:mt-6 lg:ml-6 lg:block lg:h-20 lg:w-px"
+              />
+            </div>
+          </Reveal>
+
+          <div className="lg:col-span-9 lg:col-start-4">
+            <Reveal delay={60}>
+              <p className="max-w-[70ch] text-lg leading-[1.75] text-ink-700 text-pretty">
+                {t('about.history.evolutionText1')}
+              </p>
+            </Reveal>
+
+            <Reveal delay={120}>
+              <p className="mt-7 max-w-[70ch] text-lg leading-[1.75] text-ink-600 text-pretty">
+                {t('about.history.evolutionText2')}
+              </p>
+            </Reveal>
+          </div>
+        </div>
+      </PageSection>
+
+      {/* The timeline. One dark band per page, used here as the closing
+          punctuation the narrative builds towards. */}
+      <PageSection tone="tint" className="py-20 lg:py-28">
+        <SectionHeading title={t('about.history.keyMilestones')}  layout="stack" />
+
+        <ol className="mt-11 border-t border-ink-200">
+          {milestones.map((milestone, i) => (
+            <Reveal
+              as="li"
+              key={milestone.year}
+              delay={Math.min(i, 8) * 60}
+              className="border-b border-ink-200"
+            >
+              <div className="grid gap-3 py-7 lg:grid-cols-12 lg:items-baseline lg:gap-10 lg:py-8">
+                <p className="font-display text-2xl font-semibold leading-none tracking-tight text-leaf-600 lg:col-span-3">
+                  {milestone.year}
+                </p>
+                <p className="max-w-[62ch] text-base leading-relaxed text-ink-600 text-pretty lg:col-span-9">
+                  {milestone.text}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </ol>
+      </PageSection>
     </PageLayout>
   );
 }

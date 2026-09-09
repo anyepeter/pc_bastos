@@ -1,102 +1,94 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, Heart, Calendar, Users, Phone, ChevronDown, ChevronUp } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from './LanguageSelector';
 
-const Navigation = ({scroll = false}: {scroll?: boolean}) => {
+interface MenuItem {
+  name: string;
+  href?: string;
+  submenu?: { name: string; href: string }[];
+  /** Long lists (the member churches) open as a two-column panel. */
+  wide?: boolean;
+}
+
+const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
   const { t } = useTranslation();
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdowns, setOpenDropdowns] = useState<string[]>([]);
   const [isScrolled, setIsScrolled] = useState(scroll);
+  const progressRef = useRef<HTMLSpanElement | null>(null);
 
   useEffect(() => {
+    // Written straight to the DOM rather than through state: this fires on
+    // every scroll frame and must not re-render the whole navigation.
     const handleScroll = () => {
-      if (!scroll){
-        setIsScrolled(window.scrollY > 10);
+      if (!scroll) setIsScrolled(window.scrollY > 10);
+
+      const bar = progressRef.current;
+      if (bar) {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+        bar.style.transform = `scaleX(${ratio})`;
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scroll]);
 
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    document.body.style.overflow = isMenuOpen ? 'hidden' : 'unset';
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, [isMenuOpen]);
 
-  const toggleDropdown = (itemName: string) => {
-    setOpenDropdowns(prev =>
-      prev.includes(itemName) ? [] : [itemName]
-    );
-  };
+  // A route change closes the sheet — otherwise it lingers over the new page.
+  useEffect(() => {
+    setIsMenuOpen(false);
+    setOpenDropdowns([]);
+  }, [pathname]);
+
+  // Past `xl` the desktop nav takes over and the sheet is hidden by CSS. Close
+  // it for real as well, or a resize while it is open leaves the body scroll
+  // lock on with nothing visible to explain it.
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const desktop = window.matchMedia('(min-width: 1280px)');
+    const sync = () => {
+      if (desktop.matches) setIsMenuOpen(false);
+    };
+    sync();
+    desktop.addEventListener('change', sync);
+    return () => desktop.removeEventListener('change', sync);
+  }, [isMenuOpen]);
+
+  const toggleDropdown = (itemName: string) =>
+    setOpenDropdowns((prev) => (prev.includes(itemName) ? [] : [itemName]));
 
   const closeMenu = () => setIsMenuOpen(false);
 
-  const getNavbarStyles = () => {
-    const isActive = isScrolled || isMenuOpen;
-    return `fixed w-full top-0 z-50 transition-all duration-300 ${
-      isActive ? 'bg-white shadow-lg' : 'bg-transparent'
-    }`;
-  };
-
-  const getLogoTextStyles = () => {
-    const isActive = isScrolled || isMenuOpen;
-    return `text-xl sm:text-2xl font-playfair font-bold transition-colors duration-300 tracking-tight ${
-      isActive ? 'text-purple-600' : 'text-white drop-shadow-lg'
-    }`;
-  };
-
-  const getDesktopLinkStyles = () => {
-    return `font-medium font-poppins transition-colors duration-200 flex items-center tracking-wide ${
-      isScrolled
-        ? 'text-gray-700 hover:text-purple-600'
-        : 'text-white hover:text-white/80 drop-shadow'
-    }`;
-  };
-
-  const getDonateButtonStyles = () => {
-    return `px-4 py-2 sm:px-6 rounded-full font-semibold font-poppins transition-all duration-200 text-sm sm:text-base tracking-wide ${
-      isScrolled
-        ? 'bg-green-600 hover:bg-green-700 text-white'
-        : 'bg-green-600 hover:bg-green-700 text-white backdrop-blur-sm border border-white/30'
-    }`;
-  };
-
-  const getMobileMenuButtonStyles = () => {
-    const isActive = isScrolled || isMenuOpen;
-    return `transition-colors duration-200 p-3 rounded-md touch-manipulation ${
-      isActive
-        ? 'text-gray-700 hover:text-purple-600 hover:bg-purple-50 active:bg-purple-100'
-        : 'text-white hover:text-white/80 hover:bg-white/10 active:bg-white/20 drop-shadow backdrop-blur-sm'
-    }`;
-  };
-
-  const mobileMenuItemStyles = "block text-gray-700 hover:text-purple-600 active:text-purple-700 font-medium py-3 hover:bg-purple-50 active:bg-purple-100 px-3 rounded-lg touch-manipulation";
-  const mobileSubMenuItemStyles = "block text-sm text-gray-600 hover:text-purple-600 active:text-purple-700 py-3 hover:bg-purple-50 active:bg-purple-100 px-3 rounded-lg touch-manipulation";
-
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
-      name: t('navbar.aboutUs'), href: '/about',
+      name: t('navbar.aboutUs'),
+      href: '/about',
       submenu: [
         { name: t('navbar.ourMissionVision'), href: '/about/mission-vision' },
         { name: t('navbar.leadership'), href: '/about/departments' },
         { name: t('navbar.ourHistory'), href: '/about/history' },
         { name: t('navbar.cepcaStructures'), href: '/about/structure' },
-      ]
+      ],
     },
     {
-      name: t('navbar.members'), href: '#',
+      name: t('navbar.members'),
+      wide: true,
       submenu: [
         { name: 'Eglise Anglicane (EA)', href: '/members/ea' },
         { name: 'Cameroon Baptist Convention (CBC)', href: '/members/cbc' },
@@ -109,158 +101,314 @@ const Navigation = ({scroll = false}: {scroll?: boolean}) => {
         { name: 'Presbyterian Church in Cameroon (PCC)', href: '/members/pcc' },
         { name: 'Union des Eglises Baptistes du Cameroun (UEBC)', href: '/members/uebc' },
         { name: 'Union des Eglises Evangéliques du Cameroun (UEEC)', href: '/members/ueec' },
-        { name: 'FULL GOSPEL Mission (Mission du plein Evangile)(MPE)', href: '/members/mpe' }
-      ]
+        { name: 'FULL GOSPEL Mission (Mission du plein Evangile)(MPE)', href: '/members/mpe' },
+      ],
     },
-    {
-      name: t('navbar.departements'),
-      href: '/departments'
-    },
+    { name: t('navbar.departements'), href: '/departments' },
     {
       name: t('navbar.activities'),
-      href: '#',
       submenu: [
         { name: t('navbar.charity'), href: '/charity' },
         { name: t('navbar.workshopsTrainings'), href: '/workshops' },
-      ]
+      ],
     },
     {
       name: t('navbar.news'),
-      href: '#',
       submenu: [
         { name: t('navbar.futureEvents'), href: '/events' },
         { name: t('navbar.announcements'), href: '/announcements' },
-      ]
+      ],
     },
     { name: t('navbar.blogs'), href: '/blogs' },
     { name: t('navbar.contactUs'), href: '/contact' },
   ];
 
+  /** A branch is current when its own page, or any child page, is open. */
+  const isCurrent = (item: MenuItem) => {
+    const hrefs = [item.href, ...(item.submenu?.map((s) => s.href) ?? [])].filter(
+      (h): h is string => Boolean(h) && h !== '#',
+    );
+    return hrefs.some((h) => pathname === h || pathname.startsWith(`${h}/`));
+  };
+
+  const raised = isScrolled || isMenuOpen;
+  /**
+   * The landing page opens with a full-bleed photographic hero, so at the very
+   * top the bar sits on a dark image and has to invert. Inner pages pass
+   * `scroll` and stay solid throughout.
+   */
+  const overHero = !scroll && !raised;
+
   return (
-    <nav className={getNavbarStyles()}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 sm:h-20">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
-              <Image
+    <>
+      <header
+        className={`fixed top-0 z-nav w-full transition-all duration-500 ease-spring ${
+          overHero
+            ? 'border-b border-transparent bg-gradient-to-b from-ink-950/70 to-transparent'
+            : raised
+              ? 'border-b border-ink-200 bg-white/90 shadow-[0_12px_32px_-24px_rgba(45,27,90,0.5)] backdrop-blur-xl'
+              : 'border-b border-ink-200 bg-white/90 backdrop-blur-md'
+        }`}
+      >
+        <nav aria-label="Primary" className="shell">
+          <div className="flex h-16 items-center justify-between gap-6 sm:h-20">
+            {/* Wordmark */}
+            <Link href="/" className="focus-ring group flex shrink-0 items-center gap-3" aria-label="CEPCA home">
+              <span
+                className={`flex h-10 w-10 items-center justify-center rounded-xl ring-1 ring-inset transition-colors duration-300 sm:h-11 sm:w-11 ${
+                  overHero
+                    ? 'bg-white/10 ring-white/25 group-hover:ring-white/50'
+                    : 'bg-plum-50 ring-plum-100 group-hover:ring-plum-300'
+                }`}
+              >
+                <Image
                 src="/images/logo_CEPCA.png"
-                alt="CEPCA Logo"
-                width={40}
-                height={40}
-                className="sm:w-[50px] sm:h-[50px]"
+                alt=""
+                width={26}
+                height={26}
+                aria-hidden="true"
+                className="h-auto w-auto"
               />
-            </div>
-            <div>
-              <h1 className={getLogoTextStyles()}>{t('common.cepca')}</h1>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
-            {menuItems.map((item) => (
-              <div key={item.name} className="relative group">
-                <Link href={item.href || '#'} className={getDesktopLinkStyles()}>
-                  {item.name}
-                </Link>
-                {item.submenu && (
-                  <div className="absolute left-0 mt-2 w-64 bg-white/95 backdrop-blur-md rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-white/20">
-                    <div className="py-2">
-                      {item.submenu.map((subitem) => (
-                        <Link
-                          key={subitem.name}
-                          href={subitem.href || '#'}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors duration-200"
-                        >
-                          {subitem.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-            <LanguageSelector />
-            <Link href="/give" className={getDonateButtonStyles()}>
-              {t('common.donate')}
+              </span>
+              <span className="leading-none">
+                <span
+                  className={`block font-display text-lg font-semibold tracking-tight transition-colors duration-300 sm:text-xl ${
+                    overHero ? 'text-white' : 'text-ink-900'
+                  }`}
+                >
+                  {t('common.cepca')}
+                </span>
+                <span
+                  className={`mt-1 hidden font-mono text-[0.55rem] uppercase tracking-[0.2em] transition-colors duration-300 sm:block ${
+                    overHero ? 'text-white/70' : 'text-ink-500'
+                  }`}
+                >
+                  {t('footer.tagline')}
+                </span>
+              </span>
             </Link>
-          </div>
 
-          {/* Mobile menu button */}
-          <div className="lg:hidden flex items-center space-x-3">
-            <LanguageSelector />
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={getMobileMenuButtonStyles()}
-            >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-        </div>
-      </div>
+            {/* Desktop */}
+            <div className="hidden items-center gap-0.5 xl:flex">
+              {menuItems.map((item) => {
+                const current = isCurrent(item);
+                const trigger = `focus-ring relative flex items-center gap-1 rounded-lg px-3 py-2 font-ui text-[0.83rem] font-medium transition-colors duration-300 ${
+                  overHero
+                    ? current
+                      ? 'text-white'
+                      : 'text-white/80 hover:text-white'
+                    : current
+                      ? 'text-plum-700'
+                      : 'text-ink-600 hover:text-ink-900'
+                }`;
+                const rule = `pointer-events-none absolute inset-x-3 bottom-1 h-[2px] origin-left rounded-full transition-transform duration-300 ease-spring ${
+                  overHero ? 'bg-white' : 'bg-plum-600'
+                } ${
+                  current ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                }`;
 
-      {/* Mobile Navigation */}
-      {isMenuOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-[3.9rem] sm:top-[4.9rem] bottom-0 z-10 bg-white/95 backdrop-blur-md flex flex-col">
-          <div className="flex-1 overflow-y-auto px-4 py-4">
-            <div className="space-y-1">
-              {menuItems.map((item) => (
-                <div key={item.name}>
-                  {item.submenu ? (
-                    <div>
-                      <button
-                        onClick={() => toggleDropdown(item.name)}
-                        className="flex items-center justify-between w-full text-gray-700 hover:text-purple-600 active:text-purple-700 font-medium py-3 hover:bg-purple-50 active:bg-purple-100 px-3 rounded-lg touch-manipulation"
-                      >
-                        <span>{item.name}</span>
-                        {openDropdowns.includes(item.name) ? (
-                          <ChevronUp className="w-4 h-4" />
-                        ) : (
-                          <ChevronDown className="w-4 h-4" />
+                return (
+                  <div key={item.name} className="group relative">
+                    {item.href ? (
+                      <Link href={item.href} aria-current={current ? 'page' : undefined} className={trigger}>
+                        {item.name}
+                        {item.submenu && (
+                          <ChevronDown className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-180" />
                         )}
+                        <span className={rule} />
+                      </Link>
+                    ) : (
+                      <button type="button" aria-haspopup="true" className={trigger}>
+                        {item.name}
+                        <ChevronDown className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-180" />
+                        <span className={rule} />
                       </button>
-                      {openDropdowns.includes(item.name) && (
-                        <div className="pl-4 space-y-1 pb-2">
-                          {item.submenu.map((subitem) => (
-                            <Link
-                              key={subitem.name}
-                              href={subitem.href || '#'}
-                              className={mobileSubMenuItemStyles}
-                              onClick={closeMenu}
-                            >
-                              {subitem.name}
-                            </Link>
-                          ))}
+                    )}
+
+                    {item.submenu && (
+                      <div
+                        className={`invisible absolute left-1/2 top-full z-nav -translate-x-1/2 translate-y-1 pt-3 opacity-0 transition-all duration-200 ease-spring group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 ${
+                          item.wide ? 'w-[38rem]' : 'w-max min-w-[15rem] max-w-[22rem]'
+                        }`}
+                      >
+                        <div className="panel overflow-hidden rounded-2xl p-2">
+                          {/* The twelve member churches would be an unusable
+                              single column, so the long list splits in two. */}
+                          <div className={item.wide ? 'grid grid-cols-2 gap-1' : ''}>
+                            {item.submenu.map((subitem) => {
+                              const subCurrent = pathname === subitem.href;
+                              return (
+                                <Link
+                                  key={subitem.href}
+                                  href={subitem.href}
+                                  aria-current={subCurrent ? 'page' : undefined}
+                                  className={`focus-ring block rounded-xl px-3.5 py-2.5 text-[0.82rem] leading-snug transition-colors duration-200 ${
+                                    subCurrent
+                                      ? 'bg-plum-50 font-medium text-plum-700'
+                                      : 'text-ink-600 hover:bg-ink-50 hover:text-ink-900'
+                                  }`}
+                                >
+                                  {subitem.name}
+                                </Link>
+                              );
+                            })}
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  ) : (
-                    <Link
-                      href={item.href || '#'}
-                      className={mobileMenuItemStyles}
-                      onClick={closeMenu}
-                    >
-                      {item.name}
-                    </Link>
-                  )}
-                </div>
-              ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+              <div className="ml-4 flex items-center gap-3">
+                <LanguageSelector onDark={overHero} />
+                <Link
+                  href="/give"
+                  className="focus-ring rounded-full bg-leaf-600 px-5 py-2.5 font-ui text-[0.83rem] font-semibold text-white transition-all duration-300 ease-spring hover:bg-leaf-700 hover:shadow-[0_14px_30px_-12px_rgba(39,113,78,0.75)] active:translate-y-px"
+                >
+                  {t('common.donate')}
+                </Link>
+              </div>
+            </div>
+
+            {/* Mobile trigger */}
+            <div className="flex items-center gap-2 xl:hidden">
+              <LanguageSelector onDark={overHero} />
+              <button
+                type="button"
+                onClick={() => setIsMenuOpen((open) => !open)}
+                aria-expanded={isMenuOpen}
+                aria-controls="mobile-menu"
+                aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+                className={`focus-ring rounded-lg p-2.5 transition-colors duration-200 ${
+                  overHero
+                    ? 'text-white hover:bg-white/[0.15] active:bg-white/25'
+                    : 'text-ink-800 hover:bg-ink-100 active:bg-ink-200'
+                }`}
+              >
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
             </div>
           </div>
+        </nav>
 
-          {/* Fixed donate button at bottom */}
-          <div className="p-4">
+        {/* Reading progress — sits on the header's bottom edge */}
+        <span
+          ref={progressRef}
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-plum-600 to-plum-400"
+        />
+      </header>
+
+      {/*
+        Mobile sheet — deliberately a sibling of <header>, never a child.
+        The bar carries `backdrop-blur`, and a backdrop-filter makes an element
+        the containing block for its `position: fixed` descendants: nested
+        inside it, `top-16 bottom-0` resolved against the 64px bar instead of
+        the viewport and the sheet collapsed to zero height. It must also clear
+        the floating WhatsApp button, which sits at z-float (70).
+      */}
+      {isMenuOpen && (
+        <div
+          id="mobile-menu"
+          className="fixed inset-x-0 bottom-0 top-16 z-[80] flex flex-col bg-white sm:top-20 xl:hidden"
+        >
+          <div className="shell flex-1 overflow-y-auto py-6">
+            {/* The trigger runs up to 1280px, so on a tablet the list has to
+                stop short of the full width or the rows read as stray rules. */}
+            <ul className="mx-auto w-full max-w-2xl space-y-1">
+              {menuItems.map((item) => {
+                const current = isCurrent(item);
+                const expanded = openDropdowns.includes(item.name);
+
+                return (
+                  <li key={item.name} className="border-b border-ink-200">
+                    {item.submenu ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => toggleDropdown(item.name)}
+                          aria-expanded={expanded}
+                          className={`focus-ring flex w-full items-center justify-between gap-3 py-4 text-left font-ui text-[0.95rem] font-medium transition-colors ${
+                            current ? 'text-plum-700' : 'text-ink-900'
+                          }`}
+                        >
+                          {item.name}
+                          <ChevronDown
+                            className={`h-4 w-4 shrink-0 text-ink-400 transition-transform duration-300 ease-spring ${
+                              expanded ? 'rotate-180' : ''
+                            }`}
+                          />
+                        </button>
+
+                        {expanded && (
+                          <ul
+                            className={`space-y-0.5 pb-3 pl-3 ${
+                              // Twelve member churches in a single column
+                              // outrun even a tablet; from `sm` they pair up.
+                              item.wide ? 'sm:grid sm:grid-cols-2 sm:gap-x-2 sm:space-y-0' : ''
+                            }`}
+                          >
+                            {item.href && (
+                              <li className={item.wide ? 'sm:col-span-2' : undefined}>
+                                <Link
+                                  href={item.href}
+                                  onClick={closeMenu}
+                                  className="focus-ring block rounded-lg px-3 py-2.5 text-sm font-medium text-plum-700 transition-colors hover:bg-plum-50"
+                                >
+                                  {t('common.viewAll')}
+                                </Link>
+                              </li>
+                            )}
+                            {item.submenu.map((subitem) => (
+                              <li key={subitem.href}>
+                                <Link
+                                  href={subitem.href}
+                                  onClick={closeMenu}
+                                  aria-current={pathname === subitem.href ? 'page' : undefined}
+                                  className={`focus-ring block rounded-lg px-3 py-2.5 text-sm leading-snug transition-colors ${
+                                    pathname === subitem.href
+                                      ? 'bg-plum-50 font-medium text-plum-700'
+                                      : 'text-ink-600 hover:bg-ink-50 hover:text-ink-900'
+                                  }`}
+                                >
+                                  {subitem.name}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </>
+                    ) : (
+                      <Link
+                        href={item.href ?? '#'}
+                        onClick={closeMenu}
+                        aria-current={current ? 'page' : undefined}
+                        className={`focus-ring block py-4 font-ui text-[0.95rem] font-medium transition-colors ${
+                          current ? 'text-plum-700' : 'text-ink-900 hover:text-plum-700'
+                        }`}
+                      >
+                        {item.name}
+                      </Link>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+
+          <div className="shell border-t border-ink-200 py-4">
             <Link
               href="/give"
-              className="block bg-green-600 hover:bg-green-700 active:bg-green-800 text-white px-4 py-3 rounded-lg font-medium text-center touch-manipulation"
               onClick={closeMenu}
+              className="focus-ring mx-auto block w-full max-w-2xl rounded-full bg-leaf-600 px-5 py-3.5 text-center font-ui text-sm font-semibold text-white transition-colors hover:bg-leaf-700 active:translate-y-px"
             >
               {t('common.donate')}
             </Link>
           </div>
         </div>
       )}
-    </nav>
+    </>
   );
 };
 

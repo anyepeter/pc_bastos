@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Bilingual (EN/FR) website for CEPCA/CPCC, a Cameroonian council of Protestant churches. Next.js 14 App Router, TypeScript, Tailwind + shadcn/ui, Prisma/PostgreSQL (Neon), Clerk auth, Cloudinary images, Redux Toolkit + i18next for language state.
+Bilingual (EN/FR) website for CEPCA/CPCC, a Cameroonian council of Protestant churches. Next.js 14 App Router, TypeScript, Tailwind + shadcn/ui, Prisma/PostgreSQL (Neon), self-hosted email + password auth, Cloudinary images, Redux Toolkit + i18next for language state.
 
 ## Commands
 
@@ -86,9 +86,11 @@ SSR hydration pattern instead: the server page fetches via a Server Action and p
 
 ### Auth and roles
 
-Clerk. [middleware.ts](middleware.ts) protects `/admin(.*)`; sign-in lives at [app/sign-in/](app/sign-in/).
+Self-hosted email + password. Accounts are `User` rows; passwords are bcrypt hashes (cost 12, [lib/auth/password.ts](lib/auth/password.ts)). A login creates a `Session` row and sets a signed, `httpOnly`, `sameSite=lax` cookie holding only that row's id — signed with `jose` using **`SESSION_SECRET`**, which must be set in every environment. [lib/auth/session.ts](lib/auth/session.ts) exposes `getSession()` / `createSession()` / `destroySession()`; the login and logout actions live in [app/actions/auth.ts](app/actions/auth.ts) and the login page at [app/sign-in/page.tsx](app/sign-in/page.tsx).
 
-Two roles, defined in [lib/auth/roles.ts](lib/auth/roles.ts) and stored in the Clerk user's `publicMetadata`:
+[middleware.ts](middleware.ts) protects `/admin(.*)`. It only verifies the cookie's signature — the Edge runtime cannot reach the database — so it is a redirect convenience, not the authorisation check.
+
+Two roles, defined in [lib/auth/roles.ts](lib/auth/roles.ts) and stored on the `User` row:
 
 - **`super_admin`** — the council secretariat. Every content type plus church accounts.
 - **`church`** — one member church. May edit only its own `MemberChurch` record, via `/admin/my-church`.
@@ -99,7 +101,9 @@ Enforced in three layers, and all three matter:
 2. Every council page calls `requireSuperAdminPage()` (redirects a church account to `/admin/my-church`).
 3. Every write action calls `requireSuperAdmin()` (throws) — centralised in [lib/admin/resource-actions.ts](lib/admin/resource-actions.ts) and [app/actions/blog.ts](app/actions/blog.ts). Church writes go through [app/actions/churches.ts](app/actions/churches.ts), where `resolveEditableChurchId` **discards any id sent by the browser** and substitutes the session's own `churchId`.
 
-A church account is created by inviting an email from `/admin/churches/<id>/edit`; the role and `churchId` travel on the Clerk invitation and land in `publicMetadata` on sign-up.
+A church account is created from `/admin/churches/<id>/edit`, which writes a `User` row with role `church` and that church's id, and shows a generated temporary password **once**. There is no mailer in this project — the secretariat passes the password on by hand. `/admin/account` lets any account change its own password; `resetChurchAccountPassword` issues a new temporary one and drops every open session.
+
+Seed or reset a super admin with `npm run create-admin` (`ADMIN_EMAIL` + `ADMIN_PASSWORD`, or two arguments). Credentials are never hardcoded.
 
 **`SUPER_ADMIN_EMAILS`** (comma-separated) restricts who counts as super admin. While unset, any signed-in account without role metadata is treated as super admin — convenient now, but set it before launch.
 

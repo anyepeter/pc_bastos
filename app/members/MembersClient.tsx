@@ -1,11 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
-import { MapPin, Calendar, Users } from 'lucide-react';
+import { ArrowUpRight, Calendar, MapPin, Users } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText } from '@/lib/translations';
+import PageHero from '@/components/PageHero';
+import PageSection from '@/components/PageSection';
+import SectionHeading from '@/components/SectionHeading';
+import Reveal from '@/components/Reveal';
 
 export interface PublicChurch {
   id: string;
@@ -20,124 +23,127 @@ export interface PublicChurch {
 export default function MembersClient({ churches }: { churches: PublicChurch[] }) {
   const { t } = useTranslation();
   const language = useAppSelector((state) => state.blog.language);
-  const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+  /* Figures are rendered as literal strings rather than through <CountUp>:
+     `15,500` is separated copy, and toLocaleString() would re-punctuate it
+     per browser locale. */
+  const figures = [
+    { value: String(churches.length), label: t('members.memberChurches') },
+    { value: '13M+', label: t('welcome.stats.believers') },
+    { value: '15,500', label: 'Congregations' },
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100">
-      {/* Hero Section */}
-      <div className="text-white relative overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: 'url("https://images.unsplash.com/photo-1438032005730-c779502df39b?w=1920&h=600&fit=crop&auto=format")'
-          }}
+    <>
+      <PageHero
+        eyebrow={t('members.memberChurches')}
+        title={t('members.pageTitle')}
+        titleHighlight={t('members.pageTitleHighlight')}
+        lede={t('members.pageSubtitle')}
+        crumbs={[
+          { label: t('navbar.home'), href: '/' },
+          { label: t('members.memberChurches') },
+        ]}
+      />
+
+      {/* The council in figures. Kept ahead of the directory, as it was, so the
+          twelve arrive with their scale already established. */}
+      <PageSection tone="tint">
+        <SectionHeading
+          title={t('members.unitedInFaith')}
+          standfirst={t('members.servingTogether')}
         />
-        <div className="absolute inset-0 bg-black/70"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 md:pt-32 pb-12 md:pb-16">
-          <div className={`transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-4">
-              {t('members.pageTitle')} <span className="bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">{t('members.pageTitleHighlight')}</span>
-            </h1>
-            <p className="text-xl text-purple-100 font-inter leading-relaxed max-w-3xl">
-              {t('members.pageSubtitle')}
-            </p>
-          </div>
-        </div>
-      </div>
 
-      {/* Stats Section */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
-        <div className={`transform transition-all duration-1000 ease-out delay-200 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/50">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold font-playfair bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
-                {t('members.unitedInFaith')}
-              </h2>
-              <p className="text-gray-600 font-inter">
-                {t('members.servingTogether')}
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-              <div>
-                <div className="text-4xl font-bold text-purple-600 mb-2">{churches.length}</div>
-                <div className="text-gray-600 font-inter">{t('members.memberChurches')}</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold text-indigo-600 mb-2">13M+</div>
-                <div className="text-gray-600 font-inter">{t('welcome.stats.believers')}</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold text-green-600 mb-2">15,500</div>
-                <div className="text-gray-600 font-inter">Congregations</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        <dl className="mt-11 grid grid-cols-1 gap-x-10 gap-y-10 border-t border-ink-200 pt-11 sm:grid-cols-3">
+          {figures.map((figure, i) => (
+            <Reveal key={figure.label} delay={Math.min(i, 8) * 60}>
+              <dt className="sr-only">{figure.label}</dt>
+              <dd>
+                <span className="tnum block font-display text-[clamp(2.4rem,4.4vw,3.5rem)] font-semibold leading-none tracking-tight text-ink-900">
+                  {figure.value}
+                </span>
+                <span className="mt-3 block font-mono text-[0.62rem] uppercase tracking-[0.2em] text-plum-700">
+                  {figure.label}
+                </span>
+              </dd>
+            </Reveal>
+          ))}
+        </dl>
+      </PageSection>
 
-      {/* Members Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {churches.map((member, index) => {
-            const slug = member.slug;
+      {/* The directory itself — the landing page's tile language, opened out
+          far enough to carry each church's leader, seat and founding year. */}
+      <PageSection tone="white">
+        <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+          {churches.map((member, i) => {
             const denomination = getTranslatedText(member.denomination as any, language);
             const leader = getTranslatedText(member.leader as any, language);
             const location = getTranslatedText(member.location as any, language);
 
             return (
-            <div
-              key={slug}
-              className={`transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
-              style={{ transitionDelay: `${300 + index * 100}ms` }}
-            >
-              <Link href={`/members/${slug}`}>
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/50 hover:shadow-xl hover:scale-105 transition-all duration-300 group cursor-pointer">
-                  <div className="flex items-center space-x-4 mb-4">
-                    <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+              <Reveal as="li" key={member.id} delay={Math.min(i, 8) * 60}>
+                <Link
+                  href={`/members/${member.slug}`}
+                  className="card card-hover focus-ring group flex h-full flex-col p-6 lg:p-7"
+                >
+                  <div className="flex items-start gap-5">
+                    <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-ink-200 bg-white p-2 transition-colors duration-300 group-hover:border-leaf-300">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={member.logo || '/images/logo_CEPCA.png'}
                         alt={`${denomination} logo`}
-                        className="w-full h-full object-cover"
+                        loading="lazy"
+                        className="h-full w-full object-contain"
                       />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-bold font-playfair text-gray-900 group-hover:text-purple-600 transition-colors line-clamp-2">
-                        {denomination}
-                      </h3>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Users className="w-4 h-4 mr-2 text-purple-500" />
-                      <span className="truncate">{leader}</span>
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <MapPin className="w-4 h-4 mr-2 text-blue-500" />
-                      <span>{location}</span>
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Calendar className="w-4 h-4 mr-2 text-green-500" />
-                      <span>{t('members.founded')} {member.founded}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <span className="text-purple-600 font-semibold text-sm group-hover:text-purple-700 transition-colors">
-                      {t('members.viewDetails')} →
                     </span>
+
+                    <h2 className="font-display text-lg font-semibold leading-snug tracking-tight text-ink-900 transition-colors duration-300 group-hover:text-plum-700">
+                      {denomination}
+                    </h2>
                   </div>
-                </div>
-              </Link>
-            </div>
+
+                  <ul className="mt-6 space-y-3 border-t border-ink-200 pt-5">
+                    {leader && (
+                      <li className="flex items-start gap-2.5">
+                        <Users
+                          aria-hidden="true"
+                          className="mt-0.5 h-4 w-4 shrink-0 text-leaf-600"
+                        />
+                        <span className="text-sm leading-snug text-ink-600">{leader}</span>
+                      </li>
+                    )}
+                    {location && (
+                      <li className="flex items-start gap-2.5">
+                        <MapPin
+                          aria-hidden="true"
+                          className="mt-0.5 h-4 w-4 shrink-0 text-leaf-600"
+                        />
+                        <span className="text-sm leading-snug text-ink-600">{location}</span>
+                      </li>
+                    )}
+                    {member.founded && (
+                      <li className="flex items-start gap-2.5">
+                        <Calendar
+                          aria-hidden="true"
+                          className="mt-0.5 h-4 w-4 shrink-0 text-leaf-600"
+                        />
+                        <span className="text-sm leading-snug text-ink-600">
+                          {t('members.founded')} <span className="tnum">{member.founded}</span>
+                        </span>
+                      </li>
+                    )}
+                  </ul>
+
+                  <span className="mt-auto inline-flex items-center gap-2 pt-7 font-ui text-sm font-medium text-plum-700">
+                    {t('members.viewDetails')}
+                    <ArrowUpRight className="h-4 w-4 transition-transform duration-300 ease-spring group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </span>
+                </Link>
+              </Reveal>
             );
           })}
-        </div>
-      </div>
-    </div>
+        </ul>
+      </PageSection>
+    </>
   );
 }

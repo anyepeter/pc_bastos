@@ -1,355 +1,520 @@
 'use client';
 
 import { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, Heart, MessageCircle } from 'lucide-react';
+import {
+  AlertCircle,
+  CheckCircle2,
+  Heart,
+  Loader2,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Send,
+} from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import PageLayout from '@/components/PageLayout';
-import HomeButton from '@/components/homeButton';
+import PageHero from '@/components/PageHero';
+import PageSection from '@/components/PageSection';
+import SectionHeading from '@/components/SectionHeading';
+import Reveal from '@/components/Reveal';
+
+/** The council's own map pin. Linked out rather than proxied — the footer does the same. */
+const MAPS_URL = 'https://maps.app.goo.gl/ehjxm8QprKj2Jpv16';
+
+const FIELDS = ['name', 'email', 'phone', 'subject', 'message'] as const;
+type FieldName = (typeof FIELDS)[number];
+
+const EMPTY_FORM = {
+  name: '',
+  email: '',
+  phone: '',
+  subject: '',
+  message: '',
+  requestType: 'general',
+};
+
+/**
+ * Field chrome. The invalid state changes the border *and* the ground, and is
+ * always accompanied by an icon and a message — colour never carries the
+ * signal on its own.
+ *
+ * Note the invalid tint is plum, not red. The palette has exactly three ramps,
+ * and the only red in the project (`--destructive`, ~3.8:1 on white) fails the
+ * 4.5:1 floor for body copy — so the message carries an icon and text, and the
+ * ground shift is only a supporting cue.
+ */
+const fieldClass = (invalid: boolean) =>
+  `focus-ring w-full rounded-xl border px-4 py-3 font-ui text-[15px] text-ink-900 placeholder:text-ink-400 transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-60 ${
+    invalid
+      ? 'border-plum-500 bg-plum-50'
+      : 'border-ink-200 bg-white hover:border-ink-300 focus:border-plum-400'
+  }`;
+
+const labelClass = 'block font-ui text-[13px] font-semibold tracking-wide text-ink-700';
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
-    requestType: 'general'
-  });
+  const { t } = useTranslation();
 
+  const [formData, setFormData] = useState(EMPTY_FORM);
+  const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sent, setSent] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  /**
+   * There is no submit target. This project has no API routes and no mailer —
+   * every server round-trip goes through a Server Action in `app/actions/`,
+   * and none of them accepts a contact enquiry. The original page faked the
+   * send with a `setTimeout` and an `alert()`; that behaviour is kept exactly,
+   * with the confirmation moved out of the modal alert and into the polite
+   * live region below the button so assistive technology hears it in place.
+   *
+   * When a real endpoint exists, replace the timeout — nothing else here
+   * needs to change.
+   */
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    alert('Thank you for your message! We\'ll get back to you soon.');
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: '',
-      requestType: 'general'
+    const form = e.currentTarget;
+    setSent(false);
+
+    // Constraint validation, reported inline. The messages come from the
+    // browser itself, so they arrive already translated into the user's
+    // locale — this page has no locale keys of its own for them.
+    const found: Partial<Record<FieldName, string>> = {};
+    FIELDS.forEach((name) => {
+      const el = form.querySelector<HTMLInputElement | HTMLTextAreaElement>(`[name="${name}"]`);
+      if (el && !el.checkValidity()) found[name] = el.validationMessage;
     });
+
+    if (Object.keys(found).length > 0) {
+      setErrors(found);
+      const first = FIELDS.find((name) => found[name]);
+      if (first) form.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
+      return;
+    }
+
+    setErrors({});
+    setIsSubmitting(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    setFormData(EMPTY_FORM);
     setIsSubmitting(false);
+    setSent(true);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((current) => ({ ...current, [name]: value }));
+    // Clear the message as soon as the field is being corrected.
+    setErrors((current) => {
+      if (!(name in current)) return current;
+      const next = { ...current };
+      delete next[name as FieldName];
+      return next;
     });
   };
 
   const handlePrayerRequest = () => {
-    setFormData({
-      ...formData,
+    setFormData((current) => ({
+      ...current,
       requestType: 'prayer',
-      subject: 'Prayer Request'
-    });
+      subject: 'Prayer Request',
+    }));
     document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  /**
+   * The four ways to reach the council. Values match the footer exactly — one
+   * set of numbers and one address across the site.
+   */
+  const channels = [
+    {
+      id: 'visit',
+      Icon: MapPin,
+      title: t('contact.visitUs.title'),
+      body: t('contact.visitUs.address'),
+      links: [{ href: MAPS_URL, label: t('contact.visitUs.getDirections'), external: true }],
+      note: undefined,
+    },
+    {
+      id: 'call',
+      Icon: Phone,
+      title: t('contact.callUs.title'),
+      body: undefined,
+      links: [{ href: 'https://wa.me/237242657608', label: '+237 242 657 608', external: true }],
+      note: t('contact.callUs.hours'),
+    },
+    {
+      id: 'email',
+      Icon: Mail,
+      title: t('contact.emailUs.title'),
+      body: undefined,
+      links: [
+        {
+          href: 'mailto:generalsecretarycepca@gmail.com',
+          label: 'generalsecretarycepca@gmail.com',
+          external: false,
+        },
+      ],
+      note: t('contact.emailUs.response'),
+    },
+    {
+      id: 'whatsapp',
+      Icon: MessageCircle,
+      title: t('contact.whatsapp.title'),
+      body: undefined,
+      links: [
+        { href: 'https://wa.me/237677875300', label: '+237 677 875 300', external: true },
+        { href: 'https://wa.me/237656779874', label: '+237 656 779 874', external: true },
+      ],
+      note: t('contact.whatsapp.quickResponses'),
+    },
+  ];
+
+  const required = t('contact.form.required');
+
   return (
     <PageLayout>
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(2rem);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
-      <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="relative pt-16 pb-8 text-white">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: 'url("https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1920&h=600&fit=crop&auto=format")'
-          }}
+      <PageHero
+        eyebrow={t('navbar.contactUs')}
+        title={t('contact.pageTitle')}
+        titleHighlight={t('contact.pageTitleHighlight')}
+        lede={t('contact.pageSubtitle')}
+        crumbs={[{ label: t('navbar.home'), href: '/' }, { label: t('navbar.contactUs') }]}
+      />
+
+      {/* The channels and the form, side by side. The form takes the wider
+          column: it is the reason most people open this page. */}
+      <PageSection tone="white">
+        <SectionHeading
+          title={t('contact.weAreHere')}
+          standfirst={t('contact.description')}
+          layout="split"
         />
-        <div className="absolute inset-0 bg-black/70"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8 relative z-10">
-          <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
-              Get in <span className="text-yellow-300">Touch</span>
-            </h1>
-            <p className="text-xl text-green-100 max-w-3xl mx-auto">
-              We'd love to hear from you! Whether you're planning your first visit, 
-              need prayer, or want to learn more about our church family.
-            </p>
-          </div>
-        </div>
-      </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Information */}
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-serif font-bold text-gray-900 mb-6">
-                We're Here for You
-              </h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Our team is ready to answer your questions, pray with you, 
-                or help you take your next step in faith. Don't hesitate to reach out!
-              </p>
-            </div>
+        <div className="mt-11 grid gap-8 lg:grid-cols-12 lg:gap-10">
+          <ul className="grid gap-5 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1">
+            {channels.map((channel, i) => {
+              const { Icon } = channel;
 
-            {/* Contact Cards */}
-            <div className="space-y-6">
-              <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 opacity-0 translate-y-8 animate-[fadeInUp_1.2s_ease-out_0.2s_forwards] group">
-                <div className="flex items-center sm:items-start justify-center flex-col sm:flex-row sm:justify-start gap-4 sm:gap-4">
-                  <div className="w-12 h-12 bg-primary/10 group-hover:bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-300">
-                    <MapPin className="w-6 h-6 text-primary" />
+              return (
+                <Reveal as="li" key={channel.id} delay={Math.min(i, 8) * 60}>
+                  <div className="card card-hover flex h-full gap-5 rounded-2xl p-6">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                      <Icon aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+                    </span>
+
+                    <div className="min-w-0">
+                      <h3 className="font-display text-xl font-semibold leading-tight tracking-tight text-ink-900">
+                        {channel.title}
+                      </h3>
+
+                      {channel.body && (
+                        <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-ink-600">
+                          {channel.body}
+                        </p>
+                      )}
+
+                      <ul className="mt-3 space-y-1">
+                        {channel.links.map((link) => (
+                          <li key={link.href}>
+                            <a
+                              href={link.href}
+                              {...(link.external
+                                ? { target: '_blank', rel: 'noopener noreferrer' }
+                                : {})}
+                              className="focus-ring inline-block break-words rounded font-ui text-sm font-medium text-plum-700 transition-colors duration-300 hover:text-plum-600"
+                            >
+                              {link.label}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {channel.note && (
+                        <p className="mt-3 whitespace-pre-line text-[13px] leading-relaxed text-ink-500">
+                          {channel.note}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div className="text-center sm:text-left">
-                    <h3 className="text-xl font-semibold text-gray-900 group-hover:text-primary transition-colors duration-300">Visit Us</h3>
-                    <p className="text-gray-600">
-                      CEPCA<br />
-                      Bastos, Yaoundé, Cameroon
-                    </p>
-                    <a href="https://maps.app.goo.gl/ehjxm8QprKj2Jpv16" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 font-medium transition-colors duration-300">
-                      Get Directions →
-                    </a>
-                  </div>
-                </div>
-              </div>
+                </Reveal>
+              );
+            })}
+          </ul>
 
-              <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 opacity-0 translate-y-8 animate-[fadeInUp_1.2s_ease-out_0.4s_forwards] group">
-                <div className="flex items-center sm:items-start justify-center flex-col sm:flex-row sm:justify-start gap-4 sm:gap-4">
-                  <div className="w-12 h-12 bg-primary/10 group-hover:bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-300">
-                    <Phone className="w-6 h-6 text-primary" />
-                  </div>
-                  <div className="text-center sm:text-left">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors duration-300">Call Us</h3>
-                    <a href="https://wa.me/237242657608" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 font-medium block transition-colors duration-300">+237 242 657 608</a>
-                    <p className="text-sm text-gray-500">
-                      Monday - Friday: 9:00 AM - 5:00 PM<br />
-                      Emergency: Available 24/7
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 opacity-0 translate-y-8 animate-[fadeInUp_1.2s_ease-out_0.6s_forwards] group">
-                <div className="flex items-center sm:items-start justify-center flex-col sm:flex-row sm:justify-start gap-4 sm:gap-4">
-                  <div className="w-12 h-12 bg-primary/10 group-hover:bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-300">
-                    <Mail className="w-6 h-6 text-primary" />
-                  </div>
-                  <div className="text-center sm:text-left">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors duration-300">Email Us</h3>
-                    <a href="mailto:generalsecretarycepca@gmail.com" className="text-primary hover:text-primary/80 font-medium block transition-colors duration-300">generalsecretarycepca@gmail.com</a>
-                    <p className="text-sm text-gray-500">
-                      We typically respond within 24 hours
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 opacity-0 translate-y-8 animate-[fadeInUp_1.2s_ease-out_0.8s_forwards] group">
-                <div className="flex items-center sm:items-start justify-center flex-col sm:flex-row sm:justify-start gap-4 sm:gap-4">
-                  <div className="w-12 h-12 bg-primary/10 group-hover:bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-300">
-                    <MessageCircle className="w-6 h-6 text-primary" />
-                  </div>
-                  <div className="text-center sm:text-left">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors duration-300">Contact on WhatsApp</h3>
-                    <a href="https://wa.me/237677875300" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 font-medium block transition-colors duration-300">+237 677 875 300</a>
-                    <a href="https://wa.me/237656779874" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 font-medium block transition-colors duration-300">+237 656 779 874</a>
-                    <p className="text-sm text-gray-500">
-                      Quick responses via WhatsApp
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-
-            </div>
-          </div>
-
-          {/* Contact Form */}
-          <div id="contact-form" className="bg-white rounded-2xl shadow-xl hover:shadow-2xl p-8 opacity-0 translate-y-8 animate-[fadeInUp_1.2s_ease-out_0.3s_forwards] transition-all duration-500 ease-out">
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Heart className="w-8 h-8 text-primary" />
-              </div>
-              <h2 className="text-2xl font-serif font-bold text-gray-900 mb-2">
-                Send Us a Message
-              </h2>
-              <p className="text-gray-600">
-                We'd love to hear from you. Fill out the form below and we'll be in touch!
-              </p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Reveal delay={120} className="lg:col-span-7">
+            <div id="contact-form" className="card scroll-mt-28 rounded-2xl p-6 sm:p-8 lg:p-10">
+              <div className="flex items-start gap-5">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                  <Heart aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+                </span>
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
-                    placeholder="Your full name"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
-                    placeholder="your.email@example.com"
-                  />
+                  <h3 className="font-display text-2xl font-semibold leading-tight tracking-tight text-ink-900">
+                    {t('contact.form.title')}
+                  </h3>
+                  <p className="mt-2 max-w-[48ch] text-sm leading-relaxed text-ink-600 text-pretty">
+                    {t('contact.form.subtitle')}
+                  </p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone Number
+              {/* `noValidate` so the inline messages below are what the user
+                  sees — the native bubbles cannot be described by
+                  `aria-describedby` and vanish on the next keystroke. */}
+              <form onSubmit={handleSubmit} noValidate className="mt-9 space-y-5">
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <label htmlFor="name" className={labelClass}>
+                      {t('contact.form.fullName')} {required}
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      autoComplete="name"
+                      required
+                      value={formData.name}
+                      onChange={handleChange}
+                      disabled={isSubmitting}
+                      aria-invalid={errors.name ? true : undefined}
+                      aria-describedby={errors.name ? 'name-error' : undefined}
+                      placeholder={t('contact.form.namePlaceholder')}
+                      className={fieldClass(Boolean(errors.name))}
+                    />
+                    {errors.name && (
+                      <p
+                        id="name-error"
+                        className="flex items-start gap-2 font-ui text-[13px] leading-relaxed text-plum-700"
+                      >
+                        <AlertCircle aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                        <span>{errors.name}</span>
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <label htmlFor="email" className={labelClass}>
+                      {t('contact.form.emailAddress')} {required}
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      inputMode="email"
+                      autoComplete="email"
+                      spellCheck={false}
+                      required
+                      value={formData.email}
+                      onChange={handleChange}
+                      disabled={isSubmitting}
+                      aria-invalid={errors.email ? true : undefined}
+                      aria-describedby={errors.email ? 'email-error' : undefined}
+                      placeholder={t('contact.form.emailPlaceholder')}
+                      className={fieldClass(Boolean(errors.email))}
+                    />
+                    {errors.email && (
+                      <p
+                        id="email-error"
+                        className="flex items-start gap-2 font-ui text-[13px] leading-relaxed text-plum-700"
+                      >
+                        <AlertCircle aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                        <span>{errors.email}</span>
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="phone" className={labelClass}>
+                    {t('contact.form.phoneNumber')}
                   </label>
                   <input
                     type="tel"
                     id="phone"
                     name="phone"
+                    inputMode="tel"
+                    autoComplete="tel"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
-                    placeholder="671 23 45 67"
+                    disabled={isSubmitting}
+                    aria-invalid={errors.phone ? true : undefined}
+                    aria-describedby={errors.phone ? 'phone-error' : undefined}
+                    placeholder={t('contact.form.phonePlaceholder')}
+                    className={fieldClass(Boolean(errors.phone))}
                   />
+                  {errors.phone && (
+                    <p
+                      id="phone-error"
+                      className="flex items-start gap-2 font-ui text-[13px] leading-relaxed text-plum-700"
+                    >
+                      <AlertCircle aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                      <span>{errors.phone}</span>
+                    </p>
+                  )}
                 </div>
-              </div>
 
-              <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
-                  placeholder="What would you like to discuss?"
-                />
-              </div>
+                <div className="space-y-2">
+                  <label htmlFor="subject" className={labelClass}>
+                    {t('contact.form.subject')}
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    autoComplete="off"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    disabled={isSubmitting}
+                    aria-invalid={errors.subject ? true : undefined}
+                    aria-describedby={errors.subject ? 'subject-error' : undefined}
+                    placeholder={t('contact.form.subjectPlaceholder')}
+                    className={fieldClass(Boolean(errors.subject))}
+                  />
+                  {errors.subject && (
+                    <p
+                      id="subject-error"
+                      className="flex items-start gap-2 font-ui text-[13px] leading-relaxed text-plum-700"
+                    >
+                      <AlertCircle aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                      <span>{errors.subject}</span>
+                    </p>
+                  )}
+                </div>
 
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                  Message *
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  required
-                  rows={5}
-                  value={formData.message}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors resize-none"
-                  placeholder="Tell us how we can help you..."
-                />
-              </div>
+                <div className="space-y-2">
+                  <label htmlFor="message" className={labelClass}>
+                    {t('contact.form.message')} {required}
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={6}
+                    required
+                    value={formData.message}
+                    onChange={handleChange}
+                    disabled={isSubmitting}
+                    aria-invalid={errors.message ? true : undefined}
+                    aria-describedby={errors.message ? 'message-error' : undefined}
+                    placeholder={t('contact.form.messagePlaceholder')}
+                    className={`${fieldClass(Boolean(errors.message))} resize-y`}
+                  />
+                  {errors.message && (
+                    <p
+                      id="message-error"
+                      className="flex items-start gap-2 font-ui text-[13px] leading-relaxed text-plum-700"
+                    >
+                      <AlertCircle aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                      <span>{errors.message}</span>
+                    </p>
+                  )}
+                </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-primary hover:bg-primary/90 disabled:bg-gray-400 text-white py-4 px-6 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:transform-none"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
-                    <span>Sending...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5" />
-                    <span>Send Message</span>
-                  </>
-                )}
-              </button>
-            </form>
-          </div>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="focus-ring flex w-full items-center justify-center gap-2.5 rounded-xl bg-plum-600 px-6 py-3.5 font-ui text-[15px] font-semibold text-white shadow-[0_14px_30px_-14px_rgba(93,50,166,0.7)] transition-all duration-300 ease-spring hover:bg-plum-700 hover:shadow-[0_18px_36px_-14px_rgba(93,50,166,0.8)] active:translate-y-px disabled:cursor-not-allowed disabled:bg-plum-400 disabled:shadow-none"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send aria-hidden="true" className="h-4 w-4" />
+                      Send Message
+                    </>
+                  )}
+                </button>
+
+                {/* The outcome, announced politely. Present in the DOM from
+                    first render — and never `display:none`, which stops some
+                    screen readers announcing the insertion — so what gets read
+                    out is the message arriving. */}
+                <div aria-live="polite">
+                  {sent && (
+                    <p className="flex items-start gap-2.5 rounded-xl border border-leaf-200 bg-leaf-50 px-4 py-3 font-ui text-sm leading-relaxed text-leaf-800">
+                      <CheckCircle2 aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
+                      <span>Thank you for your message! We&apos;ll get back to you soon.</span>
+                    </p>
+                  )}
+                </div>
+              </form>
+            </div>
+          </Reveal>
         </div>
+      </PageSection>
 
-        {/* Prayer Request Section */}
-        <div className="mt-20 bg-accent rounded-2xl p-8 md:p-12 text-white text-center">
-          <h2 className="text-3xl font-serif font-bold mb-4">
-            Need Prayer?
-          </h2>
-          <p className="text-lg mb-8 max-w-2xl mx-auto">
-            Our prayer team is committed to lifting up your needs before God. 
-            No request is too big or too small - we're here to pray with you.
-          </p>
-          <button 
+      {/* Prayer. A painted dark band so the invitation punctuates the page
+          instead of reading as one more card. */}
+      <PageSection tone="dark" paint className="py-20 lg:py-28">
+        <SectionHeading
+          title={t('contact.prayer.title')}
+          standfirst={t('contact.prayer.description')}
+          tone="dark"
+          layout="split"
+        />
+
+        <Reveal delay={200} className="mt-11">
+          <button
+            type="button"
             onClick={handlePrayerRequest}
-            className="bg-white text-accent hover:bg-gray-100 px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="focus-ring inline-flex items-center gap-2.5 rounded-full bg-white px-7 py-3.5 font-ui text-sm font-semibold text-plum-900 transition-all duration-300 ease-spring hover:bg-leaf-100 active:translate-y-px"
           >
-            Submit Prayer Request
+            <Heart aria-hidden="true" className="h-4 w-4" />
+            {t('contact.prayer.submitRequest')}
           </button>
-        </div>
+        </Reveal>
+      </PageSection>
 
-        {/* Map Section */}
-        <div className="mt-20">
-          <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
-            <h2 className="text-3xl font-serif font-bold text-gray-900 mb-4">
-              Find Us
-            </h2>
-            <p className="text-lg text-gray-600 mb-8">
-We're located in Bastos, Yaoundé, serving the Presbyterian community with faith and fellowship.
-            </p>
-            <div className="rounded-xl overflow-hidden shadow-lg">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3980.8947!2d11.5021!3d3.8480!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x108bcf1a1a1a1a1a%3A0x1a1a1a1a1a1a1a1a!2sPresbyterian%20Church%2C%20Bastos%2C%20Yaound%C3%A9%2C%20Cameroon!5e0!3m2!1sen!2sus!4v1640995200000!5m2!1sen!2sus"
-                width="100%"
-                height="400"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
-            <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="https://maps.app.goo.gl/ehjxm8QprKj2Jpv16"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-block"
-              >
-                Get Directions
-              </a>
-              <a
-                href="https://maps.app.goo.gl/ehjxm8QprKj2Jpv16"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border border-primary text-primary hover:bg-primary hover:text-white px-6 py-3 rounded-lg font-medium transition-colors inline-block"
-              >
-                View on Google Maps
-              </a>
-            </div>
+      {/* Where to find the secretariat. The embed is kept as it was; the two
+          links below it are the reliable route, and they are the same pin the
+          footer uses. */}
+      <PageSection tone="tint">
+        <SectionHeading
+          title={t('contact.map.title')}
+          standfirst={t('contact.map.description')}
+          layout="split"
+        />
+
+        <Reveal className="mt-11">
+          <div className="card overflow-hidden rounded-2xl">
+            <iframe
+              title={t('contact.map.title')}
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3980.8947!2d11.5021!3d3.8480!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x108bcf1a1a1a1a1a%3A0x1a1a1a1a1a1a1a1a!2sPresbyterian%20Church%2C%20Bastos%2C%20Yaound%C3%A9%2C%20Cameroon!5e0!3m2!1sen!2sus!4v1640995200000!5m2!1sen!2sus"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+              className="block h-[380px] w-full border-0 lg:h-[440px]"
+            />
           </div>
-        </div>
-      </div>
-    </div>
+        </Reveal>
+
+        <Reveal delay={120} className="mt-8">
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <a
+              href={MAPS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus-ring inline-flex items-center justify-center gap-2.5 rounded-full bg-plum-600 px-7 py-3.5 font-ui text-sm font-semibold text-white shadow-[0_14px_30px_-14px_rgba(93,50,166,0.7)] transition-all duration-300 ease-spring hover:bg-plum-700 active:translate-y-px"
+            >
+              <MapPin aria-hidden="true" className="h-4 w-4" />
+              Get Directions
+            </a>
+            <a
+              href={MAPS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus-ring inline-flex items-center justify-center gap-2.5 rounded-full border border-ink-300 bg-white px-7 py-3.5 font-ui text-sm font-semibold text-ink-800 transition-all duration-300 ease-spring hover:border-plum-400 hover:bg-plum-50 active:translate-y-px"
+            >
+              {t('contact.map.viewOnGoogleMaps')}
+            </a>
+          </div>
+        </Reveal>
+      </PageSection>
     </PageLayout>
   );
 }

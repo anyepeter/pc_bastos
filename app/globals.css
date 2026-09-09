@@ -2,76 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 88 70% 15%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 262 83% 58%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 88 70% 15%;
-    --radius: 0.5rem;
-  }
+/* ---------------------------------------------------------------------------
+   shadcn/ui tokens.
 
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 88 70% 15%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 262 83% 58%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 88 70% 15%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    scroll-behavior: smooth;
-  }
-}
-
-.hero-gradient {
-  background: linear-gradient(135deg, rgba(45, 80, 22, 0.9) 0%, rgba(107, 70, 193, 0.8) 100%);
-}
-
-.text-shadow {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+   These drive the admin panel and every light-themed inner page, so they are
+   deliberately left alone. (This file previously contained two full copies of
+   itself; the second :root silently won, which is why --primary read purple
+   while the first block declared dark green. Deduplicated — the values kept
+   below are the ones that were actually in effect.)
+--------------------------------------------------------------------------- */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -136,11 +75,194 @@
   body {
     @apply bg-background text-foreground;
   }
+  html {
+    scroll-behavior: smooth;
+    /* The fixed header must not cover an anchor target. */
+    scroll-padding-top: 6rem;
+  }
+  /* Numerals line up in stat blocks and date chips. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Surface layer — the landing page and the shared chrome.
+
+   A white / violet-tinted-paper ground with a single plum accent. Theme-level:
+   changing these rules re-skins the whole landing page.
+--------------------------------------------------------------------------- */
+@layer components {
+  /* Page shell. One place to control how wide the site runs, so content
+     spreads across large displays instead of stranding whitespace. */
+  .shell {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 100rem;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .shell {
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .shell {
+      padding-inline: 3rem;
+    }
+  }
+  @media (min-width: 1536px) {
+    .shell {
+      padding-inline: 4.5rem;
+    }
+  }
+
+  /* Fine paper tooth. Multiply, not overlay, so it settles the white rather
+     than washing it out. */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.025;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Raised surface. The shadow carries the accent's hue instead of plain
+     black — that is what stops light cards reading as flat grey boxes. */
+  .card {
+    background-color: #ffffff;
+    border: 1px solid theme('colors.ink.200');
+    box-shadow:
+      0 1px 2px rgb(45 27 90 / 0.04),
+      0 14px 34px -18px rgb(45 27 90 / 0.18);
+  }
+
+  /* OPAQUE surface — menus and anything overlapping page content.
+     Deliberately not translucent: a see-through menu let the text underneath
+     read straight through it and made the items unreadable. */
+  .panel {
+    background-color: #ffffff;
+    border: 1px solid theme('colors.ink.200');
+    box-shadow:
+      0 2px 6px rgb(45 27 90 / 0.06),
+      0 28px 60px -20px rgb(45 27 90 / 0.28);
+  }
+
+  .card-hover {
+    transition:
+      border-color 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .card-hover:hover {
+    border-color: theme('colors.plum.300');
+    transform: translateY(-3px);
+    box-shadow:
+      0 2px 4px rgb(45 27 90 / 0.05),
+      0 30px 60px -24px rgb(93 50 166 / 0.35);
+  }
+
+  /* Slow drift on the active slide. Gives the still photographs a sense of
+     movement between transitions without demanding a video. */
+  .kenburns {
+    animation: kenburns 14s ease-out forwards;
+  }
+
+  /* Cursor-tracked spotlight border. --mx/--my are set in JS; without them the
+     highlight sits off-card and the element renders normally. */
+  .spotlight {
+    position: relative;
+  }
+  .spotlight::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(
+      220px circle at var(--mx, -100%) var(--my, -100%),
+      rgb(109 63 200 / 0.45),
+      transparent 70%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 300ms ease;
+    pointer-events: none;
+  }
+  .spotlight:hover::before {
+    opacity: 1;
+  }
+
+  /* Visible keyboard focus that isn't the default browser blue box. */
+  .focus-ring:focus-visible {
+    outline: 2px solid theme('colors.plum.600');
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
 }
 
 @layer utilities {
   .animate-fade-in-up {
     animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  /* Scroll reveal. Elements start displaced and settle once observed; the
+     [data-revealed] attribute is toggled by <Reveal>.
+
+     The hidden state is gated behind `.js`, which an inline script in the
+     document sets before first paint. Without it the content is simply
+     visible — so a failed or slow hydration can never leave the page blank,
+     and crawlers that do not run scripts still see everything. */
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .js .reveal {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+    transition:
+      opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .js .reveal[data-revealed='true'] {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+@keyframes gallery-slide {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    /* Exactly half the track: the row is duplicated, so the loop closes on an
+       identical frame and never visibly jumps. */
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1.04);
+  }
+  to {
+    transform: scale(1.12);
   }
 }
 
@@ -152,6 +274,33 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Motion is decoration here — strip it rather than shipping it to anyone who
+   has asked the OS for less. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal,
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .card-hover:hover {
+    transform: none;
+  }
+  .kenburns {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

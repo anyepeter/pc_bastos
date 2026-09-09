@@ -1,14 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MapPin, User, Phone, Mail, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
+import { Calendar, Mail, MapPin, Phone, User } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import ImageSlider from './ImageSlider';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText } from '@/lib/translations';
+import PageHero from '@/components/PageHero';
+import PageSection from '@/components/PageSection';
+import SectionHeading from '@/components/SectionHeading';
+import Reveal from '@/components/Reveal';
 
 export interface PublicChurchDetail {
   id: string;
@@ -30,142 +32,154 @@ interface MemberDetailClientProps {
   member: PublicChurchDetail;
 }
 
+/* Markdown, styled on-palette. Deliberately not the global `.prose` class:
+   that sheet is written in Tailwind default greys and a blue link colour, and
+   this page has three ramps. */
+const PROSE =
+  'max-w-[68ch] text-base leading-relaxed text-ink-600 text-pretty ' +
+  '[&_p]:mt-5 [&>p:first-child]:mt-0 ' +
+  '[&_h2]:mt-10 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-ink-900 ' +
+  '[&_h3]:mt-9 [&_h3]:font-display [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:tracking-tight [&_h3]:text-ink-900 ' +
+  '[&_h4]:mt-8 [&_h4]:font-ui [&_h4]:text-base [&_h4]:font-semibold [&_h4]:text-ink-900 ' +
+  '[&_strong]:font-semibold [&_strong]:text-ink-900 ' +
+  '[&_a]:font-medium [&_a]:text-plum-700 [&_a]:underline [&_a]:underline-offset-4 ' +
+  '[&_ul]:mt-5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:mt-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mt-2 ' +
+  '[&_blockquote]:mt-6 [&_blockquote]:border-l-2 [&_blockquote]:border-plum-300 [&_blockquote]:pl-5 [&_blockquote]:text-ink-700 ' +
+  '[&_hr]:mt-8 [&_hr]:border-ink-200';
+
 export default function MemberDetailClient({ member }: MemberDetailClientProps) {
   const { t } = useTranslation();
   const language = useAppSelector((state) => state.blog.language);
-  const [isVisible, setIsVisible] = useState(false);
 
   const denomination = getTranslatedText(member.denomination as any, language);
   const leader = getTranslatedText(member.leader as any, language);
   const location = getTranslatedText(member.location as any, language);
   const history = getTranslatedText(member.history as any, language);
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+  /* The profile's identifying facts, as a definition list rather than a row of
+     coloured chips. Anything the record does not carry is simply dropped. */
+  const facts = [
+    { key: 'founded', icon: Calendar, label: t('members.founded'), value: member.founded },
+    { key: 'location', icon: MapPin, label: t('members.location'), value: location },
+    { key: 'leadership', icon: User, label: t('members.leadership'), value: leader },
+  ].filter((fact) => Boolean(fact.value));
+
+  const contact = [
+    {
+      key: 'phone',
+      icon: Phone,
+      label: t('members.phone'),
+      value: member.phone,
+      href: member.phone ? `tel:${member.phone.replace(/\s+/g, '')}` : null,
+    },
+    {
+      key: 'email',
+      icon: Mail,
+      label: t('members.email'),
+      value: member.email,
+      href: member.email ? `mailto:${member.email}` : null,
+    },
+    { key: 'address', icon: MapPin, label: t('members.address'), value: member.address, href: null },
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100">
-      <div className="text-white relative overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: 'url("https://images.unsplash.com/photo-1438032005730-c779502df39b?w=1920&h=600&fit=crop&auto=format")'
-          }}
-        />
-        <div className="absolute inset-0 bg-black/70"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 md:pt-32 pb-12 md:pb-16">
-          <div className={`transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-4 bg-gradient-to-r from-white to-purple-100 bg-clip-text text-transparent">
-              {denomination}
-            </h1>
-            <p className="text-xl text-purple-100 font-inter leading-relaxed">{t('members.founded')} {member.founded} • {location}</p>
-          </div>
+    <>
+      <PageHero
+        eyebrow={t('members.memberChurches')}
+        title={denomination}
+        crumbs={[
+          { label: t('navbar.home'), href: '/' },
+          { label: t('members.memberChurches'), href: '/members' },
+          { label: denomination },
+        ]}
+      >
+        {/* Identity rail: the church's own mark on a light tile — contained,
+            never cropped — beside the facts that place it. */}
+        <div className="mt-14 flex flex-col gap-9 border-t border-white/10 pt-10 lg:flex-row lg:items-start lg:gap-14">
+          <span className="flex h-28 w-28 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white p-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={member.logo || '/images/logo_CEPCA.png'}
+              alt={`${denomination} logo`}
+              className="h-full w-full object-contain"
+            />
+          </span>
+
+          {facts.length > 0 && (
+            <dl className="grid flex-1 gap-x-10 gap-y-7 sm:grid-cols-3">
+              {facts.map((fact) => {
+                const Icon = fact.icon;
+
+                return (
+                  <div key={fact.key}>
+                    <dt className="flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-leaf-300">
+                      <Icon aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
+                      {fact.label}
+                    </dt>
+                    <dd className="mt-3 text-base leading-relaxed text-white">{fact.value}</dd>
+                  </div>
+                );
+              })}
+            </dl>
+          )}
         </div>
-      </div>
+      </PageHero>
 
-      {/* Floating Logo Badge - Apple-inspired Design (Mobile-First) */}
-      <div className="relative max-w-7xl mx-auto -mt-12 sm:-mt-10 md:-mt-20">
-        <div className={`transform transition-all duration-1000 ease-out delay-200 scale-100 opacity-100`}>
-          <div className="flex justify-center">
-            <div className="relative group">
+      <PageSection tone="white">
+        {member.images.length > 0 && (
+          <Reveal className="mb-16 lg:mb-20">
+            <figure className="group overflow-hidden rounded-2xl border border-ink-200">
+              <ImageSlider images={member.images} alt={denomination} />
+            </figure>
+          </Reveal>
+        )}
 
-              {/* Logo container */}
-              <div className="relative bg-transparent">
-                <div className="">
-                  {/* Mobile-first sizing: 96px → 128px → 160px → 192px */}
-                  <div className="relative w-48 h-48 mx-auto">
-                    <img
-                      src={member.logo || '/images/logo_CEPCA.png'}
-                      alt={`${denomination} logo`}
-                      className="w-full h-full object-contain transform transition-transform duration-500 group-hover:scale-105"
-                    />
-                    {/* Subtle shine effect */}
+        <SectionHeading title={t('members.history')} />
+
+        <Reveal delay={140}>
+          <div className={`mt-11 ${PROSE}`}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{history}</ReactMarkdown>
+          </div>
+        </Reveal>
+      </PageSection>
+
+      <PageSection tone="tint">
+        <SectionHeading title={t('members.contactInformation')} />
+
+        <ul className="mt-11 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {contact.map((item, i) => {
+            const Icon = item.icon;
+
+            return (
+              <Reveal as="li" key={item.key} delay={Math.min(i, 8) * 60}>
+                <div className="card flex h-full items-start gap-4 rounded-2xl p-6">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                    <Icon aria-hidden="true" className="h-4 w-4 text-leaf-600" />
+                  </span>
+
+                  <div className="min-w-0">
+                    <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-500">
+                      {item.label}
+                    </p>
+                    {item.value && item.href ? (
+                      <a
+                        href={item.href}
+                        className="focus-ring mt-2.5 block break-words rounded text-base leading-relaxed text-ink-800 underline-offset-4 transition-colors duration-300 hover:text-plum-700 hover:underline"
+                      >
+                        {item.value}
+                      </a>
+                    ) : (
+                      <p className="mt-2.5 break-words text-base leading-relaxed text-ink-800">
+                        {item.value || '—'}
+                      </p>
+                    )}
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div className={`transform transition-all duration-1000 ease-out delay-300 group ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            {member.images.length > 0 && (
-              <ImageSlider images={member.images} alt={denomination} />
-            )}
-          </div>
-
-          <div className={`space-y-8 transform transition-all duration-1000 ease-out delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/50">
-              <h2 className="text-2xl font-bold font-playfair bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">{t('members.history')}</h2>
-              <div className="prose max-w-none font-inter text-gray-700">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{history}</ReactMarkdown>
-              </div>
-            </div>
-
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/50">
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg">
-                  <User className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold font-playfair text-gray-900 mb-2">{t('members.leadership')}</h3>
-                  <p className="text-gray-700 font-inter">{leader}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/50">
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg">
-                  <MapPin className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold font-playfair text-gray-900 mb-2">{t('members.location')}</h3>
-                  <p className="text-gray-700 font-inter">{location}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className={`mt-12 transform transition-all duration-1000 ease-out delay-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/50">
-            <h2 className="text-2xl font-bold font-playfair bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-6">{t('members.contactInformation')}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center shadow-md">
-                  <Phone className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-gray-600">{t('members.phone')}</p>
-                  <p className="text-gray-800 font-inter">{member.phone || '—'}</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-md">
-                  <Mail className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-gray-600">{t('members.email')}</p>
-                  <p className="text-gray-800 font-inter">{member.email || '—'}</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-md">
-                  <MapPin className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-gray-600">{t('members.address')}</p>
-                  <p className="text-gray-800 font-inter">{member.address || '—'}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+              </Reveal>
+            );
+          })}
+        </ul>
+      </PageSection>
+    </>
   );
 }

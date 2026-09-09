@@ -1,8 +1,9 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { clerkClient } from '@clerk/nextjs/server';
 import { prisma } from '@/lib/prisma';
+import { generateTemporaryPassword, hashPassword } from '@/lib/auth/password';
+import { destroyAllSessionsForUser, normalizeEmail } from '@/lib/auth/session';
 import { memberChurchConfig } from '@/lib/admin/configs';
 import { FormValues } from '@/lib/admin/resource-config';
 import { toFormValues, toPayload, validateValues } from '@/lib/admin/resource-service';
@@ -189,65 +190,71 @@ export async function toggleChurchPublish(id: string): Promise<ActionOutcome> {
 
 /* --------------------------------------------------------------- accounts */
 
+/**
+ * Logins that may edit one member church.
+ *
+ * There is no mailer wired into this project, so nothing is emailed. The
+ * secretariat creates the account here, is shown the temporary password ONCE,
+ * and passes it to the church by whatever channel it already uses. The
+ * password is stored only as a bcrypt hash; if it is lost, reset it and hand
+ * over a new one.
+ */
 export interface ChurchAccount {
   id: string;
   email: string;
-  status: 'active' | 'invited';
+  /** `pending` — still on the password the secretariat issued. */
+  status: 'active' | 'pending';
   createdAt: string;
 }
 
-/** Accounts already linked to a church, plus outstanding invitations. */
+/** Every account currently linked to this church. */
 export async function listChurchAccounts(
   churchId: string
 ): Promise<ActionOutcome<ChurchAccount[]>> {
   return guarded(async () => {
     await requireSuperAdmin();
 
-    const client = await clerkClient();
-    const accounts: ChurchAccount[] = [];
-
-    const users = await client.users.getUserList({ limit: 200 });
-    for (const user of users.data) {
-      const metadata = (user.publicMetadata || {}) as { churchId?: string };
-      if (metadata.churchId !== churchId) continue;
-
-      accounts.push({
-        id: user.id,
-        email: user.primaryEmailAddress?.emailAddress ?? '(no email)',
-        status: 'active',
-        createdAt: new Date(user.createdAt).toISOString(),
-      });
-    }
-
-    const invitations = await client.invitations.getInvitationList({
-      status: 'pending',
-      limit: 200,
+    const users = await prisma.user.findMany({
+      where: { role: 'church', churchId },
+      orderBy: { createdAt: 'asc' },
+      // Never select passwordHash — it has no business leaving the server.
+      select: {
+        id: true,
+        email: true,
+        mustChangePassword: true,
+        createdAt: true,
+      },
     });
-    for (const invitation of invitations.data) {
-      const metadata = (invitation.publicMetadata || {}) as { churchId?: string };
-      if (metadata.churchId !== churchId) continue;
 
-      accounts.push({
-        id: invitation.id,
-        email: invitation.emailAddress,
-        status: 'invited',
-        createdAt: new Date(invitation.createdAt).toISOString(),
-      });
-    }
+    const accounts: ChurchAccount[] = users.map((user) => ({
+      id: user.id,
+      email: user.email,
+      status: user.mustChangePassword ? 'pending' : 'active',
+      createdAt: user.createdAt.toISOString(),
+    }));
 
     return { success: true, data: accounts };
   });
 }
 
-/** Invite someone to manage a church. The role travels with the invitation. */
-export async function inviteChurchAccount(
+/**
+ * Create a login for a member church.
+ *
+ * The role and the churchId are written here by the council, from the id of
+ * the church page being edited — they are never read back from the browser
+ * when that account later signs in.
+ *
+ * Returns the temporary password so the secretariat can hand it over. This is
+ * the only moment it exists in plaintext.
+ */
+export async function createChurchAccount(
   churchId: string,
   email: string
-): Promise<ActionOutcome> {
+): Promise<ActionOutcome<{ email: string; temporaryPassword: string }>> {
   return guarded(async () => {
     await requireSuperAdmin();
 
-    const address = email.trim().toLowerCase();
+    const address = normalizeEmail(email || '');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) {
       return { success: false, error: 'Enter a valid email address' };
     }
@@ -255,51 +262,80 @@ export async function inviteChurchAccount(
     const church = await prisma.memberChurch.findUnique({ where: { id: churchId } });
     if (!church) return { success: false, error: 'Church not found' };
 
-    const client = await clerkClient();
-
-    try {
-      await client.invitations.createInvitation({
-        emailAddress: address,
-        publicMetadata: { role: 'church', churchId },
-        ignoreExisting: true,
-      });
-    } catch (error: any) {
-      const detail = error?.errors?.[0]?.message;
+    const existing = await prisma.user.findUnique({ where: { email: address } });
+    if (existing) {
       return {
         success: false,
-        error: detail || 'Clerk rejected the invitation. Check the email address.',
+        error: 'That email already has an account. Remove it first, or reset its password.',
       };
     }
 
+    const temporaryPassword = generateTemporaryPassword();
+
+    await prisma.user.create({
+      data: {
+        email: address,
+        passwordHash: await hashPassword(temporaryPassword),
+        role: 'church',
+        churchId,
+        mustChangePassword: true,
+      },
+    });
+
     revalidatePath(`/admin/churches/${churchId}/edit`);
-    return { success: true };
+    return { success: true, data: { email: address, temporaryPassword } };
   });
 }
 
-/** Revoke a pending invitation, or unlink an active account from its church. */
+/**
+ * Issue a fresh temporary password — the "I lost it" path, since there is no
+ * email delivery. Every open session for that account is dropped.
+ */
+export async function resetChurchAccountPassword(
+  churchId: string,
+  accountId: string
+): Promise<ActionOutcome<{ email: string; temporaryPassword: string }>> {
+  return guarded(async () => {
+    await requireSuperAdmin();
+
+    const user = await prisma.user.findUnique({ where: { id: accountId } });
+    if (!user || user.role !== 'church' || user.churchId !== churchId) {
+      throw new AccessError('That account does not belong to this church');
+    }
+
+    const temporaryPassword = generateTemporaryPassword();
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        passwordHash: await hashPassword(temporaryPassword),
+        mustChangePassword: true,
+      },
+    });
+
+    await destroyAllSessionsForUser(user.id);
+
+    revalidatePath(`/admin/churches/${churchId}/edit`);
+    return { success: true, data: { email: user.email, temporaryPassword } };
+  });
+}
+
+/** Withdraw a church login. Its sessions go with it (Session cascades). */
 export async function removeChurchAccount(
   churchId: string,
-  accountId: string,
-  status: 'active' | 'invited'
+  accountId: string
 ): Promise<ActionOutcome> {
   return guarded(async () => {
     await requireSuperAdmin();
 
-    const client = await clerkClient();
+    const user = await prisma.user.findUnique({ where: { id: accountId } });
+    if (!user) return { success: false, error: 'Account not found' };
 
-    if (status === 'invited') {
-      await client.invitations.revokeInvitation(accountId);
-    } else {
-      const user = await client.users.getUser(accountId);
-      const metadata = (user.publicMetadata || {}) as { churchId?: string };
-
-      if (metadata.churchId !== churchId) {
-        throw new AccessError('That account does not belong to this church');
-      }
-
-      // Clear the role rather than deleting the person's Clerk account.
-      await client.users.updateUser(accountId, { publicMetadata: {} });
+    if (user.role !== 'church' || user.churchId !== churchId) {
+      throw new AccessError('That account does not belong to this church');
     }
+
+    await prisma.user.delete({ where: { id: user.id } });
 
     revalidatePath(`/admin/churches/${churchId}/edit`);
     return { success: true };

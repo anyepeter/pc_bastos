@@ -3,6 +3,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, RotateCcw, RotateCw, Loader2 } from 'lucide-react';
 
+/* This component is used from both locales but takes no `t`; the labels are
+   assistive-technology only and are not rendered as visible copy. */
+const PLAY_LABEL = 'Play';
+const PAUSE_LABEL = 'Pause';
+const SEEK_LABEL = 'Seek';
+
 interface AudioPlayerProps {
   src: string;
   onClose?: () => void;
@@ -126,14 +132,31 @@ export default function AudioPlayer({ src, onClose }: AudioPlayerProps) {
   }, [isDragging, duration]);
 
 
+  /** Arrow keys seek by 5s, Home/End jump to the ends, Space toggles play. */
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    const audio = audioRef.current;
+    if (!audio || !duration) return;
+    const STEP = 5;
+    let next: number | null = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') next = Math.min(duration, audio.currentTime + STEP);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') next = Math.max(0, audio.currentTime - STEP);
+    if (e.key === 'Home') next = 0;
+    if (e.key === 'End') next = duration;
+    if (next === null) return;
+    e.preventDefault();
+    audio.currentTime = next;
+    setCurrentTime(next);
+  };
+
   return (
-    <div className="bg-purple-600 text-white p-1 rounded-lg">
+    <div className="rounded-xl bg-plum-800 p-1 text-white">
       <audio ref={audioRef} src={src} preload="auto" />
       
       <div className="flex items-center justify-between space-x-3">
         <button
           onClick={togglePlayPause}
-          className="p-2 hover:bg-purple-700 rounded transition-colors"
+          aria-label={isPlaying ? PAUSE_LABEL : PLAY_LABEL}
+          className="focus-ring rounded-lg p-2 transition-colors duration-300 hover:bg-plum-700"
         >
           {isPlaying ? (
             <Pause className="w-5 h-5" fill="currentColor" />
@@ -143,13 +166,23 @@ export default function AudioPlayer({ src, onClose }: AudioPlayerProps) {
         </button>
 
         <div className="flex-1 flex items-center space-x-2">
-          <div 
+          {/* A real slider: keyboard-operable and announced, not a bare div
+              with a mousedown handler. */}
+          <div
             ref={progressRef}
-            className="flex-1 bg-purple-700 rounded-full h-2 cursor-pointer relative"
+            role="slider"
+            tabIndex={0}
+            aria-label={SEEK_LABEL}
+            aria-valuemin={0}
+            aria-valuemax={Math.round(duration) || 0}
+            aria-valuenow={Math.round(currentTime)}
+            aria-valuetext={`${formatTime(currentTime)} / ${formatTime(duration)}`}
             onMouseDown={handleMouseDown}
+            onKeyDown={handleKeyDown}
+            className="focus-ring relative h-2 flex-1 cursor-pointer rounded-full bg-plum-950"
           >
-            <div 
-              className="bg-white h-2 rounded-full transition-all duration-150"
+            <div
+              className="h-2 rounded-full bg-leaf-400 transition-all duration-150"
               style={{ width: `${progressPercentage}%` }}
             />
           </div>

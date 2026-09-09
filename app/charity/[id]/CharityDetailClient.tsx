@@ -1,14 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Calendar, HeartHandshake, MapPin, Users } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, MapPin, Users } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useTranslation } from 'react-i18next';
 import ImageSlider from './ImageSlider';
 import { useAppSelector } from '@/store/hooks';
-import { getTranslatedText } from '@/lib/translations';
+import { getTranslatedText, readTranslation } from '@/lib/translations';
 import { formatLongDate } from '@/lib/format';
+import PageHero from '@/components/PageHero';
+import PageSection from '@/components/PageSection';
+import SectionHeading from '@/components/SectionHeading';
+import Reveal from '@/components/Reveal';
 
 export interface PublicCharityDetail {
   id: string;
@@ -23,24 +27,58 @@ export interface PublicCharityDetail {
   images: string[];
 }
 
+/**
+ * Markdown body. The global `.prose` rules predate the palette and hardcode
+ * grey text with blue links, so the body is styled here instead — on-palette,
+ * and scoped to this element rather than to a global class.
+ */
+const BODY_PROSE = [
+  'max-w-[68ch] text-base leading-relaxed text-ink-600',
+  '[&>*+*]:mt-5',
+  '[&_h1]:mt-10 [&_h1]:font-display [&_h1]:text-2xl [&_h1]:font-semibold [&_h1]:tracking-tight [&_h1]:text-ink-900',
+  '[&_h2]:mt-10 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-ink-900',
+  '[&_h3]:mt-8 [&_h3]:font-display [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:tracking-tight [&_h3]:text-ink-900',
+  '[&_h4]:mt-8 [&_h4]:font-ui [&_h4]:text-base [&_h4]:font-semibold [&_h4]:text-ink-900',
+  '[&_strong]:font-semibold [&_strong]:text-ink-900',
+  '[&_a]:font-medium [&_a]:text-plum-700 [&_a]:underline [&_a]:underline-offset-4',
+  '[&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mt-2 [&_li]:pl-1',
+  '[&_blockquote]:border-l-2 [&_blockquote]:border-leaf-300 [&_blockquote]:pl-5 [&_blockquote]:italic [&_blockquote]:text-ink-500',
+  '[&_code]:rounded [&_code]:bg-ink-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[0.85em] [&_code]:text-plum-700',
+  '[&_pre]:overflow-x-auto [&_pre]:rounded-xl [&_pre]:bg-ink-900 [&_pre]:p-5 [&_pre]:text-sm [&_pre]:text-ink-100',
+  '[&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:text-inherit',
+  '[&_hr]:border-ink-200',
+  '[&_img]:rounded-xl',
+  '[&_table]:w-full [&_table]:border-collapse [&_table]:text-sm',
+  '[&_th]:border [&_th]:border-ink-200 [&_th]:bg-ink-50 [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:font-ui [&_th]:font-semibold [&_th]:text-ink-900',
+  '[&_td]:border [&_td]:border-ink-200 [&_td]:px-3 [&_td]:py-2',
+].join(' ');
+
+/**
+ * One programme.
+ *
+ * The hero this replaced stretched the programme's own cover photo behind the
+ * title under three stacked black scrims, and fell back to a teal gradient
+ * when there was none. The cover is now shown as itself, at full width, under
+ * a typographic header — and a programme without one simply opens on type.
+ */
 export default function CharityDetailClient({
   charity,
 }: {
   charity: PublicCharityDetail;
 }) {
-  const [isVisible, setIsVisible] = useState(false);
+  const { t } = useTranslation();
   const language = useAppSelector((state) => state.blog.language);
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+  // Prisma `Json` columns may still hold a bare legacy string; `readTranslation`
+  // normalises that before it reaches React.
+  const read = (value: unknown) => getTranslatedText(readTranslation(value), language);
 
-  const title = getTranslatedText(charity.title as any, language);
-  const description = getTranslatedText(charity.description as any, language);
-  const fullDescription = getTranslatedText(charity.fullDescription as any, language);
-  const impact = getTranslatedText(charity.impact as any, language);
-  const beneficiaries = getTranslatedText(charity.beneficiaries as any, language);
-  const location = getTranslatedText(charity.location as any, language);
+  const title = read(charity.title);
+  const description = read(charity.description);
+  const fullDescription = read(charity.fullDescription);
+  const impact = read(charity.impact);
+  const beneficiaries = read(charity.beneficiaries);
+  const location = read(charity.location);
   const cover = charity.images[0];
   const gallery = charity.images.slice(1);
 
@@ -82,121 +120,111 @@ export default function CharityDetailClient({
   ].filter(Boolean) as { icon: typeof Calendar; label: string; value: string }[];
 
   return (
-    <div className="min-h-screen bg-[#fbfbfa]">
-      {/* Hero */}
-      <div className="relative overflow-hidden text-white">
-        {cover ? (
-          <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={cover}
-              alt={title}
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/65 to-black/85" />
-          </>
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-700 via-cyan-700 to-emerald-700" />
+    <>
+      <PageHero
+        // The impact headline is optional; the section label stands in for it
+        // so the hero never opens on a missing line.
+        eyebrow={impact || t('navbar.charity')}
+        title={title}
+        lede={description || undefined}
+        crumbs={[
+          { label: t('navbar.home'), href: '/' },
+          { label: t('navbar.charity'), href: '/charity' },
+          { label: title },
+        ]}
+      >
+        {facts.length > 0 && (
+          <dl className="mt-12 grid gap-x-10 gap-y-6 border-t border-white/10 pt-8 sm:grid-cols-3">
+            {facts.map((fact) => {
+              const Icon = fact.icon;
+
+              return (
+                <div key={fact.label} className="flex items-start gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+                    <Icon aria-hidden="true" className="h-4 w-4 text-leaf-300" />
+                  </span>
+                  <div className="min-w-0">
+                    <dt className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-plum-300">
+                      {fact.label}
+                    </dt>
+                    <dd className="mt-1.5 truncate font-ui text-sm font-medium text-white">
+                      {fact.value}
+                    </dd>
+                  </div>
+                </div>
+              );
+            })}
+          </dl>
+        )}
+      </PageHero>
+
+      <PageSection tone="white">
+        {cover && (
+          <Reveal>
+            <figure className="overflow-hidden rounded-2xl border border-ink-200">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={cover}
+                alt={title}
+                className="aspect-[21/9] w-full object-cover"
+              />
+            </figure>
+          </Reveal>
         )}
 
-        <div className="relative mx-auto max-w-5xl px-4 pb-16 pt-28 sm:px-6 md:pb-20 md:pt-36 lg:px-8">
-          <Link
-            href="/charity"
-            className="inline-flex items-center gap-2 text-sm font-medium text-white/70 transition-colors hover:text-white"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {copy.back}
-          </Link>
+        <SectionHeading title={copy.about} className={cover ? 'mt-14 lg:mt-16' : ''} />
 
-          <div
-            className={`mt-8 transform transition-all duration-1000 ease-out ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            }`}
-          >
-            {impact && (
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal-200">
-                {impact}
-              </p>
-            )}
-
-            <h1 className="mt-4 max-w-3xl font-playfair text-4xl font-bold leading-[1.08] sm:text-5xl md:text-6xl">
-              {title}
-            </h1>
-
-            {description && (
-              <p className="mt-6 max-w-2xl font-inter text-lg leading-relaxed text-gray-200">
-                {description}
-              </p>
-            )}
+        <Reveal delay={80}>
+          <div className={`mt-11 ${BODY_PROSE}`}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{fullDescription}</ReactMarkdown>
           </div>
-        </div>
-      </div>
+        </Reveal>
+      </PageSection>
 
-      {/* Facts strip */}
-      {facts.length > 0 && (
-        <div className="border-b border-gray-200 bg-white">
-          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-px px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
-            {facts.map((fact) => (
-              <div
-                key={fact.label}
-                className="flex items-center gap-3 py-5 sm:justify-center sm:py-6"
-              >
-                <fact.icon className="h-5 w-5 shrink-0 text-teal-600" />
-                <div className="min-w-0">
-                  <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
-                    {fact.label}
-                  </p>
-                  <p className="truncate font-inter font-semibold text-gray-900">
-                    {fact.value}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      {gallery.length > 0 && (
+        <PageSection tone="tint">
+          <SectionHeading title={copy.gallery} />
+
+          <Reveal delay={80} className="mt-11">
+            <div className="overflow-hidden rounded-2xl border border-ink-200">
+              <ImageSlider images={gallery} alt={title} />
+            </div>
+          </Reveal>
+        </PageSection>
       )}
 
-      {/* Body */}
-      <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 md:py-20 lg:px-8">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <h2 className="font-playfair text-3xl font-bold text-gray-900">
-              {copy.about}
-            </h2>
-            <div className="prose prose-lg mt-6 max-w-none font-inter text-gray-700 prose-headings:font-playfair prose-headings:text-gray-900 prose-a:text-teal-700">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{fullDescription}</ReactMarkdown>
-            </div>
+      {/* The page closes on the ask, as a painted dark band rather than a
+          sidebar card — the sidebar left the CTA stranded beside a short body
+          on programmes with little text. */}
+      <PageSection tone="white" className="py-20 lg:py-28">
+        <SectionHeading title={copy.ctaTitle} standfirst={copy.ctaBody}  />
 
-            {gallery.length > 0 && (
-              <div className="mt-14">
-                <h2 className="mb-6 font-playfair text-2xl font-bold text-gray-900">
-                  {copy.gallery}
-                </h2>
-                <ImageSlider images={gallery} alt={title} />
-              </div>
-            )}
+        <Reveal delay={200}>
+          <div className="mt-11 flex flex-wrap items-center gap-x-8 gap-y-4">
+            <Link
+              href="/give"
+              className="focus-ring group inline-flex items-center gap-2.5 rounded-full bg-white px-6 py-3 font-ui text-sm font-semibold text-plum-900 transition-colors duration-300 ease-spring hover:bg-plum-100"
+            >
+              {copy.ctaButton}
+              <ArrowRight
+                aria-hidden="true"
+                className="h-4 w-4 transition-transform duration-300 ease-spring group-hover:translate-x-0.5"
+              />
+            </Link>
+
+            <Link
+              href="/charity"
+              className="focus-ring group inline-flex items-center gap-2 font-ui text-sm font-medium text-ink-600 transition-colors duration-300 hover:text-leaf-600"
+            >
+              <ArrowLeft
+                aria-hidden="true"
+                className="h-4 w-4 transition-transform duration-300 ease-spring group-hover:-translate-x-0.5"
+              />
+              {copy.back}
+            </Link>
           </div>
-
-          {/* Sidebar */}
-          <aside className="lg:col-span-1">
-            <div className="lg:sticky lg:top-28">
-              <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-teal-600 to-emerald-600 p-7 text-white shadow-lg">
-                <HeartHandshake className="h-8 w-8 text-teal-100" />
-                <h3 className="mt-4 font-playfair text-2xl font-bold">{copy.ctaTitle}</h3>
-                <p className="mt-3 font-inter text-sm leading-relaxed text-teal-50">
-                  {copy.ctaBody}
-                </p>
-                <Link
-                  href="/give"
-                  className="mt-6 block w-full rounded-xl bg-white px-6 py-3 text-center font-semibold text-teal-700 transition-colors hover:bg-teal-50"
-                >
-                  {copy.ctaButton}
-                </Link>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </div>
-    </div>
+        </Reveal>
+      </PageSection>
+    </>
   );
 }

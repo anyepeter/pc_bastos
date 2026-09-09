@@ -1,6 +1,6 @@
-import { cache } from 'react';
-import { auth, clerkClient } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
+import { getSession } from './session';
+import type { AppRole, SessionRole } from './session';
 
 /**
  * Who may do what in /admin.
@@ -10,27 +10,19 @@ import { redirect } from 'next/navigation';
  * - `church` — one member church. May edit that church's own profile and
  *   nothing else.
  *
- * The role lives in the Clerk user's `publicMetadata`, which is set when the
- * super admin invites the account. It is read here on the server for every
- * protected page and action; never trust a role sent from the browser.
+ * The role lives on the `User` row and is read from the database on every
+ * request via `getSession()` (lib/auth/session.ts). The session cookie carries
+ * only an opaque session id, so there is no role and no churchId anywhere in
+ * the request for the browser to tamper with.
  */
 
-export type AppRole = 'super_admin' | 'church';
-
-export interface SessionRole {
-  userId: string;
-  role: AppRole;
-  /** Set only for `church` accounts — the MemberChurch they may edit. */
-  churchId: string | null;
-  email: string | null;
-}
+export type { AppRole, SessionRole };
 
 /**
  * Emails allowed to act as super admin, from `SUPER_ADMIN_EMAILS`
- * (comma-separated). When the variable is unset, any signed-in account that has
- * no role metadata is treated as super admin — that keeps the council's
- * existing logins working. Set the variable before going live so a stray Clerk
- * sign-up cannot reach the dashboard.
+ * (comma-separated). When the variable is unset, any account whose row is
+ * marked `super_admin` is accepted. Setting it adds a second lock: even a row
+ * marked `super_admin` is refused unless its address is on the list.
  */
 function allowedSuperAdminEmails(): string[] {
   return (process.env.SUPER_ADMIN_EMAILS || '')
@@ -40,61 +32,41 @@ function allowedSuperAdminEmails(): string[] {
 }
 
 /**
- * Raised when Clerk itself is unreachable, as opposed to the visitor simply
- * not being allowed in. Kept separate so we never sign someone out because of
- * a network blip.
+ * Raised when the account store itself is unreachable, as opposed to the
+ * visitor simply not being allowed in. Kept separate so we never sign someone
+ * out because of a database blip.
  */
 export class AuthUnavailableError extends Error {
   constructor(readonly cause: unknown) {
-    super('Could not reach Clerk to check your account. Please try again.');
+    super('Could not reach the account database. Please try again.');
     this.name = 'AuthUnavailableError';
   }
 }
 
-/**
- * One Clerk Backend API call per request, shared by the layout, the page guard
- * and any server action in the same render. Without this, a single page load
- * made three or four identical round-trips — slow, and three chances to fail.
- */
-const fetchUser = cache(async (userId: string) => {
-  try {
-    const client = await clerkClient();
-    return await client.users.getUser(userId);
-  } catch (error) {
-    // Surfaced with a real message instead of an empty server-render crash.
-    console.error('[auth] Clerk getUser failed for', userId, error);
-    throw new AuthUnavailableError(error);
-  }
-});
-
 /** Resolve the signed-in user's role, or null when signed out. */
 export async function getSessionRole(): Promise<SessionRole | null> {
-  const { userId } = await auth();
-  if (!userId) return null;
+  let session;
 
-  const user = await fetchUser(userId);
+  try {
+    session = await getSession();
+  } catch (error) {
+    // Surfaced with a real message instead of an empty server-render crash.
+    console.error('[auth] Could not read the session', error);
+    throw new AuthUnavailableError(error);
+  }
 
-  const metadata = (user.publicMetadata || {}) as {
-    role?: string;
-    churchId?: string;
-  };
-  const email = user.primaryEmailAddress?.emailAddress?.toLowerCase() ?? null;
+  if (!session) return null;
 
-  if (metadata.role === 'church') {
-    return {
-      userId,
-      role: 'church',
-      churchId: typeof metadata.churchId === 'string' ? metadata.churchId : null,
-      email,
-    };
+  const { userId, email, churchId } = session;
+
+  if (session.role === 'church') {
+    return { userId, role: 'church', churchId, email };
   }
 
   const allowList = allowedSuperAdminEmails();
-  const isSuperAdmin =
-    metadata.role === 'super_admin' ||
-    (allowList.length === 0 ? true : Boolean(email && allowList.includes(email)));
-
-  if (!isSuperAdmin) return null;
+  if (allowList.length > 0 && !(email && allowList.includes(email))) {
+    return null;
+  }
 
   return { userId, role: 'super_admin', churchId: null, email };
 }

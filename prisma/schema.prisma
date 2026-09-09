@@ -156,3 +156,48 @@ model Sermon {
 
   @@index([date])
 }
+/// A dashboard login. Replaces the previous third-party auth provider: the
+/// council now owns its own accounts.
+///
+/// `role` mirrors AppRole in lib/auth/roles.ts — `super_admin` (the council
+/// secretariat) or `church` (one member church). A `church` row carries the
+/// MemberChurch id it may edit; the session is the ONLY place that id is read
+/// from, never the request body.
+model User {
+  id           String    @id @default(cuid())
+  /// Always stored lowercased — the login form lowercases before it looks up.
+  email        String    @unique
+  /// bcrypt hash, cost 12. Plaintext is never stored or logged.
+  passwordHash String
+  name         String?
+  /// "super_admin" | "church"
+  role         String    @default("church")
+  /// Set only for `church` accounts — the MemberChurch they may edit.
+  churchId     String?
+
+  /// Set when the secretariat issues a temporary password, cleared on the
+  /// first successful password change. Shown as a nudge in the dashboard.
+  mustChangePassword Boolean @default(false)
+
+  sessions     Session[]
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([churchId])
+}
+
+/// Server-side half of a login. The cookie only carries this row's id (signed
+/// with SESSION_SECRET), so deleting the row logs the person out everywhere
+/// and role changes take effect on the next request.
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}

@@ -1,8 +1,9 @@
 'use client';
 
-import { Globe, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import Reveal from '@/components/Reveal';
 
 const ObjectivesSection = () => {
   const { t } = useTranslation();
@@ -13,49 +14,86 @@ const ObjectivesSection = () => {
     t('objectives.objective3'),
     t('objectives.objective4'),
     t('objectives.objective5'),
-    t('objectives.objective6')
+    t('objectives.objective6'),
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-            {t('objectives.title')}
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t('objectives.subtitle')}
-          </p>
-        </div>
+    <section className="grain relative overflow-hidden bg-white py-14 lg:py-20">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-32 bottom-0 h-[28rem] w-[28rem] rounded-full bg-plum-700/[0.15] blur-[130px]"
+      />
 
-        {/* Objectives Grid */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 lg:p-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            {objectives.map((objective, index) => (
-              <div key={index} className="flex items-start group">
-                <div className="w-10 h-10 bg-gradient-to-br from-green-600 to-emerald-600 rounded-full flex items-center justify-center flex-shrink-0 mr-4 group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-white font-bold text-sm">{index + 1}</span>
-                </div>
-                <p className="text-gray-700 pt-2 leading-relaxed">{objective}</p>
+      <div className="shell relative">
+        {/* Header — deliberately off-centre */}
+        <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-6">
+            <Reveal>
+              <div className="flex items-center gap-3">
+                <span className="h-px w-10 bg-plum-500" />
+                <p className="font-mono text-[0.68rem] uppercase tracking-[0.3em] text-plum-700">
+                  {t('home.sections.mandate')}
+                </p>
               </div>
-            ))}
+            </Reveal>
+            <Reveal delay={80}>
+              <h2 className="mt-7 font-display text-[clamp(2.1rem,4.6vw,3.6rem)] font-semibold leading-[1.02] tracking-tightest text-ink-900 text-balance">
+                {t('objectives.title')}
+              </h2>
+            </Reveal>
           </div>
 
-          {/* CTA Button */}
-          <div className="text-center pt-6 border-t border-gray-200">
-            <p className="text-gray-600 mb-4">
+          <Reveal delay={140} className="lg:col-span-5 lg:col-start-8">
+            <p className="max-w-[46ch] text-base leading-relaxed text-ink-600 text-pretty lg:pb-2">
+              {t('objectives.subtitle')}
+            </p>
+          </Reveal>
+        </div>
+
+        {/* Ledger — two columns of numbered entries, no boxes */}
+        <ol className="mt-11 grid border-t border-ink-200 md:grid-cols-2">
+          {objectives.map((objective, i) => (
+            <Reveal
+              as="li"
+              key={objective}
+              delay={i * 70}
+              /* The right-hand column keeps a dividing rule on desktop only. */
+              className={`group relative border-b border-ink-200 md:[&:nth-child(odd)]:border-r md:[&:nth-child(odd)]:border-ink-200`}
+            >
+              <div
+                className="spotlight flex h-full items-start gap-5 p-7 transition-colors duration-300 hover:bg-ink-50 sm:gap-7 lg:p-9"
+                onMouseMove={(e) => {
+                  const r = e.currentTarget.getBoundingClientRect();
+                  e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`);
+                  e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`);
+                }}
+              >
+                <span className="tnum shrink-0 pt-1 font-mono text-xs text-ink-400 transition-colors duration-300 group-hover:text-plum-700">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <p className="max-w-[46ch] text-[0.98rem] leading-relaxed text-ink-700 text-pretty transition-colors duration-300 group-hover:text-plum-700">
+                  {objective}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </ol>
+
+        {/* Closing call to action, aligned with the ledger rather than centred */}
+        <Reveal delay={120}>
+          <div className="mt-12 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <p className="max-w-[48ch] text-sm leading-relaxed text-ink-500 text-pretty">
               {t('objectives.ctaDescription')}
             </p>
             <Link
               href="/about"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-purple-400"
+              className="focus-ring group inline-flex shrink-0 items-center gap-2.5 rounded-full border border-ink-300 bg-white px-6 py-3 font-ui text-sm font-semibold text-ink-800 transition-all duration-300 ease-spring hover:border-plum-400 hover:bg-plum-50 active:translate-y-px"
             >
-              {t('objectives.learnMore')}
-              <ArrowRight className="w-5 h-5" />
+              {t('home.readMandate')}
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-spring group-hover:translate-x-1" />
             </Link>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

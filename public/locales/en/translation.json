@@ -14,6 +14,7 @@
     "complete": "Complete"
   },
   "navbar": {
+    "home": "Home",
     "aboutUs": "About Us",
     "ourMissionVision": "Our Mission & Vision",
     "leadership": "Leadership",
@@ -48,10 +49,11 @@
     "backToTop": "Back to top"
   },
   "hero": {
-    "title": "BEING CHURCH TOGETHER",
-    "description": "Jesus is holy, loving, and worthy of all our worship and devotion. You will feel heaven in our Grace Community Church. Join us and Praise the Lord Jesus.",
+    "title": "BEING CHURCH",
+    "description": "Twelve Protestant churches. One voice. CEPCA unites 13 million believers across Cameroon around healing, education and the service of communities.",
     "contactUs": "Contact Us",
-    "donateNow": "Donate Now"
+    "donateNow": "Donate Now",
+    "titleHighlight": "TOGETHER"
   },
   "welcome": {
     "tagline": "Welcome to CEPCA",
@@ -446,6 +448,100 @@
         "denomination": "Full Gospel Mission (MPE)",
         "leader": "General Superintendent Rev. SOKENG ALAIN Clément",
         "history": "The Full Gospel Mission emphasizes the complete Gospel message with signs, wonders, and miracles, serving communities with Pentecostal fervor and social engagement."
+      }
+    }
+  },
+  "home": {
+    "eyebrow": "Council of Protestant Churches of Cameroon",
+    "scrollCue": "Scroll",
+    "nextGatherings": "Next gatherings",
+    "allEvents": "All events",
+    "stats": {
+      "churches": "Member churches",
+      "believers": "Believers",
+      "congregations": "Congregations",
+      "health": "Health facilities",
+      "schools": "Schools"
+    },
+    "sections": {
+      "whoWeAre": "Who we are",
+      "pillars": "Where the work lands",
+      "mandate": "Mandate",
+      "principles": "Principles",
+      "programs": "Programmes",
+      "missionVision": "Purpose",
+      "workshops": "Training",
+      "gallery": "Gallery",
+      "announcements": "Notices"
+    },
+    "visionLabel": "Vision",
+    "missionLabel": "Mission",
+    "readMandate": "Read the full mandate",
+    "workshops": {
+      "title": "Workshops and",
+      "titleHighlight": "Trainings",
+      "subtitle": "Practical training for clergy, teachers and secretariat staff across the member churches.",
+      "viewAll": "All workshops",
+      "capacity": "Capacity",
+      "duration": "Duration"
+    },
+    "gallery": {
+      "title": "The council at",
+      "titleHighlight": "work",
+      "subtitle": "Scenes from the programmes, gatherings and congregations of the twelve member churches.",
+      "view": "View",
+      "close": "Close",
+      "previous": "Previous photograph",
+      "next": "Next photograph"
+    },
+    "announcements": {
+      "title": "Latest",
+      "titleHighlight": "Announcements",
+      "subtitle": "Notices from the secretariat, in the order they were issued.",
+      "viewAll": "All announcements",
+      "priorityHigh": "Urgent",
+      "priorityMedium": "Notice",
+      "priorityLow": "For information"
+    }
+  },
+  "impact": {
+    "title": "Transforming Lives Across Cameroon",
+    "subtitle": "As a key actor and strategic partner in promoting holistic Gospel development, combining both spiritual and social dimensions of Christian witness",
+    "ctaTitle": "Be Part of Our Mission",
+    "ctaBody": "Your support enables us to continue our work in healthcare, education, and community development across Cameroon. Together, we can make a lasting impact.",
+    "donateNow": "Donate Now",
+    "stats": {
+      "churches": {
+        "label": "Member Churches",
+        "description": "United in faith and purpose"
+      },
+      "believers": {
+        "label": "Believers",
+        "description": "Across Cameroon"
+      },
+      "congregations": {
+        "label": "Congregations",
+        "description": "Churches and parishes"
+      },
+      "schools": {
+        "label": "Educational Institutions",
+        "description": "Schools, colleges & training centers"
+      },
+      "universities": {
+        "label": "Universities",
+        "description": "Higher education institutions"
+      },
+      "health": {
+        "label": "Health Facilities",
+        "description": "Hospitals and health centers"
+      },
+      "radio": {
+        "label": "Radio Stations",
+        "description": "Across 5 regions"
+      },
+      "microfinance": {
+        "label": "Microfinance Institutions",
+        "description": "Supporting economic empowerment"
       }
     }
   }

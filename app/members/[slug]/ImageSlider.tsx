@@ -18,7 +18,7 @@ export default function ImageSlider({ images, alt }: ImageSliderProps) {
   }
 
   return (
-    <div className="relative overflow-hidden shadow-2xl">
+    <div className="relative overflow-hidden">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={0}
@@ -43,12 +43,13 @@ export default function ImageSlider({ images, alt }: ImageSliderProps) {
         {images.map((image, index) => (
           <SwiperSlide key={index}>
             <div className="relative h-96">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={image}
                 alt={`${alt} - Image ${index + 1}`}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+              <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-plum-950/30 to-transparent"></div>
             </div>
           </SwiperSlide>
         ))}
@@ -56,13 +57,13 @@ export default function ImageSlider({ images, alt }: ImageSliderProps) {
 
       {images.length > 1 && (
         <>
-          <div className="swiper-button-prev-custom absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white p-2 rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100 cursor-pointer z-10">
+          <div className="swiper-button-prev-custom absolute left-4 top-1/2 transform -translate-y-1/2 focus-ring z-10 cursor-pointer rounded-full border border-white/20 bg-plum-950/50 p-2 text-white opacity-0 backdrop-blur-sm transition-all duration-300 ease-spring hover:bg-plum-950/70 focus-visible:opacity-100 group-hover:opacity-100">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </div>
 
-          <div className="swiper-button-next-custom absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white p-2 rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100 cursor-pointer z-10">
+          <div className="swiper-button-next-custom absolute right-4 top-1/2 transform -translate-y-1/2 focus-ring z-10 cursor-pointer rounded-full border border-white/20 bg-plum-950/50 p-2 text-white opacity-0 backdrop-blur-sm transition-all duration-300 ease-spring hover:bg-plum-950/70 focus-visible:opacity-100 group-hover:opacity-100">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>

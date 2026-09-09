@@ -1,117 +1,95 @@
-import { Users, Church, School, Heart, Radio, Building2 } from 'lucide-react';
+'use client';
 
+import Link from 'next/link';
+import { Users, School, Heart, Radio, Building2, Landmark, Church, GraduationCap } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import Reveal from '@/components/Reveal';
+import CountUp from '@/components/CountUp';
+
+/**
+ * The council in figures, shown on the mission and vision page.
+ *
+ * Every figure used to carry its own gradient — purple, green, blue, orange,
+ * indigo, red, teal, yellow — which made a rainbow out of what is really one
+ * uniform set of facts. Differentiation now comes from the figure itself; the
+ * icons are one colour, as they are everywhere else on the site.
+ *
+ * The copy was also hardcoded English on a bilingual site, so French visitors
+ * read this block in English. It now goes through i18next like everything else.
+ */
 const ImpactSection = () => {
+  const { t } = useTranslation();
+
   const stats = [
-    {
-      icon: Church,
-      number: "12",
-      label: "Member Churches",
-      description: "United in faith and purpose",
-      color: "from-purple-500 to-violet-600"
-    },
-    {
-      icon: Users,
-      number: "13M",
-      label: "Believers",
-      description: "Across Cameroon",
-      color: "from-green-500 to-emerald-600"
-    },
-    {
-      icon: Building2,
-      number: "15,500",
-      label: "Congregations",
-      description: "Churches and parishes",
-      color: "from-blue-500 to-cyan-600"
-    },
-    {
-      icon: School,
-      number: "1,580",
-      label: "Educational Institutions",
-      description: "Schools, colleges & training centers",
-      color: "from-orange-500 to-amber-600"
-    },
-    {
-      icon: Building2,
-      number: "15",
-      label: "Universities",
-      description: "Higher education institutions",
-      color: "from-indigo-500 to-purple-600"
-    },
-    {
-      icon: Heart,
-      number: "350",
-      label: "Health Facilities",
-      description: "Hospitals and health centers",
-      color: "from-red-500 to-pink-600"
-    },
-    {
-      icon: Radio,
-      number: "9",
-      label: "Radio Stations",
-      description: "Across 5 regions",
-      color: "from-teal-500 to-cyan-600"
-    },
-    {
-      icon: Building2,
-      number: "3",
-      label: "Microfinance Institutions",
-      description: "Supporting economic empowerment",
-      color: "from-yellow-500 to-orange-600"
-    }
+    { key: 'churches', value: 12, suffix: '', Icon: Church },
+    { key: 'believers', value: 13, suffix: 'M', Icon: Users },
+    { key: 'congregations', value: 15500, suffix: '', Icon: Landmark },
+    { key: 'schools', value: 1580, suffix: '', Icon: School },
+    { key: 'universities', value: 15, suffix: '', Icon: GraduationCap },
+    { key: 'health', value: 350, suffix: '', Icon: Heart },
+    { key: 'radio', value: 9, suffix: '', Icon: Radio },
+    { key: 'microfinance', value: 3, suffix: '', Icon: Building2 },
   ];
 
   return (
-    <section className="">
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-            Transforming Lives Across Cameroon
+    <div>
+      <div className="mx-auto max-w-3xl text-center">
+        <Reveal>
+          <h2 className="font-display text-[clamp(2.1rem,4.2vw,3.4rem)] font-semibold leading-[1.04] tracking-tight text-ink-900 text-balance">
+            {t('impact.title')}
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            As a key actor and strategic partner in promoting holistic Gospel development,
-            combining both spiritual and social dimensions of Christian witness
+        </Reveal>
+        <Reveal delay={80}>
+          <p className="mt-6 text-base leading-relaxed text-ink-600 text-pretty">
+            {t('impact.subtitle')}
           </p>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {stats.map((stat, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-            >
-              <div className={`w-14 h-14 bg-gradient-to-r ${stat.color} rounded-lg flex items-center justify-center mb-4`}>
-                <stat.icon className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-4xl font-bold text-gray-900 mb-2">{stat.number}</div>
-              <div className="text-lg font-semibold text-gray-800 mb-1">{stat.label}</div>
-              <p className="text-sm text-gray-600">{stat.description}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Call to Action */}
-        <div className="text-center bg-white rounded-2xl p-8 shadow-xl">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">
-            Be Part of Our Mission
-          </h3>
-          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Your support enables us to continue our work in healthcare, education, and community development
-            across Cameroon. Together, we can make a lasting impact.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="/donate"
-              className="bg-gradient-to-r from-green-600 via-emerald-600 to-purple-600 text-white px-10 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 inline-flex items-center justify-center gap-2"
-            >
-              <Heart className="w-5 h-5" />
-              Donate Now
-            </a>
-          </div>
-        </div>
+        </Reveal>
       </div>
-    </section>
+
+      <ul className="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {stats.map((stat, i) => (
+          <Reveal as="li" key={stat.key} delay={Math.min(i, 8) * 60}>
+            <div className="card card-hover flex h-full flex-col p-6">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                <stat.Icon aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+              </span>
+
+              <span className="mt-6 block font-display text-[clamp(1.9rem,3vw,2.6rem)] font-semibold leading-none tracking-tight text-ink-900">
+                <CountUp value={stat.value} suffix={stat.suffix} />
+              </span>
+
+              <span className="mt-3 block font-mono text-[0.62rem] uppercase tracking-[0.2em] text-plum-700">
+                {t(`impact.stats.${stat.key}.label`)}
+              </span>
+
+              <span className="mt-2 block text-sm leading-relaxed text-ink-500 text-pretty">
+                {t(`impact.stats.${stat.key}.description`)}
+              </span>
+            </div>
+          </Reveal>
+        ))}
+      </ul>
+
+      <Reveal delay={200}>
+        <div className="mt-12 rounded-2xl border border-ink-200 bg-ink-50 p-8 text-center lg:p-12">
+          <h3 className="font-display text-2xl font-semibold tracking-tight text-ink-900">
+            {t('impact.ctaTitle')}
+          </h3>
+          <p className="mx-auto mt-4 max-w-[60ch] text-base leading-relaxed text-ink-600 text-pretty">
+            {t('impact.ctaBody')}
+          </p>
+          {/* `/donate` does not exist — the giving page is `/give`. The old link
+              here was a 404. */}
+          <Link
+            href="/give"
+            className="focus-ring group mt-7 inline-flex items-center gap-2.5 rounded-full bg-leaf-600 px-7 py-3.5 font-ui text-sm font-semibold text-white transition-all duration-300 ease-spring hover:bg-leaf-700 active:translate-y-px"
+          >
+            <Heart aria-hidden="true" className="h-4 w-4" />
+            {t('impact.donateNow')}
+          </Link>
+        </div>
+      </Reveal>
+    </div>
   );
 };
 

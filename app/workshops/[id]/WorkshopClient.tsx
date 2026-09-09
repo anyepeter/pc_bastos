@@ -1,10 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Calendar, MapPin, Users, Clock } from 'lucide-react';
+import { CalendarDays, Clock, MapPin, Users } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import ImageSlider from './ImageSlider';
+import { useTranslation } from 'react-i18next';
+import PageHero from '@/components/PageHero';
+import PageSection from '@/components/PageSection';
+import SectionHeading from '@/components/SectionHeading';
+import Reveal from '@/components/Reveal';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText } from '@/lib/translations';
 import { formatLongDate } from '@/lib/format';
@@ -22,17 +25,32 @@ export interface PublicWorkshopDetail {
   images: string[];
 }
 
+/* The markdown body, styled from the palette instead of the global `.prose`
+   rules — those set slate body text and a blue link colour, neither of which
+   exists on this site. */
+const PROSE = [
+  'max-w-[68ch] text-base leading-relaxed text-ink-600',
+  '[&>*+*]:mt-5',
+  '[&_h2]:mt-10 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-ink-900',
+  '[&_h3]:mt-8 [&_h3]:font-display [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:tracking-tight [&_h3]:text-ink-900',
+  '[&_p]:text-pretty',
+  '[&_strong]:font-semibold [&_strong]:text-ink-800',
+  '[&_a]:font-medium [&_a]:text-plum-700 [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-plum-800',
+  '[&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5',
+  '[&_li]:mt-2 [&_li]:marker:text-leaf-600',
+  '[&_blockquote]:border-l-2 [&_blockquote]:border-plum-300 [&_blockquote]:pl-5 [&_blockquote]:italic [&_blockquote]:text-ink-500',
+  '[&_code]:rounded [&_code]:bg-ink-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[0.85em] [&_code]:text-ink-800',
+  '[&_hr]:my-9 [&_hr]:border-ink-200',
+  '[&_img]:rounded-2xl',
+].join(' ');
+
 export default function WorkshopClient({
   workshop,
 }: {
   workshop: PublicWorkshopDetail;
 }) {
-  const [isVisible, setIsVisible] = useState(false);
+  const { t } = useTranslation();
   const language = useAppSelector((state) => state.blog.language);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
 
   const title = getTranslatedText(workshop.title as any, language);
   const description = getTranslatedText(workshop.description as any, language);
@@ -41,88 +59,126 @@ export default function WorkshopClient({
   const duration = getTranslatedText(workshop.duration as any, language);
   const capacity = getTranslatedText(workshop.capacity as any, language);
 
+  // The two headings below are hardcoded language ternaries in this file
+  // rather than i18next keys. Kept verbatim — redesign only.
+  const fr = language === 'fr';
+
+  const [lead, ...rest] = workshop.images;
+  const hasImages = Boolean(lead);
+
+  // Date, place, length and size — the four facts a reader scans for. Set in
+  // mono so they read as data rather than prose.
+  const facts = [
+    { id: 'date', icon: CalendarDays, value: formatLongDate(workshop.date, language), numeric: true },
+    { id: 'location', icon: MapPin, value: location, numeric: false },
+    { id: 'duration', icon: Clock, value: duration, numeric: false },
+    { id: 'capacity', icon: Users, value: capacity, numeric: false },
+  ].filter((fact) => Boolean(fact.value));
+
   return (
-    <div className="min-h-screen bg-white">
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32">
-          <div
-            className={`transform transition-all duration-1000 ease-out ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            }`}
-          >
-            <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-4">{title}</h1>
-            <p className="text-xl text-gray-900 font-inter leading-relaxed max-w-3xl">
-              {description}
-            </p>
-          </div>
-        </div>
-      </div>
+    <>
+      <PageHero
+        eyebrow={t('navbar.workshopsTrainings')}
+        title={title}
+        lede={description}
+        crumbs={[
+          { label: t('navbar.home'), href: '/' },
+          { label: t('navbar.workshopsTrainings'), href: '/workshops' },
+          { label: title },
+        ]}
+      />
 
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 px-4 py-10 md:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div
-            className={`transform transition-all duration-1000 ease-out delay-300 group ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            }`}
-          >
-            {workshop.images.length > 0 && (
-              <ImageSlider images={workshop.images} alt={title} />
-            )}
-          </div>
+      {/* The photographs the council actually uploaded, beside the facts
+          panel. With no upload the panel simply widens — nothing is faked in
+          to fill the column. */}
+      <PageSection tone="white">
+        <div className={hasImages ? 'grid gap-8 lg:grid-cols-12 lg:gap-10' : ''}>
+          {hasImages && (
+            <Reveal className="lg:col-span-7">
+              <figure className="overflow-hidden rounded-2xl border border-ink-200">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={lead}
+                  alt={title}
+                  className="aspect-[16/10] w-full object-cover"
+                />
+              </figure>
 
-          <div
-            className={`space-y-8 transform transition-all duration-1000 ease-out delay-500 ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            }`}
+              {rest.length > 0 && (
+                <ul className="mt-4 grid grid-cols-3 gap-4">
+                  {rest.map((image, i) => (
+                    <li key={`${image}-${i}`} className="overflow-hidden rounded-xl border border-ink-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={image}
+                        alt=""
+                        aria-hidden="true"
+                        loading="lazy"
+                        className="aspect-[4/3] w-full object-cover"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </Reveal>
+          )}
+
+          <Reveal
+            delay={hasImages ? 80 : 0}
+            className={hasImages ? 'lg:col-span-5 lg:col-start-8' : ''}
           >
-            <div className="bg-white backdrop-blur-sm border border-white/50">
-              <h2 className="text-2xl font-bold font-playfair bg-clip-text mb-4">
-                {language === 'fr' ? "Détails de l'atelier" : 'Workshop Details'}
+            <div className="card rounded-2xl p-7 lg:p-8">
+              <h2 className="font-display text-2xl font-semibold leading-tight tracking-tight text-ink-900">
+                {fr ? "Détails de l'atelier" : 'Workshop Details'}
               </h2>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <Calendar className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700 font-inter">
-                    {formatLongDate(workshop.date, language)}
-                  </span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <MapPin className="w-5 h-5 text-purple-600" />
-                  <span className="text-gray-700 font-inter">{location}</span>
-                </div>
-                {duration && (
-                  <div className="flex items-center space-x-3">
-                    <Clock className="w-5 h-5 text-green-600" />
-                    <span className="text-gray-700 font-inter">{duration}</span>
-                  </div>
-                )}
-                {capacity && (
-                  <div className="flex items-center space-x-3">
-                    <Users className="w-5 h-5 text-purple-600" />
-                    <span className="text-gray-700 font-inter">{capacity}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div
-          className={`mt-12 transform transition-all duration-1000 ease-out delay-700 ${
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-          }`}
-        >
-          <div className="bg-white/90">
-            <h2 className="text-2xl font-bold font-playfair mb-6">
-              {language === 'fr' ? 'À propos de cet atelier' : 'About This Workshop'}
-            </h2>
-            <div className="prose prose-lg max-w-none font-inter text-gray-700">
+              <ul
+                className={`mt-7 border-t border-ink-200 ${
+                  hasImages ? '' : 'sm:grid sm:grid-cols-2 sm:gap-x-10'
+                }`}
+              >
+                {facts.map((fact) => {
+                  const Icon = fact.icon;
+
+                  return (
+                    <li
+                      key={fact.id}
+                      className="flex items-start gap-3 border-b border-ink-200 py-4"
+                    >
+                      <Icon aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-leaf-600" />
+                      <span
+                        className={`font-mono text-sm leading-relaxed text-ink-700 ${
+                          fact.numeric ? 'tnum' : ''
+                        }`}
+                      >
+                        {fact.value}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </Reveal>
+        </div>
+      </PageSection>
+
+      {/* The full brief. Dropped entirely when the record has no long
+          description, rather than leaving a heading over empty space. */}
+      {fullDescription.trim().length > 0 && (
+        <PageSection tone="tint">
+          <SectionHeading
+            title={fr ? 'À propos de cet atelier' : 'About This Workshop'}
+            layout="stack"
+            as="h2"
+          />
+
+          <Reveal delay={60}>
+            <div className={`mt-11 ${PROSE}`}>
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{fullDescription}</ReactMarkdown>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </Reveal>
+        </PageSection>
+      )}
+    </>
   );
 }

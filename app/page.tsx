@@ -1,15 +1,25 @@
 import HeroSection from '@/components/HeroSection';
 import WelcomeSection from '@/components/WelcomeSection';
-import MissionVisionSection from '@/components/MissionVisionSection';
-import ObjectivesSection from '@/components/ObjectivesSection';
 import CharitySection from '@/components/CharitySection';
+import MemberChurchesSection from '@/components/MemberChurchesSection';
+import StatsSection from '@/components/StatsSection';
+import UpcomingEventsSection from '@/components/UpcomingEventsSection';
+import WorkshopsSection from '@/components/WorkshopsSection';
+import GallerySection from '@/components/GallerySection';
+import AnnouncementsSection from '@/components/AnnouncementsSection';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { getPublishedCharityPrograms } from '@/app/actions/charity';
 import { getPublishedEvents } from '@/app/actions/events';
+import { getPublishedChurches } from '@/app/actions/churches';
+import { getPublishedWorkshops } from '@/app/actions/workshops';
+import { getPublishedAnnouncements } from '@/app/actions/announcements';
 import type { PublicCharityProgram } from '@/app/charity/CharityClient';
 import type { PublicEvent } from '@/app/events/EventsClient';
+import type { PublicChurch } from '@/app/members/MembersClient';
+import type { PublicWorkshop } from '@/app/workshops/WorkshopsClient';
+import type { PublicAnnouncement } from '@/app/announcements/AnnouncementsClient';
 
 /**
  * Which events count as "upcoming" changes with the clock, not only with edits,
@@ -52,13 +62,50 @@ function selectHeroEvents(rows: any[]): PublicEvent[] {
 }
 
 export default async function Home() {
-  const [charityResult, eventsResult] = await Promise.all([
-    getPublishedCharityPrograms(),
-    getPublishedEvents(),
-  ]);
+  const [charityResult, eventsResult, churchesResult, workshopsResult, announcementsResult] =
+    await Promise.all([
+      getPublishedCharityPrograms(),
+      getPublishedEvents(),
+      getPublishedChurches(),
+      getPublishedWorkshops(),
+      getPublishedAnnouncements(),
+    ]);
 
   const charityRows = charityResult.success ? charityResult.data || [] : [];
   const eventRows = eventsResult.success ? eventsResult.data || [] : [];
+  const churchRows = churchesResult.success ? churchesResult.data || [] : [];
+  const workshopRows = workshopsResult.success ? workshopsResult.data || [] : [];
+  const announcementRows = announcementsResult.success ? announcementsResult.data || [] : [];
+
+  const workshops: PublicWorkshop[] = workshopRows.map((row: any) => ({
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    description: row.description,
+    location: row.location,
+    date: new Date(row.date).toISOString(),
+    images: row.images || [],
+  }));
+
+  const announcements: PublicAnnouncement[] = announcementRows.map((row: any) => ({
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    fullContent: row.fullContent,
+    date: new Date(row.date).toISOString(),
+    priority: row.priority,
+    imageUrl: row.imageUrl,
+  }));
+
+  const churches: PublicChurch[] = churchRows.map((row: any) => ({
+    id: row.id,
+    slug: row.slug,
+    denomination: row.denomination,
+    leader: row.leader,
+    location: row.location,
+    founded: row.founded,
+    logo: row.logo,
+  }));
 
   const charityPrograms: PublicCharityProgram[] = charityRows.map((row: any) => ({
     id: row.id,
@@ -72,25 +119,41 @@ export default async function Home() {
   }));
 
   return (
-    <>
+    // The wrapper carries the canvas colour so overscroll and any gap
+    // between sections stays on-theme.
+    <div className="bg-white">
       <Navigation />
-      {/* Hero — event cards appear only once events are published */}
-      <HeroSection events={selectHeroEvents(eventRows)} />
+
+      {/* Hero — photographic carousel with the painted foot */}
+      <HeroSection />
 
       {/* Introduction to CEPCA */}
       <WelcomeSection />
 
-      {/* Mission, Vision & Core Principles */}
-      <MissionVisionSection />
+      {/* Next gatherings — sits straight after the introduction, and hides
+          itself when nothing is published */}
+      <UpcomingEventsSection events={selectHeroEvents(eventRows)} />
 
-      {/* Our Objectives with link to About page */}
-      <ObjectivesSection />
+      {/* The council in figures */}
+      <StatsSection />
 
       {/* Charity Programs — hides itself when nothing is published */}
       <CharitySection programs={charityPrograms} />
 
+      {/* The twelve member churches — hides itself when nothing is published */}
+      <MemberChurchesSection churches={churches} />
+
+      {/* Workshops and trainings — hides itself when nothing is published */}
+      <WorkshopsSection workshops={workshops} />
+
+      {/* Gallery — a curated set of the council's own photography */}
+      <GallerySection />
+
+      {/* Announcements from the secretariat */}
+      <AnnouncementsSection announcements={announcements} />
+
       <Footer />
       <WhatsAppButton />
-    </>
+    </div>
   );
 }

@@ -1,10 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight, HeartHandshake, MapPin, Users } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store/hooks';
-import { getTranslatedText } from '@/lib/translations';
+import { getTranslatedText, readTranslation } from '@/lib/translations';
+import PageHero from '@/components/PageHero';
+import PageSection from '@/components/PageSection';
+import Reveal from '@/components/Reveal';
 
 export interface PublicCharityProgram {
   id: string;
@@ -17,22 +20,29 @@ export interface PublicCharityProgram {
   images: string[];
 }
 
+/**
+ * The council's programmes, in full.
+ *
+ * The fuller expression of the landing page's `CharitySection`: the same card
+ * language — numbered cover, beneficiaries chip, impact eyebrow, a footer
+ * pairing place against the call to action — set on light ground so a long
+ * list stays readable.
+ *
+ * Programmes carry real uploaded photography or none at all. Where a cover is
+ * missing the card degrades to a typographic head (mark + number) rather than
+ * borrowing stock imagery, which is what the page this replaced did.
+ */
 export default function CharityClient({
   programs,
 }: {
   programs: PublicCharityProgram[];
 }) {
-  const [isVisible, setIsVisible] = useState(false);
-  const [visibleCards, setVisibleCards] = useState<string[]>([]);
+  const { t } = useTranslation();
   const language = useAppSelector((state) => state.blog.language);
 
-  useEffect(() => {
-    setIsVisible(true);
-    const timer = setTimeout(() => {
-      setVisibleCards(programs.map((program) => program.id));
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [programs]);
+  // Prisma `Json` columns may still hold a bare legacy string; `readTranslation`
+  // normalises that before it reaches React.
+  const read = (value: unknown) => getTranslatedText(readTranslation(value), language);
 
   const copy =
     language === 'fr'
@@ -58,142 +68,148 @@ export default function CharityClient({
           emptyHint: 'Check back soon to see the work under way.',
         };
 
+  // A lone programme in a two-column grid strands an empty half; hold it to a
+  // single readable measure instead.
+  const columns = programs.length === 1 ? 'lg:max-w-3xl' : 'lg:grid-cols-2';
+
   return (
-    <div className="min-h-screen bg-[#fbfbfa]">
-      {/* Header */}
-      <div className="relative overflow-hidden text-white">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage:
-              'url("https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1920&h=600&fit=crop&auto=format")',
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black/80" />
+    <>
+      <PageHero
+        eyebrow={copy.eyebrow}
+        title={copy.title}
+        lede={copy.subtitle}
+        crumbs={[{ label: t('navbar.home'), href: '/' }, { label: t('navbar.charity') }]}
+      >
+        {programs.length > 0 && (
+          <p className="mt-12 flex items-center gap-3 border-t border-white/10 pt-7 font-mono text-[0.68rem] uppercase tracking-[0.2em] text-plum-200">
+            <span aria-hidden="true" className="h-px w-8 shrink-0 bg-leaf-400" />
+            <span className="tnum">{copy.count(programs.length)}</span>
+          </p>
+        )}
+      </PageHero>
 
-        <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-28 sm:px-6 md:pb-20 md:pt-36 lg:px-8">
-          <div
-            className={`max-w-3xl transform transition-all duration-1000 ease-out ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            }`}
-          >
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-teal-100 backdrop-blur-sm">
-              <HeartHandshake className="h-3.5 w-3.5" />
-              {copy.eyebrow}
-            </span>
-
-            <h1 className="mt-6 font-playfair text-4xl font-bold leading-[1.05] sm:text-6xl">
-              {copy.title}
-            </h1>
-
-            <p className="mt-5 max-w-2xl font-inter text-lg leading-relaxed text-gray-200 sm:text-xl">
-              {copy.subtitle}
-            </p>
-
-            {programs.length > 0 && (
-              <p className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-teal-200">
-                <span className="h-px w-8 bg-teal-300/60" />
-                {copy.count(programs.length)}
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Programs */}
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
+      <PageSection tone="white">
         {programs.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-gray-300 bg-white py-20 text-center">
-            <HeartHandshake className="mx-auto h-12 w-12 text-teal-300" />
-            <p className="mt-5 text-lg font-medium text-gray-800">{copy.empty}</p>
-            <p className="mt-1 text-sm text-gray-500">{copy.emptyHint}</p>
-          </div>
+          <Reveal>
+            <div className="rounded-2xl border border-dashed border-ink-300 bg-ink-50 px-6 py-20 text-center">
+              <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-ink-200 bg-white">
+                <HeartHandshake aria-hidden="true" className="h-6 w-6 text-leaf-600" />
+              </span>
+              <p className="mt-6 font-display text-xl font-semibold tracking-tight text-ink-900">
+                {copy.empty}
+              </p>
+              <p className="mx-auto mt-3 max-w-[42ch] text-base leading-relaxed text-ink-600 text-pretty">
+                {copy.emptyHint}
+              </p>
+            </div>
+          </Reveal>
         ) : (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {programs.map((program, index) => {
-              const title = getTranslatedText(program.title as any, language);
-              const description = getTranslatedText(program.description as any, language);
-              const impact = getTranslatedText(program.impact as any, language);
-              const beneficiaries = getTranslatedText(
-                program.beneficiaries as any,
-                language
-              );
-              const location = getTranslatedText(program.location as any, language);
+          <ul className={`grid gap-6 ${columns}`}>
+            {programs.map((program, i) => {
+              const title = read(program.title);
+              const description = read(program.description);
+              const impact = read(program.impact);
+              const beneficiaries = read(program.beneficiaries);
+              const location = read(program.location);
               const cover = program.images[0];
+              const number = `No. ${String(i + 1).padStart(2, '0')}`;
 
               return (
-                <Link
-                  key={program.id}
-                  href={`/charity/${program.slug}`}
-                  className={`group flex flex-col overflow-hidden rounded-3xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] ring-1 ring-gray-900/5 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_24px_48px_-12px_rgba(13,148,136,0.25)] ${
-                    visibleCards.includes(program.id)
-                      ? 'translate-y-0 opacity-100'
-                      : 'translate-y-10 opacity-0'
-                  }`}
-                  style={{ transitionDelay: `${index * 120}ms` }}
-                >
-                  <div className="relative aspect-[16/10] overflow-hidden">
+                <Reveal as="li" key={program.id} delay={Math.min(i, 8) * 60} className="h-full">
+                  <Link
+                    href={`/charity/${program.slug}`}
+                    className="card card-hover focus-ring group flex h-full flex-col overflow-hidden rounded-2xl"
+                  >
                     {cover ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={cover}
-                        alt={title}
-                        className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]"
-                      />
-                    ) : (
-                      <div className="h-full w-full bg-gradient-to-br from-teal-500 via-cyan-500 to-emerald-500" />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+                      <div className="relative aspect-[16/10] w-full overflow-hidden">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={cover}
+                          alt={title}
+                          loading="lazy"
+                          className="h-full w-full object-cover transition-transform duration-700 ease-spring group-hover:scale-[1.05]"
+                        />
+                        <div
+                          aria-hidden="true"
+                          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-plum-950/70 via-transparent to-transparent"
+                        />
 
-                    {beneficiaries && (
-                      // right-4 + max-w-fit keeps the chip inside the card and
-                      // lets a long value ellipsis instead of clipping mid-word.
-                      <span className="absolute bottom-4 left-4 right-4 inline-flex max-w-fit items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-gray-800 shadow-sm backdrop-blur">
-                        <Users className="h-3.5 w-3.5 shrink-0 text-teal-600" />
-                        <span className="truncate">{beneficiaries}</span>
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="flex flex-1 flex-col p-5 sm:p-7">
-                    {impact && (
-                      <p className="mb-3 truncate text-xs font-semibold uppercase tracking-[0.16em] text-teal-600">
-                        {impact}
-                      </p>
-                    )}
-
-                    <h3 className="line-clamp-2 font-playfair text-xl font-bold leading-snug text-gray-900 transition-colors duration-300 group-hover:text-teal-700 sm:text-2xl">
-                      {title}
-                    </h3>
-
-                    <p className="mt-3 line-clamp-3 flex-1 font-inter leading-relaxed text-gray-600">
-                      {description}
-                    </p>
-
-                    {/* Both halves stay on a single line; the location gives up
-                        space first, and each ellipsises rather than wrapping. */}
-                    <div className="mt-6 flex items-center justify-between gap-3 border-t border-gray-100 pt-5">
-                      {location ? (
-                        <span className="flex min-w-0 flex-1 items-center gap-1.5 text-sm text-gray-500">
-                          <MapPin className="h-4 w-4 shrink-0 text-teal-500" />
-                          <span className="truncate">{location}</span>
+                        <span className="tnum absolute right-4 top-4 rounded-full bg-plum-950/80 px-3.5 py-1.5 font-mono text-[0.6rem] uppercase tracking-[0.16em] text-white backdrop-blur">
+                          {number}
                         </span>
-                      ) : (
-                        <span className="flex-1" />
+
+                        {beneficiaries && (
+                          // right-4 + max-w-fit keeps the chip inside the card and
+                          // lets a long value ellipsis instead of clipping mid-word.
+                          <span className="absolute bottom-4 left-4 right-4 inline-flex max-w-fit items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 text-xs font-medium text-ink-800">
+                            <Users aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-leaf-600" />
+                            <span className="truncate">{beneficiaries}</span>
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      // No photograph for this programme. A mark and its number
+                      // rather than a substituted stock image.
+                      <div className="flex items-center justify-between gap-4 border-b border-ink-200 bg-ink-50 px-6 py-5">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white transition-colors duration-300 group-hover:border-leaf-300">
+                          <HeartHandshake aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+                        </span>
+                        <span className="tnum font-mono text-[0.62rem] uppercase tracking-[0.24em] text-ink-400">
+                          {number}
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="flex flex-1 flex-col p-6 lg:p-7">
+                      {impact && (
+                        <p className="truncate font-mono text-[0.62rem] uppercase tracking-[0.2em] text-plum-700">
+                          {impact}
+                        </p>
                       )}
 
-                      <span className="flex min-w-0 max-w-[60%] shrink-0 items-center gap-2 text-sm font-semibold text-teal-700">
-                        <span className="truncate">{copy.view}</span>
-                        <ArrowRight className="h-4 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
-                      </span>
+                      <h2
+                        className={`${impact ? 'mt-4' : ''} line-clamp-2 font-display text-2xl font-semibold leading-tight tracking-tight text-ink-900 transition-colors duration-300 group-hover:text-plum-700`}
+                      >
+                        {title}
+                      </h2>
+
+                      <p className="mt-4 line-clamp-3 text-base leading-relaxed text-ink-600 text-pretty">
+                        {description}
+                      </p>
+
+                      {!cover && beneficiaries && (
+                        <span className="mt-5 inline-flex max-w-full items-center gap-2 self-start rounded-full border border-ink-200 bg-ink-50 px-3.5 py-1.5 text-xs font-medium text-ink-700">
+                          <Users aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-leaf-600" />
+                          <span className="truncate">{beneficiaries}</span>
+                        </span>
+                      )}
+
+                      {/* Pinned low so the row of CTAs lines up across cards.
+                          Both halves stay on a single line; the location gives
+                          up space first and each ellipsises rather than wraps. */}
+                      <div className="mt-auto flex items-center justify-between gap-3 border-t border-ink-200 pt-5">
+                        {location ? (
+                          <span className="flex min-w-0 flex-1 items-center gap-2 text-sm text-ink-500">
+                            <MapPin aria-hidden="true" className="h-4 w-4 shrink-0 text-leaf-600" />
+                            <span className="truncate">{location}</span>
+                          </span>
+                        ) : (
+                          <span className="flex-1" />
+                        )}
+
+                        <span className="flex min-w-0 max-w-[60%] shrink-0 items-center gap-2 font-ui text-sm font-medium text-plum-700">
+                          <span className="truncate">{copy.view}</span>
+                          <ArrowRight className="h-4 w-4 shrink-0 transition-transform duration-300 ease-spring group-hover:translate-x-0.5" />
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </Reveal>
               );
             })}
-          </div>
+          </ul>
         )}
-      </div>
-    </div>
+      </PageSection>
+    </>
   );
 }

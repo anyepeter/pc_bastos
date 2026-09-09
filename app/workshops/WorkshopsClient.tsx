@@ -1,17 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Calendar, GraduationCap, MapPin, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import { ArrowUpRight, CalendarDays, GraduationCap, MapPin } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import PageHero from '@/components/PageHero';
+import PageSection from '@/components/PageSection';
+import Reveal from '@/components/Reveal';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText } from '@/lib/translations';
 import { formatLongDate } from '@/lib/format';
 
+/** Shared with the landing page's WorkshopsSection — keep the shape stable. */
 export interface PublicWorkshop {
   id: string;
   slug: string;
@@ -27,136 +26,117 @@ export default function WorkshopsClient({
 }: {
   workshops: PublicWorkshop[];
 }) {
-  const [isVisible, setIsVisible] = useState(false);
-  const [visibleCards, setVisibleCards] = useState<string[]>([]);
+  const { t } = useTranslation();
   const language = useAppSelector((state) => state.blog.language);
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setVisibleCards(workshops.map((workshop) => workshop.id));
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [workshops]);
+  // The page title, lede and the two UI strings below were never lifted into
+  // `public/locales`; they live here as language ternaries. Kept verbatim —
+  // this is a visual redesign and the copy is not ours to change.
+  const fr = language === 'fr';
+  const read = (value: unknown) => getTranslatedText(value as any, language);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-purple-100">
-      <div className="text-white relative overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage:
-              'url("https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1920&h=600&fit=crop&auto=format")',
-          }}
-        />
-        <div className="absolute inset-0 bg-black/70"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-8 md:pb-16">
-          <div
-            className={`text-center transform transition-all duration-1000 ease-out ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            }`}
-          >
-            <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-4 bg-gradient-to-r from-white to-green-100 bg-clip-text text-transparent">
-              {language === 'fr' ? 'Ateliers et Formations' : 'Workshops & Training'}
-            </h1>
-            <p className="text-xl text-green-100 font-inter max-w-3xl mx-auto leading-relaxed">
-              {language === 'fr'
-                ? "Renforcer notre communauté par des programmes de formation complets et le développement des compétences"
-                : 'Empowering our community through comprehensive training programs and skill development workshops'}
-            </p>
-          </div>
-        </div>
-      </div>
+    <>
+      <PageHero
+        eyebrow={t('home.sections.workshops')}
+        title={fr ? 'Ateliers et' : 'Workshops &'}
+        titleHighlight={fr ? 'Formations' : 'Training'}
+        lede={
+          fr
+            ? 'Renforcer notre communauté par des programmes de formation complets et le développement des compétences'
+            : 'Empowering our community through comprehensive training programs and skill development workshops'
+        }
+        crumbs={[
+          { label: t('navbar.home'), href: '/' },
+          { label: t('navbar.workshopsTrainings') },
+        ]}
+      />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* The register of workshops. The landing page shows three of these in a
+          tighter three-up; here they run two-up so the date, place and summary
+          all have room. A workshop with no uploaded photograph falls back to a
+          typographic plate rather than borrowed stock. */}
+      <PageSection tone="white">
         {workshops.length === 0 ? (
-          <div className="rounded-2xl border border-white/50 bg-white/80 py-16 text-center">
-            <GraduationCap className="mx-auto h-12 w-12 text-green-300" />
-            <p className="mt-4 text-lg text-gray-700">
-              {language === 'fr'
-                ? "Aucun atelier n'est programmé pour le moment."
-                : 'No workshops are scheduled at the moment.'}
-            </p>
-          </div>
+          <Reveal>
+            <div className="card flex flex-col items-center rounded-2xl px-6 py-16 text-center">
+              <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                <GraduationCap aria-hidden="true" className="h-6 w-6 text-leaf-600" />
+              </span>
+              <p className="mt-6 max-w-[42ch] text-base leading-relaxed text-ink-600 text-pretty">
+                {fr
+                  ? "Aucun atelier n'est programmé pour le moment."
+                  : 'No workshops are scheduled at the moment.'}
+              </p>
+            </div>
+          </Reveal>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {workshops.map((workshop, index) => {
-              const title = getTranslatedText(workshop.title as any, language);
-              const description = getTranslatedText(workshop.description as any, language);
-              const location = getTranslatedText(workshop.location as any, language);
+          <ul className="grid gap-6 md:grid-cols-2">
+            {workshops.map((workshop, i) => {
+              const title = read(workshop.title);
+              const cover = workshop.images[0];
 
               return (
-                <Link
-                  key={workshop.id}
-                  href={`/workshops/${workshop.slug}`}
-                  className={`block bg-white/90 border border-white/50 overflow-hidden hover:shadow-2xl hover:scale-[1.02] transition-all duration-700 transform ${
-                    visibleCards.includes(workshop.id)
-                      ? 'translate-y-0 opacity-100'
-                      : 'translate-y-12 opacity-0'
-                  }`}
-                  style={{ transitionDelay: `${index * 150}ms` }}
-                >
-                  <div className="relative h-64 overflow-hidden">
-                    {workshop.images.length > 0 ? (
-                      <Swiper
-                        modules={[Navigation, Pagination]}
-                        spaceBetween={0}
-                        slidesPerView={1}
-                        pagination={{ clickable: true }}
-                        className="h-full"
-                      >
-                        {workshop.images.map((image, imageIndex) => (
-                          <SwiperSlide key={imageIndex}>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={image}
-                              alt={`${title} - ${imageIndex + 1}`}
-                              className="w-full h-full object-cover"
-                            />
-                          </SwiperSlide>
-                        ))}
-                      </Swiper>
-                    ) : (
-                      <div className="h-full w-full bg-gradient-to-br from-green-400 to-emerald-500" />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
-                  </div>
-
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold font-playfair text-gray-900 mb-3 leading-tight">
-                      {title}
-                    </h3>
-                    <p className="text-gray-700 leading-relaxed font-inter mb-4 line-clamp-3">
-                      {description}
-                    </p>
-
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center space-x-2 text-sm text-gray-600">
-                        <Calendar className="w-4 h-4 text-green-600" />
-                        <span>{formatLongDate(workshop.date, language)}</span>
-                      </div>
-                      <div className="flex items-center space-x-2 text-sm text-gray-600">
-                        <MapPin className="w-4 h-4 text-purple-600" />
-                        <span>{location}</span>
-                      </div>
+                <Reveal as="li" key={workshop.id} delay={Math.min(i, 8) * 60} className="h-full">
+                  <Link
+                    href={`/workshops/${workshop.slug}`}
+                    className="card card-hover focus-ring group flex h-full flex-col overflow-hidden rounded-2xl"
+                  >
+                    <div className="relative aspect-[16/10] overflow-hidden">
+                      {cover ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={cover}
+                          alt={title}
+                          loading="lazy"
+                          className="h-full w-full object-cover transition-transform duration-700 ease-spring group-hover:scale-[1.05]"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-end bg-ink-50 p-6">
+                          <span
+                            aria-hidden="true"
+                            className="absolute right-5 top-5 font-mono text-[0.62rem] uppercase tracking-[0.24em] text-ink-400"
+                          >
+                            {String(i + 1).padStart(2, '0')}
+                          </span>
+                          <GraduationCap aria-hidden="true" className="h-9 w-9 text-leaf-600" />
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold text-purple-600">
-                        {language === 'fr' ? 'En savoir plus' : 'Learn More'}
-                      </span>
-                      <ArrowRight className="w-5 h-5 text-green-600 transition-transform duration-200" />
+                    <div className="flex flex-1 flex-col p-6 lg:p-7">
+                      <p className="tnum inline-flex items-center gap-2 font-mono text-[0.6rem] uppercase tracking-[0.2em] text-plum-700">
+                        <CalendarDays aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
+                        {formatLongDate(workshop.date, language)}
+                      </p>
+
+                      <h2 className="mt-3 font-display text-xl font-medium leading-snug tracking-tight text-ink-900 transition-colors duration-300 group-hover:text-plum-700 lg:text-2xl">
+                        {title}
+                      </h2>
+
+                      <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-ink-600 text-pretty">
+                        {read(workshop.description)}
+                      </p>
+
+                      <div className="mt-auto pt-7">
+                        <p className="flex min-w-0 items-center gap-2 border-t border-ink-200 pt-5 font-mono text-xs leading-relaxed text-ink-500">
+                          <MapPin aria-hidden="true" className="h-4 w-4 shrink-0 text-leaf-600" />
+                          <span className="truncate">{read(workshop.location)}</span>
+                        </p>
+
+                        <span className="mt-5 inline-flex items-center gap-2 font-ui text-sm font-medium text-plum-700">
+                          {fr ? 'En savoir plus' : 'Learn More'}
+                          <ArrowUpRight className="h-4 w-4 transition-transform duration-300 ease-spring group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </Reveal>
               );
             })}
-          </div>
+          </ul>
         )}
-      </div>
-    </div>
+      </PageSection>
+    </>
   );
 }

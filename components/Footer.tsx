@@ -2,8 +2,12 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Phone, Mail, MapPin, Facebook, Instagram, Heart, ArrowUp } from 'lucide-react';
+import { Phone, Mail, MapPin, Facebook, Instagram, ArrowUp, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import BrushEdge from '@/components/BrushEdge';
+
+/** The footer's ground. Shared with the painted edge, which must match it exactly. */
+const GROUND = '#33205C'; // plum-900
 
 /**
  * X (formerly Twitter). lucide-react still ships the retired bird glyph, which
@@ -16,9 +20,9 @@ const XIcon = ({ className }: { className?: string }) => (
 );
 
 const SOCIAL_LINKS = [
-  { label: 'Facebook', href: '#', Icon: Facebook, hover: 'hover:bg-[#1877F2]' },
-  { label: 'Instagram', href: '#', Icon: Instagram, hover: 'hover:bg-[#E1306C]' },
-  { label: 'X', href: '#', Icon: XIcon, hover: 'hover:bg-black' },
+  { label: 'Facebook', href: '#', Icon: Facebook },
+  { label: 'Instagram', href: '#', Icon: Instagram },
+  { label: 'X', href: '#', Icon: XIcon },
 ];
 
 const Footer = () => {
@@ -35,148 +39,146 @@ const Footer = () => {
     { href: '/contact', label: t('footer.contact') },
   ];
 
+  const contacts = [
+    {
+      href: 'https://wa.me/237242657608',
+      external: true,
+      Icon: Phone,
+      value: t('footer.phone'),
+      className: 'tnum',
+    },
+    {
+      href: 'mailto:generalsecretarycepca@gmail.com',
+      external: false,
+      Icon: Mail,
+      // The address is one unbroken token — it must be allowed to wrap.
+      value: t('footer.email'),
+      className: 'break-words',
+    },
+    {
+      href: 'https://www.google.com/maps/search/Presbyterian+Church+Bastos+Yaound%C3%A9+Cameroon',
+      external: true,
+      Icon: MapPin,
+      value: t('footer.address'),
+      className: '',
+    },
+  ];
+
   return (
-    <footer className="relative overflow-hidden bg-gradient-to-b from-purple-900 via-purple-900 to-indigo-950 text-white">
-      {/* Accent hairline */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-purple-400/60 to-transparent" />
+    /* No `overflow-hidden` here: the painted edge deliberately overhangs the
+       top of the footer, and clipping would shear the streaks off. */
+    <footer className="grain relative bg-plum-900 text-plum-200">
+      {/* The paint is the footer's OWN colour, thrown up onto the page above.
+          Every route ends on a different pale ground (white, gray-50, #fbfbfa,
+          two violet gradients, a green one — all measured), so an edge painted
+          in the neighbour's colour would seam somewhere. Painting upward in the
+          footer's ground leaves the area around the bristles transparent, and
+          the join is then correct on every page by construction.
 
-      {/* Soft glow + dot pattern */}
-      <div
-        className="pointer-events-none absolute -top-32 left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-purple-500/20 blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.07]"
-        aria-hidden="true"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }}
+          The ground is a single flat colour by request — no glows — so the
+          whole band is `GROUND` and the edge matches it everywhere. */}
+      <BrushEdge
+        fill={GROUND}
+        className="pointer-events-none absolute inset-x-0 bottom-full z-10 h-11 w-full sm:h-14 lg:h-[55px]"
       />
 
-      <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-12">
+      <div className="relative shell py-16">
+        <div className="grid gap-14 lg:grid-cols-12 lg:gap-10">
           {/* Brand */}
-          <div className="space-y-6 sm:col-span-2 lg:col-span-4">
-            <div className="group flex items-center gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15 backdrop-blur-sm transition-transform duration-300 group-hover:scale-105">
+          <div className="lg:col-span-4">
+            <Link href="/" className="focus-ring group inline-flex items-center gap-3.5">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-colors duration-300 group-hover:border-leaf-400/60">
                 <Image
                   src="/images/logo_CEPCA.png"
-                  alt="CEPCA Logo"
-                  width={32}
-                  height={32}
+                  alt=""
+                  width={28}
+                  height={28}
+                  aria-hidden="true"
+                  className="h-auto w-auto"
                 />
-              </div>
-              <div className="min-w-0">
-                <h3 className="font-playfair text-2xl font-bold tracking-tight">
+              </span>
+              <span className="leading-tight">
+                <span className="block font-display text-xl font-semibold tracking-tight text-white">
                   {t('common.cepca')}
-                </h3>
-                <p className="font-poppins text-sm text-purple-200">
+                </span>
+                <span className="mt-1 block font-mono text-[0.58rem] uppercase tracking-[0.2em] text-plum-300">
                   {t('footer.tagline')}
-                </p>
-              </div>
-            </div>
+                </span>
+              </span>
+            </Link>
 
-            <p className="max-w-sm font-inter leading-relaxed text-purple-100/90">
+            <p className="mt-7 max-w-[42ch] text-sm leading-relaxed text-plum-200 text-pretty">
               {t('footer.description')}
             </p>
 
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 ring-1 ring-white/10">
-              <Heart className="h-4 w-4 shrink-0 text-pink-300" />
-              <span className="font-poppins text-sm text-purple-100">
+            <p className="mt-7 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-4 py-2">
+              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-leaf-400" />
+              <span className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-plum-200">
                 {t('footer.servingSince')}
               </span>
-            </div>
+            </p>
           </div>
 
           {/* Quick links */}
-          <div className="space-y-6 lg:col-span-4">
-            <h4 className="font-playfair text-lg font-semibold tracking-wide text-white">
+          <nav aria-label="Footer" className="lg:col-span-4">
+            <h2 className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-leaf-300">
               {t('footer.quickLinks')}
-            </h4>
-            <nav className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
+            </h2>
+            <ul className="mt-6 grid grid-cols-1 gap-x-8 sm:grid-cols-2">
               {quickLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="group flex min-w-0 items-center gap-2.5 font-poppins text-purple-200 transition-colors duration-300 hover:text-white"
-                >
-                  <span className="h-1 w-1 shrink-0 rounded-full bg-purple-400 transition-all duration-300 group-hover:w-3 group-hover:bg-pink-300" />
-                  <span className="truncate">{link.label}</span>
-                </Link>
+                <li key={link.href} className="border-b border-white/10">
+                  <Link
+                    href={link.href}
+                    className="focus-ring group flex items-center justify-between gap-3 py-3 text-sm text-plum-200 transition-colors duration-300 hover:text-white"
+                  >
+                    <span className="truncate">{link.label}</span>
+                    <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-plum-400 opacity-0 transition-all duration-300 ease-spring group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-leaf-300 group-hover:opacity-100" />
+                  </Link>
+                </li>
               ))}
-            </nav>
-          </div>
+            </ul>
+          </nav>
 
           {/* Contact */}
-          <div className="space-y-6 lg:col-span-4">
-            <h4 className="font-playfair text-lg font-semibold tracking-wide text-white">
+          <div className="lg:col-span-4">
+            <h2 className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-leaf-300">
               {t('footer.getInTouch')}
-            </h4>
+            </h2>
 
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="https://wa.me/237242657608"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group -mx-2 flex items-start gap-3 rounded-xl p-2 transition-colors duration-300 hover:bg-white/5"
-                >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-green-500/15 ring-1 ring-green-400/20 transition-colors duration-300 group-hover:bg-green-500/25">
-                    <Phone className="h-4 w-4 text-green-300" />
-                  </span>
-                  <span className="min-w-0 pt-1.5 font-poppins text-purple-100 transition-colors group-hover:text-white">
-                    {t('footer.phone')}
-                  </span>
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="mailto:generalsecretarycepca@gmail.com"
-                  className="group -mx-2 flex items-start gap-3 rounded-xl p-2 transition-colors duration-300 hover:bg-white/5"
-                >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-sky-500/15 ring-1 ring-sky-400/20 transition-colors duration-300 group-hover:bg-sky-500/25">
-                    <Mail className="h-4 w-4 text-sky-300" />
-                  </span>
-                  {/* min-w-0 + break-words: the address is one long unbroken
-                      token and used to push the whole column off screen. */}
-                  <span className="min-w-0 break-words pt-1.5 font-poppins text-sm text-purple-100 transition-colors group-hover:text-white">
-                    {t('footer.email')}
-                  </span>
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="https://www.google.com/maps/search/Presbyterian+Church+Bastos+Yaound%C3%A9+Cameroon"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group -mx-2 flex items-start gap-3 rounded-xl p-2 transition-colors duration-300 hover:bg-white/5"
-                >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-purple-500/20 ring-1 ring-purple-400/20 transition-colors duration-300 group-hover:bg-purple-500/30">
-                    <MapPin className="h-4 w-4 text-purple-200" />
-                  </span>
-                  <span className="min-w-0 pt-1.5 font-poppins leading-relaxed text-purple-100 transition-colors group-hover:text-white">
-                    {t('footer.address')}
-                  </span>
-                </a>
-              </li>
+            <ul className="mt-6 space-y-1">
+              {contacts.map(({ href, external, Icon, value, className }) => (
+                <li key={href}>
+                  <a
+                    href={href}
+                    {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    className="focus-ring group -mx-3 flex items-start gap-3.5 rounded-xl px-3 py-3 transition-colors duration-300 hover:bg-white/5"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-colors duration-300 group-hover:border-leaf-400/60">
+                      <Icon className="h-4 w-4 text-leaf-300" />
+                    </span>
+                    <span
+                      className={`min-w-0 pt-1.5 text-sm leading-relaxed text-plum-200 transition-colors duration-300 group-hover:text-white ${className}`}
+                    >
+                      {value}
+                    </span>
+                  </a>
+                </li>
+              ))}
             </ul>
 
-            {/* Social */}
-            <div className="space-y-3 pt-2">
-              <p className="font-poppins text-sm text-purple-200">
+            <div className="mt-8">
+              <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-plum-300">
                 {t('footer.followUs')}
               </p>
-              <div className="flex gap-3">
-                {SOCIAL_LINKS.map(({ label, href, Icon, hover }) => (
+              <div className="mt-4 flex gap-2.5">
+                {SOCIAL_LINKS.map(({ label, href, Icon }) => (
                   <a
                     key={label}
                     href={href}
                     aria-label={label}
-                    className={`flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-purple-100 ring-1 ring-white/15 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:text-white hover:ring-white/30 ${hover}`}
+                    className="focus-ring flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-plum-200 transition-all duration-300 ease-spring hover:-translate-y-0.5 hover:border-leaf-400/60 hover:bg-leaf-400/10 hover:text-white"
                   >
-                    <Icon className="h-[18px] w-[18px]" />
+                    <Icon className="h-[17px] w-[17px]" />
                   </a>
                 ))}
               </div>
@@ -185,17 +187,17 @@ const Footer = () => {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row">
-          <p className="text-center font-poppins text-sm text-purple-300 sm:text-left">
+        <div className="mt-16 flex flex-col items-center justify-between gap-5 border-t border-white/10 pt-8 sm:flex-row">
+          <p className="text-center font-mono text-[0.68rem] tracking-wide text-plum-300 sm:text-left">
             {t('footer.copyright')}
           </p>
 
           <button
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="group inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 font-poppins text-sm text-purple-200 ring-1 ring-white/10 transition-all duration-300 hover:bg-white/10 hover:text-white"
+            className="focus-ring group inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 font-ui text-xs font-medium text-plum-200 transition-all duration-300 ease-spring hover:border-leaf-400/60 hover:text-white"
           >
-            <ArrowUp className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5" />
+            <ArrowUp className="h-3.5 w-3.5 transition-transform duration-300 ease-spring group-hover:-translate-y-0.5" />
             {t('footer.backToTop')}
           </button>
         </div>

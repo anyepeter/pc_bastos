@@ -3,92 +3,135 @@
 import { Calendar, Clock, MapPin } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store/hooks';
-import { getTranslatedText } from '@/lib/translations';
+import { getTranslatedText, readTranslation } from '@/lib/translations';
 import { formatLongDate, formatTime } from '@/lib/format';
+import PageHero from '@/components/PageHero';
+import PageSection from '@/components/PageSection';
+import SectionHeading from '@/components/SectionHeading';
+import Reveal from '@/components/Reveal';
 import type { PublicEvent } from '../EventsClient';
 
+/**
+ * Markdown body styling, scoped to this element.
+ *
+ * The global `.prose` rules predate the design system and hardcode grey body
+ * text and blue links; they are shared, so they are styled around here rather
+ * than edited.
+ */
+const BODY =
+  'text-base leading-relaxed text-ink-600 text-pretty ' +
+  '[&>*:first-child]:mt-0 [&_p]:mt-5 ' +
+  '[&_h2]:mt-10 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-ink-900 ' +
+  '[&_h3]:mt-9 [&_h3]:font-display [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:tracking-tight [&_h3]:text-ink-900 ' +
+  '[&_h4]:mt-8 [&_h4]:font-ui [&_h4]:text-base [&_h4]:font-semibold [&_h4]:text-ink-900 ' +
+  '[&_strong]:font-semibold [&_strong]:text-ink-900 ' +
+  '[&_a]:font-medium [&_a]:text-plum-700 [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:text-plum-800 ' +
+  '[&_ul]:mt-5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:mt-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mt-2 [&_li]:pl-1 ' +
+  '[&_blockquote]:mt-6 [&_blockquote]:border-l-2 [&_blockquote]:border-plum-200 [&_blockquote]:pl-5 [&_blockquote]:text-ink-700 ' +
+  '[&_code]:rounded [&_code]:bg-ink-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[0.85em] [&_code]:text-ink-800 ' +
+  '[&_pre]:mt-6 [&_pre]:overflow-x-auto [&_pre]:rounded-xl [&_pre]:bg-ink-900 [&_pre]:p-5 [&_pre]:text-sm [&_pre]:text-ink-100 [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:text-ink-100 ' +
+  '[&_hr]:mt-8 [&_hr]:border-ink-200 ' +
+  '[&_img]:mt-6 [&_img]:rounded-xl ' +
+  '[&_table]:mt-6 [&_table]:w-full [&_table]:text-sm ' +
+  '[&_th]:border-b [&_th]:border-ink-300 [&_th]:py-2 [&_th]:pr-4 [&_th]:text-left [&_th]:font-ui [&_th]:font-semibold [&_th]:text-ink-900 ' +
+  '[&_td]:border-b [&_td]:border-ink-200 [&_td]:py-2 [&_td]:pr-4';
+
+/**
+ * One event.
+ *
+ * The when and where are the point of the page, so they sit in the hero as a
+ * mono data rail rather than in a row of tinted boxes below the title; the
+ * description then runs as a single measured column underneath.
+ */
 export default function EventDetailClient({ event }: { event: PublicEvent }) {
+  const { t } = useTranslation();
   const language = useAppSelector((state) => state.blog.language);
 
-  const title = getTranslatedText(event.title as any, language);
-  const description = getTranslatedText(event.description as any, language);
-  const location = getTranslatedText(event.location as any, language);
-  const category = getTranslatedText(event.category as any, language);
+  // Prisma `Json` columns: a legacy row may hold a bare string.
+  const read = (value: unknown) => getTranslatedText(readTranslation(value), language);
+
+  const title = read(event.title);
+  const description = read(event.description);
+  const location = read(event.location);
+  const category = read(event.category);
+
+  const meta = [
+    {
+      key: 'date',
+      icon: Calendar,
+      label: language === 'fr' ? 'Date' : 'Date',
+      value: formatLongDate(event.date, language),
+    },
+    {
+      key: 'time',
+      icon: Clock,
+      label: language === 'fr' ? 'Heure' : 'Time',
+      value: event.time ? formatTime(event.time, language) : '',
+    },
+    {
+      key: 'location',
+      icon: MapPin,
+      label: language === 'fr' ? 'Lieu' : 'Location',
+      value: location,
+    },
+  ].filter((item) => item.value);
 
   return (
-    <div className="pb-12 md:pb-16">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="mt-24 md:mt-32">
-          {event.imageUrl && (
-            <div className="mb-8 overflow-hidden rounded-2xl">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={event.imageUrl}
-                alt={title}
-                className="h-64 w-full object-cover sm:h-80"
-              />
-            </div>
-          )}
+    <>
+      <PageHero
+        eyebrow={category || t('navbar.futureEvents')}
+        title={title}
+        crumbs={[
+          { label: t('navbar.home'), href: '/' },
+          { label: t('navbar.futureEvents'), href: '/events' },
+          { label: title },
+        ]}
+      >
+        {meta.length > 0 && (
+          <dl className="mt-14 grid gap-x-10 gap-y-8 border-t border-white/10 pt-9 sm:grid-cols-2 lg:grid-cols-3">
+            {meta.map((item) => {
+              const Icon = item.icon;
 
-          {category && (
-            <div className="mb-6">
-              <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">
-                {category}
-              </span>
-            </div>
-          )}
-
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8 sm:mb-12 font-playfair">
-            {title}
-          </h1>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 sm:mb-12">
-            <div className="flex items-center space-x-3 p-4 bg-purple-50 rounded-lg">
-              <Calendar className="w-6 h-6 text-purple-600" />
-              <div>
-                <p className="text-sm text-gray-600">
-                  {language === 'fr' ? 'Date' : 'Date'}
-                </p>
-                <p className="font-semibold text-gray-900">
-                  {formatLongDate(event.date, language)}
-                </p>
-              </div>
-            </div>
-
-            {event.time && (
-              <div className="flex items-center space-x-3 p-4 bg-purple-50 rounded-lg">
-                <Clock className="w-6 h-6 text-purple-600" />
-                <div>
-                  <p className="text-sm text-gray-600">
-                    {language === 'fr' ? 'Heure' : 'Time'}
-                  </p>
-                  <p className="font-semibold text-gray-900">
-                    {formatTime(event.time, language)}
-                  </p>
+              return (
+                <div key={item.key}>
+                  <dt className="flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-leaf-300">
+                    <Icon aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-leaf-300" />
+                    {item.label}
+                  </dt>
+                  <dd className="tnum mt-3 font-ui text-lg font-medium text-white text-pretty">
+                    {item.value}
+                  </dd>
                 </div>
-              </div>
-            )}
+              );
+            })}
+          </dl>
+        )}
+      </PageHero>
 
-            <div className="flex items-center space-x-3 p-4 bg-purple-50 rounded-lg">
-              <MapPin className="w-6 h-6 text-purple-600" />
-              <div>
-                <p className="text-sm text-gray-600">
-                  {language === 'fr' ? 'Lieu' : 'Location'}
-                </p>
-                <p className="font-semibold text-gray-900">{location}</p>
-              </div>
+      <PageSection tone="white">
+        {/* The event's own uploaded image where there is one; no stock
+            photograph stands in where there is not. */}
+        {event.imageUrl && (
+          <Reveal as="figure" className="mb-14 overflow-hidden rounded-2xl bg-ink-100">
+            <div className="aspect-[16/9] w-full sm:aspect-[21/9]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={event.imageUrl} alt={title} className="h-full w-full object-cover" />
             </div>
-          </div>
+          </Reveal>
+        )}
 
-          <div className="prose prose-lg max-w-none">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              {language === 'fr' ? 'À propos de cet événement' : 'About This Event'}
-            </h2>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{description}</ReactMarkdown>
-          </div>
-        </div>
-      </div>
-    </div>
+        <SectionHeading
+          as="h2"
+          layout="stack"
+          title={language === 'fr' ? 'À propos de cet événement' : 'About This Event'}
+        />
+
+        <Reveal className={`mt-11 max-w-[68ch] ${BODY}`}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{description}</ReactMarkdown>
+        </Reveal>
+      </PageSection>
+    </>
   );
 }

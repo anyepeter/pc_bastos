@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button';
 
 /**
  * Anything that throws while rendering the dashboard lands here. Without this,
- * a failed Clerk lookup showed only "An error occurred in the Server Components
- * render but no message was provided", which says nothing useful.
+ * a failed session lookup showed only "An error occurred in the Server
+ * Components render but no message was provided", which says nothing useful.
  */
 export default function AdminError({
   error,
@@ -21,7 +21,7 @@ export default function AdminError({
     console.error('[admin] render failed:', error);
   }, [error]);
 
-  const looksLikeAuth = /clerk|auth|account/i.test(error.message);
+  const looksLikeAuth = /auth|session|account/i.test(error.message);
 
   return (
     <div className="mx-auto max-w-xl py-16 text-center">
@@ -35,7 +35,7 @@ export default function AdminError({
 
       <p className="mt-3 text-gray-600">
         {looksLikeAuth
-          ? 'We could not confirm your account with Clerk just now. This is usually temporary.'
+          ? 'We could not confirm your account just now. This is usually temporary — try again, or sign in afresh.'
           : 'Something went wrong while loading this page.'}
       </p>
 

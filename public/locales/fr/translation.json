@@ -14,6 +14,7 @@
     "complete": "Terminé"
   },
   "navbar": {
+    "home": "Accueil",
     "aboutUs": "À Propos",
     "ourMissionVision": "Notre Mission & Vision",
     "leadership": "Direction",
@@ -48,10 +49,11 @@
     "backToTop": "Retour en haut"
   },
   "hero": {
-    "title": "ÊTRE ÉGLISE ENSEMBLE",
-    "description": "Jésus est saint, aimant et digne de toute notre adoration et dévotion. Vous ressentirez le ciel dans notre communauté de grâce. Rejoignez-nous et louez le Seigneur Jésus.",
+    "title": "ÊTRE ÉGLISE",
+    "description": "Douze Églises protestantes. Une seule voix. Le CEPCA rassemble 13 millions de fidèles au Cameroun autour de la santé, de l'éducation et du service des communautés.",
     "contactUs": "Nous Contacter",
-    "donateNow": "Faire un Don"
+    "donateNow": "Faire un Don",
+    "titleHighlight": "ENSEMBLE"
   },
   "welcome": {
     "tagline": "Bienvenue au CEPCA",
@@ -446,6 +448,100 @@
         "denomination": "Mission du Plein Évangile (MPE)",
         "leader": "Surintendant Général Rév. SOKENG ALAIN Clément",
         "history": "La Mission du Plein Évangile met l'accent sur le message complet de l'Évangile avec signes, prodiges et miracles, servant les communautés avec ferveur pentecôtiste et engagement social."
+      }
+    }
+  },
+  "home": {
+    "eyebrow": "Conseil des Églises Protestantes du Cameroun",
+    "scrollCue": "Défiler",
+    "nextGatherings": "Prochains rendez-vous",
+    "allEvents": "Tous les événements",
+    "stats": {
+      "churches": "Églises membres",
+      "believers": "Fidèles",
+      "congregations": "Paroisses",
+      "health": "Structures de santé",
+      "schools": "Écoles"
+    },
+    "sections": {
+      "whoWeAre": "Qui nous sommes",
+      "pillars": "Là où le travail se concrétise",
+      "mandate": "Mandat",
+      "principles": "Principes",
+      "programs": "Programmes",
+      "missionVision": "Raison d'être",
+      "workshops": "Formation",
+      "gallery": "Galerie",
+      "announcements": "Avis"
+    },
+    "visionLabel": "Vision",
+    "missionLabel": "Mission",
+    "readMandate": "Lire le mandat complet",
+    "workshops": {
+      "title": "Ateliers et",
+      "titleHighlight": "Formations",
+      "subtitle": "Formations pratiques pour le clergé, les enseignants et le personnel de secrétariat des Églises membres.",
+      "viewAll": "Tous les ateliers",
+      "capacity": "Capacité",
+      "duration": "Durée"
+    },
+    "gallery": {
+      "title": "Le conseil à",
+      "titleHighlight": "l'œuvre",
+      "subtitle": "Images des programmes, des rencontres et des paroisses des douze Églises membres.",
+      "view": "Voir",
+      "close": "Fermer",
+      "previous": "Photographie précédente",
+      "next": "Photographie suivante"
+    },
+    "announcements": {
+      "title": "Dernières",
+      "titleHighlight": "Annonces",
+      "subtitle": "Communications du secrétariat, dans leur ordre de publication.",
+      "viewAll": "Toutes les annonces",
+      "priorityHigh": "Urgent",
+      "priorityMedium": "Avis",
+      "priorityLow": "Pour information"
+    }
+  },
+  "impact": {
+    "title": "Transformer des vies à travers le Cameroun",
+    "subtitle": "Acteur clé et partenaire stratégique de la promotion d'un développement intégral fondé sur l'Évangile, alliant les dimensions spirituelles et sociales du témoignage chrétien",
+    "ctaTitle": "Participez à notre mission",
+    "ctaBody": "Votre soutien nous permet de poursuivre notre action dans la santé, l'éducation et le développement communautaire à travers le Cameroun. Ensemble, nous pouvons avoir un impact durable.",
+    "donateNow": "Faire un don",
+    "stats": {
+      "churches": {
+        "label": "Églises membres",
+        "description": "Unies dans la foi et la mission"
+      },
+      "believers": {
+        "label": "Fidèles",
+        "description": "À travers le Cameroun"
+      },
+      "congregations": {
+        "label": "Paroisses",
+        "description": "Églises et paroisses"
+      },
+      "schools": {
+        "label": "Institutions éducatives",
+        "description": "Écoles, collèges et centres de formation"
+      },
+      "universities": {
+        "label": "Universités",
+        "description": "Établissements d'enseignement supérieur"
+      },
+      "health": {
+        "label": "Structures de santé",
+        "description": "Hôpitaux et centres de santé"
+      },
+      "radio": {
+        "label": "Stations de radio",
+        "description": "Dans 5 régions"
+      },
+      "microfinance": {
+        "label": "Institutions de microfinance",
+        "description": "Au service de l'autonomisation économique"
       }
     }
   }

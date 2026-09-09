@@ -1,176 +1,145 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { ArrowRight, Calendar, Users, Building, Layers } from 'lucide-react';
 import Link from 'next/link';
-import PageLayout from '@/components/PageLayout';
-import HomeButton from '@/components/homeButton';
+import { ArrowUpRight, Calendar, Users, Building, Layers } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import PageLayout from '@/components/PageLayout';
+import PageHero from '@/components/PageHero';
+import PageSection from '@/components/PageSection';
+import SectionHeading from '@/components/SectionHeading';
+import Reveal from '@/components/Reveal';
+import CountUp from '@/components/CountUp';
+import ObjectivesSection from '@/components/ObjectivesSection';
 
 export default function AboutPage() {
   const { t } = useTranslation();
-  const [isVisible, setIsVisible] = useState(false);
-  const [visibleCards, setVisibleCards] = useState<string[]>([]);
 
   const aboutSections = [
     {
       id: 'history',
       title: t('about.history.title'),
       icon: Calendar,
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&auto=format',
       description: t('about.history.description'),
       preview: t('about.history.preview'),
-      href: '/about/history'
+      href: '/about/history',
     },
     {
       id: 'mission-vision',
       title: t('about.missionVision.title'),
       icon: Users,
-      image: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=600&fit=crop&auto=format',
       description: t('about.missionVision.description'),
       preview: t('about.missionVision.preview'),
-      href: '/about/mission-vision'
+      href: '/about/mission-vision',
     },
     {
       id: 'departments',
       title: t('about.departments.title'),
       icon: Building,
-      image: 'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=800&h=600&fit=crop&auto=format',
       description: t('about.departments.description'),
       preview: t('about.departments.preview'),
-      href: '/about/departments'
+      // The council's departments live at /departments; `/about/departments`
+      // was linked here and is a 404 — there is no such route.
+      href: '/departments',
     },
     {
       id: 'structure',
       title: t('about.structure.title'),
       icon: Layers,
-      image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop&auto=format',
       description: t('about.structure.description'),
       preview: t('about.structure.preview'),
-      href: '/about/structure'
-    }
+      href: '/about/structure',
+    },
   ];
 
-  useEffect(() => {
-    setIsVisible(true);
-    const timer = setTimeout(() => {
-      setVisibleCards(aboutSections.map(section => section.id));
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
+  const impact = [
+    { value: 12, suffix: '', label: t('about.impact.memberChurches') },
+    { value: 13, suffix: 'M+', label: t('about.impact.believers') },
+    { value: 1580, suffix: '', label: t('about.impact.educationalInstitutions') },
+    { value: 350, suffix: '', label: t('about.impact.healthCenters') },
+  ];
 
   return (
     <PageLayout>
-      <div className="min-h-screen bg-white">
-        <div className="text-white relative">
-          <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: 'url("https://images.unsplash.com/photo-1438032005730-c779502df39b?w=1920&h=600&fit=crop&auto=format")'
-            }}
-          />
-          <div className="absolute inset-0 bg-black/70"></div>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-10 md:pb-16 relative z-10">
-            <HomeButton />
-            <div className={`text-center transform transition-all duration-1000 ease-out ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            }`}>
-              <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-6">
-                {t('about.pageTitle')}
-              </h1>
-              <p className="text-xl text-blue-100 font-inter max-w-4xl mx-auto leading-relaxed">
-                {t('about.pageSubtitle')}
-              </p>
-            </div>
-          </div>
-        </div>
+      <PageHero
+        eyebrow={t('navbar.aboutUs')}
+        title={t('about.pageTitle')}
+        lede={t('about.pageSubtitle')}
+        crumbs={[{ label: t('navbar.home'), href: '/' }, { label: t('navbar.aboutUs') }]}
+      />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="space-y-16">
-            {aboutSections.map((section, index) => {
-              const IconComponent = section.icon;
-              const isEven = index % 2 === 0;
-              
-              return (
-                <div
-                  key={section.id}
-                  className={`transform transition-all duration-1000 ease-out ${
-                    visibleCards.includes(section.id)
-                      ? 'translate-y-0 opacity-100'
-                      : 'translate-y-12 opacity-0'
-                  }`}
-                  style={{ transitionDelay: `${index * 200}ms` }}
+      {/* The four About chapters. Set as an editorial index rather than as
+          photo cards: the four images here were Unsplash stock of American
+          churches, and the council has no photography to put in their place. */}
+      <PageSection tone="white">
+        {/* No heading here: the hero already carries this page's title and
+            lede, and repeating them verbatim reads as a mistake. */}
+        <ul className="grid gap-5 lg:grid-cols-2">
+          {aboutSections.map((section, i) => {
+            const Icon = section.icon;
+
+            return (
+              <Reveal as="li" key={section.id} delay={Math.min(i, 8) * 60}>
+                <Link
+                  href={section.href}
+                  className="card card-hover focus-ring group flex h-full flex-col p-7 lg:p-8"
                 >
-                  <div className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 lg:gap-12 items-center`}>
-                    <div className="w-full lg:w-1/2">
-                      <img
-                        src={section.image}
-                        alt={section.title}
-                        className="w-full h-64 sm:h-80 object-cover"
-                      />
-                    </div>
-                    
-                    <div className="w-full lg:w-1/2 space-y-6">
-                      <div className="flex items-center space-x-3">
-                        <div className="bg-purple-100 p-3">
-                          <IconComponent className="w-6 h-6 text-purple-600" />
-                        </div>
-                        <h2 className="text-3xl font-bold font-playfair text-gray-900">
-                          {section.title}
-                        </h2>
-                      </div>
-                      
-                      <p className="text-lg text-gray-700 font-inter leading-relaxed">
-                        {section.description}
-                      </p>
-                      
-                      <p className="text-gray-600 font-inter leading-relaxed">
-                        {section.preview}
-                      </p>
-                      
-                      <Link
-                        href={section.href}
-                        className="inline-flex items-center space-x-2 bg-purple-600 text-white px-6 py-3 font-semibold hover:bg-purple-700 transition-colors group"
-                      >
-                        <span>{t('about.learnMore')}</span>
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </Link>
-                    </div>
+                  <div className="flex items-start justify-between gap-5">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white transition-colors duration-300 group-hover:border-leaf-300">
+                      <Icon aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+                    </span>
+                    <span className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-ink-400">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
                   </div>
-                </div>
-              );
-            })}
-          </div>
 
-          <div className={`mt-20 text-center transform transition-all duration-1000 ease-out delay-1000 ${
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-          }`}>
-            <div className="bg-gray-50 p-8 lg:p-12">
-              <h2 className="text-3xl font-bold font-playfair text-gray-900 mb-6">
-                {t('about.impact.title')}
-              </h2>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-600 mb-2">12</div>
-                  <div className="text-gray-600 font-inter">{t('about.impact.memberChurches')}</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-600 mb-2">13M+</div>
-                  <div className="text-gray-600 font-inter">{t('about.impact.believers')}</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-600 mb-2">1,580</div>
-                  <div className="text-gray-600 font-inter">{t('about.impact.educationalInstitutions')}</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-600 mb-2">350</div>
-                  <div className="text-gray-600 font-inter">{t('about.impact.healthCenters')}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                  <h3 className="mt-6 font-display text-2xl font-semibold leading-tight tracking-tight text-ink-900 transition-colors duration-300 group-hover:text-plum-700">
+                    {section.title}
+                  </h3>
+
+                  <p className="mt-4 text-base leading-relaxed text-ink-600 text-pretty">
+                    {section.description}
+                  </p>
+
+                  <p className="mt-3 text-sm leading-relaxed text-ink-500 text-pretty">
+                    {section.preview}
+                  </p>
+
+                  <span className="mt-7 inline-flex items-center gap-2 font-ui text-sm font-medium text-plum-700">
+                    {t('about.learnMore')}
+                    <ArrowUpRight className="h-4 w-4 transition-transform duration-300 ease-spring group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </span>
+                </Link>
+              </Reveal>
+            );
+          })}
+        </ul>
+      </PageSection>
+
+      {/* The council in figures. A painted dark band so the numbers punctuate
+          the page rather than sitting in another grey box. */}
+      <PageSection tone="dark" paint className="py-20 lg:py-28">
+        <SectionHeading title={t('about.impact.title')} tone="dark" layout="stack" />
+
+        <dl className="mt-11 grid grid-cols-2 gap-x-8 gap-y-10 lg:grid-cols-4">
+          {impact.map((stat, i) => (
+            <Reveal key={stat.label} delay={Math.min(i, 8) * 60}>
+              <dt className="sr-only">{stat.label}</dt>
+              <dd>
+                <span className="block font-display text-[clamp(2.4rem,4.4vw,3.5rem)] font-semibold leading-none tracking-tight text-white">
+                  <CountUp value={stat.value} suffix={stat.suffix} />
+                </span>
+                <span className="mt-3 block font-mono text-[0.62rem] uppercase tracking-[0.2em] text-leaf-300">
+                  {stat.label}
+                </span>
+              </dd>
+            </Reveal>
+          ))}
+        </dl>
+      </PageSection>
+
+      {/* Moved off the landing page: the council's objectives belong with
+          the rest of the About material. */}
+      <ObjectivesSection />
     </PageLayout>
   );
 }

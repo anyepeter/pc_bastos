@@ -1,10 +1,24 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Calendar, Download, Mic, Play, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  AudioLines,
+  Calendar,
+  Clock,
+  Download,
+  Loader2,
+  MapPin,
+  Mic,
+  Play,
+  X,
+} from 'lucide-react';
 import AudioPlayer from '@/components/AudioPlayer';
+import PageHero from '@/components/PageHero';
+import PageSection from '@/components/PageSection';
+import Reveal from '@/components/Reveal';
 import { useAppSelector } from '@/store/hooks';
-import { getTranslatedText } from '@/lib/translations';
+import { getTranslatedText, readTranslation } from '@/lib/translations';
 import { formatLongDate } from '@/lib/format';
 
 export interface PublicSermon {
@@ -19,208 +33,321 @@ export interface PublicSermon {
   thumbnail: string | null;
 }
 
-const FALLBACK_THUMBNAIL =
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&auto=format';
+/** The sermon whose video is open in the overlay. The title labels the dialog. */
+interface ActiveVideo {
+  url: string;
+  title: string;
+}
 
+/**
+ * The sermon archive: a media library rather than a photo grid.
+ *
+ * Every row is one recording — a media tile carrying the play affordance, the
+ * title, and the metadata (date, place, running time) set in mono so it reads
+ * as data rather than prose. Sermons carry no photography of their own more
+ * often than not, so the tile falls back to a painted plum panel instead of the
+ * Unsplash stock this page used to hardcode.
+ */
 export default function SermonsClient({ sermons }: { sermons: PublicSermon[] }) {
-  const [isVisible, setIsVisible] = useState(false);
-  const [visibleCards, setVisibleCards] = useState<string[]>([]);
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
-  const [activePlayerId, setActivePlayerId] = useState<string | null>(null);
-  const [loadingAudio, setLoadingAudio] = useState<string | null>(null);
+  const { t } = useTranslation();
   const language = useAppSelector((state) => state.blog.language);
 
-  useEffect(() => {
-    setIsVisible(true);
-    const timer = setTimeout(() => {
-      setVisibleCards(sermons.map((sermon) => sermon.id));
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [sermons]);
+  const [activeVideo, setActiveVideo] = useState<ActiveVideo | null>(null);
+  const [activePlayerId, setActivePlayerId] = useState<string | null>(null);
+  const [loadingAudio, setLoadingAudio] = useState<string | null>(null);
 
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const listenTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Hold the page behind the overlay, move focus onto the one control inside
+  // it, and let Escape dismiss it — the overlay is the only modal on the page.
   useEffect(() => {
-    document.body.style.overflow = selectedVideo ? 'hidden' : 'unset';
-    return () => {
-      document.body.style.overflow = 'unset';
+    if (!activeVideo) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeButtonRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setActiveVideo(null);
     };
-  }, [selectedVideo]);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [activeVideo]);
+
+  useEffect(
+    () => () => {
+      if (listenTimer.current) clearTimeout(listenTimer.current);
+    },
+    [],
+  );
 
   const handleListenClick = (sermonId: string) => {
     setLoadingAudio(sermonId);
-    setTimeout(() => {
+    if (listenTimer.current) clearTimeout(listenTimer.current);
+    listenTimer.current = setTimeout(() => {
       setLoadingAudio(null);
       setActivePlayerId(sermonId);
     }, 1500);
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-purple-100">
-      {/* Header */}
-      <div className="text-white relative overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage:
-              'url("https://images.unsplash.com/photo-1507692049790-de58290a4334?w=1920&h=600&fit=crop&auto=format")',
-          }}
-        />
-        <div className="absolute inset-0 bg-black/70"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-10 md:pb-16">
-          <div
-            className={`text-center transform transition-all duration-1000 ease-out ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            }`}
-          >
-            <h1 className="text-4xl sm:text-6xl font-bold font-playfair mb-4 bg-gradient-to-r from-white to-green-100 bg-clip-text text-transparent">
-              {language === 'fr' ? 'Prédications' : 'Sermons'}
-            </h1>
-            <p className="text-xl text-green-100 font-inter max-w-3xl mx-auto leading-relaxed">
-              {language === 'fr'
-                ? 'Des messages inspirants de nos responsables spirituels dans les Églises membres'
-                : 'Inspiring messages from our spiritual leaders across member churches'}
-            </p>
-          </div>
-        </div>
-      </div>
+  const listenLabel = language === 'fr' ? 'Écouter' : 'Listen';
+  const loadingLabel = language === 'fr' ? 'Chargement...' : 'Loading...';
+  const downloadLabel = language === 'fr' ? 'Télécharger' : 'Download';
+  const playVideoLabel = language === 'fr' ? 'Lire la vidéo' : 'Play video';
+  const closeLabel = language === 'fr' ? 'Fermer' : 'Close';
 
-      {/* Sermons Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  return (
+    <>
+      <PageHero
+        eyebrow={t('sermons.listen')}
+        title={language === 'fr' ? 'Prédications' : 'Sermons'}
+        lede={
+          language === 'fr'
+            ? 'Des messages inspirants de nos responsables spirituels dans les Églises membres'
+            : 'Inspiring messages from our spiritual leaders across member churches'
+        }
+        crumbs={[
+          { label: t('navbar.home'), href: '/' },
+          { label: t('navbar.sermons') },
+        ]}
+      />
+
+      {/* The archive. No section heading: the hero already names the page, and
+          repeating it above the first row reads as a mistake. */}
+      <PageSection tone="tint">
         {sermons.length === 0 ? (
-          <div className="rounded-2xl bg-white py-16 text-center shadow-sm">
-            <Mic className="mx-auto h-12 w-12 text-purple-300" />
-            <p className="mt-4 text-lg text-gray-700">
-              {language === 'fr'
-                ? 'Aucune prédication publiée pour le moment.'
-                : 'No sermons have been published yet.'}
-            </p>
-          </div>
+          <Reveal>
+            <div className="card mx-auto max-w-xl rounded-2xl px-8 py-16 text-center">
+              <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-ink-200 bg-white">
+                <Mic aria-hidden="true" className="h-6 w-6 text-leaf-600" />
+              </span>
+              <p className="mx-auto mt-7 max-w-[36ch] text-base leading-relaxed text-ink-600 text-pretty">
+                {language === 'fr'
+                  ? 'Aucune prédication publiée pour le moment.'
+                  : 'No sermons have been published yet.'}
+              </p>
+            </div>
+          </Reveal>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <ul className="grid gap-5">
             {sermons.map((sermon, index) => {
-              const title = getTranslatedText(sermon.title as any, language);
-              const description = getTranslatedText(sermon.description as any, language);
-              const location = getTranslatedText(sermon.location as any, language);
+              const title = getTranslatedText(readTranslation(sermon.title), language);
+              const description = getTranslatedText(readTranslation(sermon.description), language);
+              const location = getTranslatedText(readTranslation(sermon.location), language);
+
+              // Read into consts so the narrowing survives into the handlers.
+              const { videoUrl, audioUrl, thumbnail } = sermon;
+              const titleId = `sermon-${sermon.id}-title`;
+
+              const isPlaying = activePlayerId === sermon.id;
+              const isLoading = loadingAudio === sermon.id;
+
+              // The tile is the primary play affordance: video where there is
+              // one, otherwise the audio. It goes inert once audio is running,
+              // since the transport below has taken over.
+              let tileAction: { onClick: () => void; label: string } | null = null;
+              if (videoUrl) {
+                tileAction = {
+                  onClick: () => setActiveVideo({ url: videoUrl, title }),
+                  label: playVideoLabel,
+                };
+              } else if (audioUrl && !isPlaying) {
+                tileAction = {
+                  onClick: () => handleListenClick(sermon.id),
+                  label: listenLabel,
+                };
+              }
+
+              const tileClass =
+                'group relative aspect-video w-full overflow-hidden rounded-xl bg-plum-950';
+
+              const tileBody = (
+                <>
+                  {thumbnail ? (
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={thumbnail}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-spring group-hover:scale-105"
+                      />
+                      <span aria-hidden="true" className="absolute inset-0 bg-plum-950/40" />
+                    </>
+                  ) : (
+                    <span aria-hidden="true" className="grain absolute inset-0 bg-plum-950" />
+                  )}
+
+                  {tileAction ? (
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 flex items-center justify-center"
+                    >
+                      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white ring-1 ring-plum-950/10 transition-transform duration-300 ease-spring group-hover:scale-110">
+                        {isLoading ? (
+                          <Loader2 className="h-5 w-5 animate-spin text-leaf-600" />
+                        ) : (
+                          <Play fill="currentColor" className="ml-0.5 h-5 w-5 text-leaf-600" />
+                        )}
+                      </span>
+                    </span>
+                  ) : (
+                    !thumbnail && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute inset-0 flex items-center justify-center"
+                      >
+                        <AudioLines className="h-7 w-7 text-leaf-300" />
+                      </span>
+                    )
+                  )}
+                </>
+              );
 
               return (
-                <div
-                  key={sermon.id}
-                  className={`bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:scale-[1.02] transition-all duration-700 transform group ${
-                    visibleCards.includes(sermon.id)
-                      ? 'translate-y-0 opacity-100'
-                      : 'translate-y-12 opacity-0'
-                  }`}
-                  style={{ transitionDelay: `${index * 150}ms` }}
-                >
-                  {/* Thumbnail */}
-                  <div className="relative">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={sermon.thumbnail || FALLBACK_THUMBNAIL}
-                      alt={title}
-                      className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
-
-                    {sermon.duration && (
-                      <div className="absolute top-4 right-4">
-                        <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
-                          {sermon.duration}
-                        </span>
-                      </div>
-                    )}
-
-                    {sermon.videoUrl && (
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <button
-                          onClick={() => setSelectedVideo(sermon.videoUrl)}
-                          aria-label={language === 'fr' ? 'Lire la vidéo' : 'Play video'}
-                          className="w-16 h-16 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition-colors duration-300"
-                        >
-                          <Play className="w-6 h-6 text-purple-600 ml-1" fill="currentColor" />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 leading-tight">
-                      {title}
-                    </h3>
-
-                    <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
-                      {description}
-                    </p>
-
-                    <div className="flex items-center space-x-2 text-sm text-gray-500 mb-4">
-                      <Calendar className="w-4 h-4" />
-                      <span>{formatLongDate(sermon.date, language)}</span>
-                      <span className="text-gray-400">•</span>
-                      <span>{location}</span>
-                    </div>
-
-                    {sermon.audioUrl && (
-                      <div className="flex space-x-2">
-                        {activePlayerId === sermon.id ? (
-                          <div className="w-full">
-                            <AudioPlayer src={sermon.audioUrl} />
-                          </div>
-                        ) : (
+                <Reveal as="li" key={sermon.id} delay={Math.min(index, 8) * 60}>
+                  <article className="card rounded-2xl p-4 sm:p-5 lg:p-6">
+                    <div className="grid gap-5 sm:grid-cols-12 sm:gap-6 lg:gap-8">
+                      <div className="sm:col-span-5 lg:col-span-4 xl:col-span-3">
+                        {tileAction ? (
                           <button
-                            onClick={() => handleListenClick(sermon.id)}
-                            disabled={loadingAudio === sermon.id}
-                            className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg font-medium transition-colors duration-300 flex items-center justify-center space-x-2 disabled:opacity-70"
+                            type="button"
+                            onClick={tileAction.onClick}
+                            aria-label={tileAction.label}
+                            aria-describedby={titleId}
+                            className={`focus-ring ${tileClass}`}
                           >
-                            <Play className="w-4 h-4" fill="currentColor" />
-                            <span>
-                              {loadingAudio === sermon.id
-                                ? language === 'fr'
-                                  ? 'Chargement...'
-                                  : 'Loading...'
-                                : language === 'fr'
-                                ? 'Écouter'
-                                : 'Listen'}
-                            </span>
+                            {tileBody}
                           </button>
+                        ) : (
+                          <div className={tileClass}>{tileBody}</div>
                         )}
-                        <a
-                          href={sermon.audioUrl}
-                          download
-                          aria-label={language === 'fr' ? 'Télécharger' : 'Download'}
-                          className="p-2 border border-gray-300 hover:border-purple-300 rounded-lg transition-colors duration-300"
-                        >
-                          <Download className="w-4 h-4 text-gray-600" />
-                        </a>
                       </div>
-                    )}
-                  </div>
-                </div>
+
+                      <div className="min-w-0 sm:col-span-7 lg:col-span-8 xl:col-span-9">
+                        <div className="flex items-center gap-4">
+                          <span className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-ink-400">
+                            {String(index + 1).padStart(2, '0')}
+                          </span>
+                          <span aria-hidden="true" className="h-px flex-1 bg-ink-200" />
+                        </div>
+
+                        <h2
+                          id={titleId}
+                          className="mt-4 font-display text-xl font-semibold leading-tight tracking-tight text-ink-900 text-balance lg:text-2xl"
+                        >
+                          {title}
+                        </h2>
+
+                        {description && (
+                          <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-ink-600 text-pretty">
+                            {description}
+                          </p>
+                        )}
+
+                        <ul className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ink-500">
+                          <li className="flex items-center gap-2">
+                            <Calendar aria-hidden="true" className="h-3.5 w-3.5 text-leaf-600" />
+                            {formatLongDate(sermon.date, language)}
+                          </li>
+                          {location && (
+                            <li className="flex items-center gap-2">
+                              <MapPin aria-hidden="true" className="h-3.5 w-3.5 text-leaf-600" />
+                              {location}
+                            </li>
+                          )}
+                          {sermon.duration && (
+                            <li className="flex items-center gap-2">
+                              <Clock aria-hidden="true" className="h-3.5 w-3.5 text-leaf-600" />
+                              {sermon.duration}
+                            </li>
+                          )}
+                        </ul>
+
+                        {audioUrl && (
+                          <div className="mt-6 flex flex-wrap items-center gap-3">
+                            {isPlaying ? (
+                              <div className="min-w-0 flex-1">
+                                <AudioPlayer src={audioUrl} />
+                              </div>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => handleListenClick(sermon.id)}
+                                disabled={isLoading}
+                                aria-busy={isLoading}
+                                aria-describedby={titleId}
+                                className="focus-ring inline-flex items-center gap-2 rounded-full bg-plum-700 px-5 py-2.5 font-ui text-sm font-medium text-white transition-colors duration-300 hover:bg-plum-800 disabled:cursor-wait disabled:opacity-70"
+                              >
+                                {isLoading ? (
+                                  <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Play
+                                    aria-hidden="true"
+                                    fill="currentColor"
+                                    className="h-4 w-4"
+                                  />
+                                )}
+                                {isLoading ? loadingLabel : listenLabel}
+                              </button>
+                            )}
+
+                            <a
+                              href={audioUrl}
+                              download
+                              aria-label={downloadLabel}
+                              aria-describedby={titleId}
+                              className="focus-ring inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-ink-200 bg-white text-leaf-600 transition-colors duration-300 hover:border-leaf-300"
+                            >
+                              <Download aria-hidden="true" className="h-4 w-4" />
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                </Reveal>
               );
             })}
-          </div>
+          </ul>
         )}
-      </div>
+      </PageSection>
 
-      {/* Video Popup */}
-      {selectedVideo && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="relative w-full max-w-4xl bg-black rounded-2xl overflow-hidden shadow-2xl">
+      {activeVideo && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={activeVideo.title}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setActiveVideo(null);
+          }}
+          className="fixed inset-0 z-overlay flex items-center justify-center bg-plum-950/90 p-4 backdrop-blur-sm"
+        >
+          <div className="relative w-full max-w-4xl overflow-hidden rounded-2xl bg-plum-950 ring-1 ring-white/10">
             <button
-              onClick={() => setSelectedVideo(null)}
-              aria-label={language === 'fr' ? 'Fermer' : 'Close'}
-              className="absolute top-4 right-4 z-10 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition-colors duration-200"
+              ref={closeButtonRef}
+              type="button"
+              onClick={() => setActiveVideo(null)}
+              aria-label={closeLabel}
+              className="focus-ring absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-leaf-300 backdrop-blur transition-colors duration-300 hover:bg-white/10"
             >
-              <X className="w-6 h-6" />
+              <X aria-hidden="true" className="h-5 w-5" />
             </button>
+
             <video
-              src={selectedVideo}
+              src={activeVideo.url}
               controls
               autoPlay
-              className="w-full h-auto max-h-[80vh]"
+              className="h-auto max-h-[80vh] w-full"
             />
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

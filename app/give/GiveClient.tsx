@@ -1,26 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
+  ArrowUpRight,
   Building2,
   Check,
   Copy,
   Church,
   HandHeart,
-  Heart,
   Mail,
   MapPin,
   Phone,
   Smartphone,
-  Sparkles,
   Users,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText } from '@/lib/translations';
 import { BANK_TRANSFER, MOBILE_MONEY, givingDetailsMissing } from '@/lib/giving';
+import PageHero from '@/components/PageHero';
+import PageSection from '@/components/PageSection';
+import SectionHeading from '@/components/SectionHeading';
+import Reveal from '@/components/Reveal';
 import type { PublicCharityProgram } from '@/app/charity/CharityClient';
 
 interface GiveClientProps {
@@ -28,15 +31,30 @@ interface GiveClientProps {
   programs: PublicCharityProgram[];
 }
 
-/** Small inline copy-to-clipboard control for account numbers. */
+/**
+ * Small inline copy-to-clipboard control for account numbers.
+ *
+ * The confirmation is a change of glyph (copy → check), not a change of
+ * colour: the icon carries the site's single icon colour in both states, so
+ * the feedback survives for anyone who cannot separate the two hues.
+ */
 function CopyValue({ value, label }: { value: string; label: string }) {
   const [copied, setCopied] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    [],
+  );
 
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(value);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => setCopied(false), 2000);
     } catch {
       // Clipboard blocked (insecure context or denied) — the value is still
       // on screen to copy by hand, so there is nothing to recover from.
@@ -48,15 +66,17 @@ function CopyValue({ value, label }: { value: string; label: string }) {
       type="button"
       onClick={copy}
       aria-label={`${label}: ${value}`}
-      className="group inline-flex max-w-full items-center gap-2 rounded-lg px-2 py-1 -mx-2 text-left transition-colors hover:bg-emerald-50"
+      className="focus-ring -mx-2 inline-flex max-w-full items-center gap-2 rounded-lg px-2 py-1 text-left transition-colors duration-300 hover:bg-plum-50"
     >
-      <span className="truncate font-mono text-sm font-semibold text-gray-900">
+      {/* Account and phone numbers are set in tabular figures so the digits
+          line up column-to-column and never shift width. */}
+      <span className="tnum truncate font-mono text-sm font-semibold text-ink-900">
         {value}
       </span>
       {copied ? (
-        <Check className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+        <Check aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-leaf-600" />
       ) : (
-        <Copy className="h-3.5 w-3.5 shrink-0 text-gray-400 transition-colors group-hover:text-emerald-600" />
+        <Copy aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-leaf-600" />
       )}
     </button>
   );
@@ -69,6 +89,14 @@ export default function GiveClient({ programs }: GiveClientProps) {
   const phone = t('footer.phone');
   const email = t('footer.email');
   const address = t('footer.address');
+
+  /**
+   * Nothing on this page takes a payment. `lib/giving.ts` holds the council's
+   * real account details and is deliberately empty until the secretariat fills
+   * it in, so today this is always true and the page offers the office's phone
+   * and email instead. There is no form, no card field and no processor —
+   * inventing one would be a promise the site cannot keep.
+   */
   const detailsMissing = givingDetailsMissing();
 
   const copy =
@@ -185,219 +213,228 @@ export default function GiveClient({ programs }: GiveClientProps) {
           thanks: 'Thank you for your support',
         };
 
+  const telHref = `tel:${phone.replace(/\s/g, '')}`;
+
   return (
-    <div className="min-h-screen bg-[#fbfbfa]">
-      {/* Hero */}
-      <section className="relative overflow-hidden text-white">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage:
-              'url("https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=1920&h=900&fit=crop&auto=format")',
-          }}
-        />
-        <div className="absolute inset-0" />
-
-        <div className="relative mx-auto max-w-6xl px-4 pb-20 pt-28 sm:px-6 md:pb-28 md:pt-36 lg:px-8">
-          <div className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100 backdrop-blur-sm">
-              <Heart className="h-3.5 w-3.5" />
-              {copy.eyebrow}
-            </span>
-
-            <h1 className="mt-6 font-playfair text-4xl font-bold leading-[1.05] sm:text-5xl md:text-6xl">
-              {copy.title}
-            </h1>
-
-            <p className="mt-6 max-w-2xl font-inter text-lg leading-relaxed text-gray-200 sm:text-xl">
-              {copy.lead}
-            </p>
-
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <a
-                href="#ways-to-give"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500 px-8 py-3.5 font-semibold text-white shadow-lg shadow-emerald-900/30 transition-all duration-300 hover:bg-emerald-400 hover:shadow-xl"
-              >
-                <HandHeart className="h-5 w-5" />
-                {copy.ctaWays}
-              </a>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-8 py-3.5 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/10"
-              >
-                {copy.ctaTalk}
-              </Link>
-            </div>
-          </div>
+    <>
+      <PageHero
+        eyebrow={copy.eyebrow}
+        title={copy.title}
+        lede={copy.lead}
+        crumbs={[{ label: t('navbar.home'), href: '/' }, { label: copy.eyebrow }]}
+      >
+        {/* One obvious primary action — down to the giving details — and one
+            quiet alternative for anyone who would rather speak to a person. */}
+        <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-9 sm:flex-row sm:items-center">
+          <a
+            href="#ways-to-give"
+            className="focus-ring group inline-flex items-center justify-center gap-2.5 rounded-full bg-leaf-600 px-7 py-3.5 font-ui text-sm font-semibold text-white transition-all duration-300 ease-spring hover:bg-leaf-500 hover:shadow-[0_18px_40px_-14px_rgba(39,113,78,0.85)] active:translate-y-px"
+          >
+            <HandHeart aria-hidden="true" className="h-4 w-4" />
+            {copy.ctaWays}
+          </a>
+          <Link
+            href="/contact"
+            className="focus-ring inline-flex items-center justify-center gap-2.5 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 font-ui text-sm font-semibold text-white transition-all duration-300 ease-spring hover:border-white/60 hover:bg-white/20 active:translate-y-px"
+          >
+            {copy.ctaTalk}
+          </Link>
         </div>
-      </section>
+      </PageHero>
 
-      {/* Verse */}
-      <section className="border-b border-gray-200 bg-white">
-        <div className="mx-auto max-w-4xl px-4 py-12 text-center sm:px-6 lg:px-8">
-          <Sparkles className="mx-auto h-5 w-5 text-emerald-500" />
-          <blockquote className="mt-4 font-playfair text-xl italic leading-relaxed text-gray-800 sm:text-2xl">
-            {copy.verse}
-          </blockquote>
-          <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-emerald-600">
-            {copy.verseRef}
-          </p>
+      {/* The scripture opens the page as an epigraph rather than as a boxed
+          "verse card", then the three reasons follow under one hairline. */}
+      <PageSection tone="white">
+        <Reveal>
+          <figure className="mx-auto max-w-[56ch] text-center">
+            <span aria-hidden="true" className="mx-auto block h-px w-10 bg-plum-500" />
+            <blockquote className="mt-7 font-display text-[clamp(1.3rem,2.6vw,1.9rem)] font-medium italic leading-snug text-ink-800 text-balance">
+              {copy.verse}
+            </blockquote>
+            <figcaption className="mt-6 font-mono text-[0.62rem] uppercase tracking-[0.24em] text-plum-700">
+              {copy.verseRef}
+            </figcaption>
+          </figure>
+        </Reveal>
+
+        <div className="mt-16 border-t border-ink-200 pt-16 lg:mt-20 lg:pt-20">
+          <SectionHeading title={copy.reasonsTitle} layout="stack" />
+
+          <ul className="mt-11 grid gap-6 lg:grid-cols-3">
+            {copy.reasons.map((reason, i) => {
+              const Icon = reason.icon;
+
+              return (
+                <Reveal as="li" key={reason.title} delay={Math.min(i, 8) * 60}>
+                  <div className="card flex h-full flex-col rounded-2xl p-7">
+                    <div className="flex items-start justify-between gap-5">
+                      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                        <Icon aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+                      </span>
+                      <span className="tnum font-mono text-[0.62rem] uppercase tracking-[0.24em] text-ink-400">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                    </div>
+
+                    <h3 className="mt-6 font-display text-xl font-semibold leading-tight tracking-tight text-ink-900">
+                      {reason.title}
+                    </h3>
+
+                    <p className="mt-4 max-w-[48ch] text-base leading-relaxed text-ink-600 text-pretty">
+                      {reason.body}
+                    </p>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </ul>
         </div>
-      </section>
+      </PageSection>
 
-      {/* Why give */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
-        <h2 className="text-center font-playfair text-3xl font-bold text-gray-900 sm:text-4xl">
-          {copy.reasonsTitle}
-        </h2>
-
-        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {copy.reasons.map((reason) => (
-            <div
-              key={reason.title}
-              className="rounded-3xl bg-white p-7 shadow-[0_1px_3px_rgba(0,0,0,0.06)] ring-1 ring-gray-900/5 transition-shadow duration-300 hover:shadow-lg"
-            >
-              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 ring-1 ring-emerald-100">
-                <reason.icon className="h-6 w-6 text-emerald-600" />
-              </span>
-              <h3 className="mt-5 font-playfair text-xl font-bold text-gray-900">
-                {reason.title}
-              </h3>
-              <p className="mt-2 font-inter leading-relaxed text-gray-600">
-                {reason.body}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* What your gift funds — only when programs are published */}
+      {/* What a gift actually funds. A painted dark band, matching the way the
+          same programs are set on the landing page — and the only place on
+          this page where photography appears, because it is the council's
+          own. Rendered only when something is published. */}
       {programs.length > 0 && (
-        <section className="border-y border-gray-200 bg-white">
-          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <h2 className="font-playfair text-3xl font-bold text-gray-900 sm:text-4xl">
-                  {copy.programsTitle}
-                </h2>
-                <p className="mt-3 max-w-2xl font-inter text-gray-600">
-                  {copy.programsLead}
-                </p>
-              </div>
-              <Link
-                href="/charity"
-                className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-emerald-700 hover:text-emerald-800"
-              >
-                {copy.programsAll}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
+        <PageSection tone="dark" paint className="py-20 lg:py-28">
+          <SectionHeading
+            title={copy.programsTitle}
+            standfirst={copy.programsLead}
+            tone="dark"
+          />
 
-            <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {programs.slice(0, 3).map((program) => {
-                const title = getTranslatedText(program.title as any, language);
-                const impact = getTranslatedText(program.impact as any, language);
-                const beneficiaries = getTranslatedText(
-                  program.beneficiaries as any,
-                  language
-                );
-                const cover = program.images[0];
+          <ul className="mt-11 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+            {programs.slice(0, 3).map((program, i) => {
+              const title = getTranslatedText(program.title as any, language);
+              const impact = getTranslatedText(program.impact as any, language);
+              const beneficiaries = getTranslatedText(
+                program.beneficiaries as any,
+                language
+              );
+              const cover = program.images[0];
 
-                return (
+              return (
+                <Reveal as="li" key={program.id} delay={Math.min(i, 8) * 60} className="h-full">
                   <Link
-                    key={program.id}
                     href={`/charity/${program.slug}`}
-                    className="group overflow-hidden rounded-3xl bg-[#fbfbfa] ring-1 ring-gray-900/5 transition-all duration-500 hover:-translate-y-1 hover:shadow-lg"
+                    className="focus-ring group flex h-full flex-col"
                   >
-                    <div className="relative aspect-[16/10] overflow-hidden">
-                      {cover ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={cover}
-                          alt={title}
-                          className="h-full w-full object-cover transition-transform duration-[900ms] group-hover:scale-[1.06]"
-                        />
-                      ) : (
-                        <div className="h-full w-full bg-gradient-to-br from-emerald-500 to-teal-500" />
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
+                    <div className="relative overflow-hidden rounded-2xl">
+                      <div className="aspect-[4/3] w-full">
+                        {cover ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={cover}
+                            alt={title}
+                            loading="lazy"
+                            className="h-full w-full object-cover transition-transform duration-1000 ease-spring group-hover:scale-[1.05]"
+                          />
+                        ) : (
+                          <div className="h-full w-full bg-gradient-to-br from-plum-800 to-plum-900" />
+                        )}
+                      </div>
+                      <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-plum-950/70 via-transparent to-transparent"
+                      />
+
                       {beneficiaries && (
-                        <span className="absolute bottom-3 left-3 right-3 inline-flex max-w-fit items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-gray-800">
-                          <Users className="h-3 w-3 shrink-0 text-emerald-600" />
+                        <span className="absolute bottom-4 left-4 right-4 inline-flex max-w-fit items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 text-xs font-medium text-ink-800">
+                          <Users aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-leaf-600" />
                           <span className="truncate">{beneficiaries}</span>
                         </span>
                       )}
                     </div>
-                    <div className="p-5">
+
+                    <div className="flex flex-1 flex-col pt-6">
                       {impact && (
-                        <p className="truncate text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-600">
+                        <p className="truncate font-mono text-[0.6rem] uppercase tracking-[0.2em] text-leaf-300">
                           {impact}
                         </p>
                       )}
-                      <h3 className="mt-1.5 line-clamp-2 font-playfair text-lg font-bold text-gray-900 group-hover:text-emerald-700">
+
+                      <h3 className="mt-3 line-clamp-2 font-display text-xl font-semibold leading-snug text-white transition-colors duration-300 group-hover:text-plum-200">
                         {title}
                       </h3>
                     </div>
                   </Link>
-                );
-              })}
+                </Reveal>
+              );
+            })}
+          </ul>
+
+          <Reveal delay={160}>
+            <div className="mt-11 border-t border-white/10 pt-9">
+              <Link
+                href="/charity"
+                className="focus-ring group inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/5 px-6 py-3 font-ui text-sm font-semibold text-white transition-all duration-300 ease-spring hover:border-leaf-300/40 hover:bg-white/10 active:translate-y-px"
+              >
+                {copy.programsAll}
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-spring group-hover:translate-x-1" />
+              </Link>
             </div>
-          </div>
-        </section>
+          </Reveal>
+        </PageSection>
       )}
 
-      {/* Ways to give */}
-      <section id="ways-to-give" className="scroll-mt-24">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
-          <div className="max-w-2xl">
-            <h2 className="font-playfair text-3xl font-bold text-gray-900 sm:text-4xl">
-              {copy.waysTitle}
-            </h2>
-            <p className="mt-3 font-inter text-gray-600">{copy.waysLead}</p>
-          </div>
+      {/* Ways to give — the page's working end. Deliberately plain: no
+          gimmicks, no gradients and no ornament around money. */}
+      <PageSection tone="tint" id="ways-to-give">
+        <SectionHeading title={copy.waysTitle} standfirst={copy.waysLead} />
 
-          {detailsMissing ? (
-            /* No account details configured yet — never invent them. */
-            <div className="mt-10 rounded-3xl border border-dashed border-emerald-300 bg-emerald-50/60 p-8 sm:p-10">
-              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white ring-1 ring-emerald-100">
-                <HandHeart className="h-6 w-6 text-emerald-600" />
+        {detailsMissing ? (
+          /* No account details configured yet — never invent them. The dashed
+             rule says "provisional" without dressing it up as an error. */
+          <Reveal>
+            <div className="mt-11 rounded-2xl border border-dashed border-ink-300 bg-white p-7 lg:p-9">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                <HandHeart aria-hidden="true" className="h-5 w-5 text-leaf-600" />
               </span>
-              <h3 className="mt-5 font-playfair text-2xl font-bold text-gray-900">
+
+              <h3 className="mt-6 font-display text-2xl font-semibold leading-tight tracking-tight text-ink-900">
                 {copy.pending}
               </h3>
-              <p className="mt-3 max-w-2xl font-inter leading-relaxed text-gray-700">
+
+              <p className="mt-4 max-w-[60ch] text-base leading-relaxed text-ink-600 text-pretty">
                 {copy.pendingBody}
               </p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <a
-                  href={`tel:${phone.replace(/\s/g, '')}`}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-emerald-700"
+                  href={telHref}
+                  className="focus-ring inline-flex items-center justify-center gap-2.5 rounded-full bg-leaf-600 px-6 py-3.5 font-ui text-sm font-semibold text-white transition-all duration-300 ease-spring hover:bg-leaf-500 active:translate-y-px"
                 >
-                  <Phone className="h-4 w-4" />
-                  {phone}
+                  <Phone aria-hidden="true" className="h-4 w-4 shrink-0" />
+                  <span className="tnum font-mono">{phone}</span>
                 </a>
                 <a
                   href={`mailto:${email}`}
-                  className="inline-flex min-w-0 items-center justify-center gap-2 rounded-full border border-emerald-300 bg-white px-6 py-3 font-semibold text-emerald-800 transition-colors hover:bg-emerald-50"
+                  className="focus-ring inline-flex min-w-0 items-center justify-center gap-2.5 rounded-full border border-ink-300 bg-white px-6 py-3.5 font-ui text-sm font-semibold text-ink-800 transition-all duration-300 ease-spring hover:border-plum-400 hover:bg-plum-50 active:translate-y-px"
                 >
-                  <Mail className="h-4 w-4 shrink-0" />
+                  <Mail aria-hidden="true" className="h-4 w-4 shrink-0 text-leaf-600" />
                   <span className="truncate">{email}</span>
                 </a>
               </div>
             </div>
-          ) : (
-            <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
-              {BANK_TRANSFER && (
-                <div className="rounded-3xl bg-white p-7 shadow-[0_1px_3px_rgba(0,0,0,0.06)] ring-1 ring-gray-900/5">
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 ring-1 ring-emerald-100">
-                    <Building2 className="h-6 w-6 text-emerald-600" />
+          </Reveal>
+        ) : (
+          <div className="mt-11 grid gap-6 lg:grid-cols-2">
+            {BANK_TRANSFER && (
+              <Reveal>
+                <div className="card flex h-full flex-col rounded-2xl p-7">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                    <Building2 aria-hidden="true" className="h-5 w-5 text-leaf-600" />
                   </span>
-                  <h3 className="mt-5 font-playfair text-2xl font-bold text-gray-900">
+
+                  <h3 className="mt-6 font-display text-2xl font-semibold leading-tight tracking-tight text-ink-900">
                     {copy.bank}
                   </h3>
-                  <p className="mt-2 font-inter text-gray-600">{copy.bankBody}</p>
 
-                  <dl className="mt-6 space-y-3 border-t border-gray-100 pt-5">
+                  <p className="mt-4 max-w-[48ch] text-base leading-relaxed text-ink-600 text-pretty">
+                    {copy.bankBody}
+                  </p>
+
+                  <dl className="mt-7 space-y-3 border-t border-ink-200 pt-6">
                     {[
                       [copy.bankName, BANK_TRANSFER.bankName],
                       [copy.accountName, BANK_TRANSFER.accountName],
@@ -406,11 +443,10 @@ export default function GiveClient({ programs }: GiveClientProps) {
                         ? [[copy.swift, BANK_TRANSFER.swift]]
                         : []),
                     ].map(([label, value]) => (
-                      <div
-                        key={label}
-                        className="flex items-center justify-between gap-4"
-                      >
-                        <dt className="shrink-0 text-sm text-gray-500">{label}</dt>
+                      <div key={label} className="flex items-center justify-between gap-4">
+                        <dt className="shrink-0 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-500">
+                          {label}
+                        </dt>
                         <dd className="min-w-0">
                           <CopyValue value={value} label={label} />
                         </dd>
@@ -418,89 +454,110 @@ export default function GiveClient({ programs }: GiveClientProps) {
                     ))}
                   </dl>
                 </div>
-              )}
+              </Reveal>
+            )}
 
-              {MOBILE_MONEY.length > 0 && (
-                <div className="rounded-3xl bg-white p-7 shadow-[0_1px_3px_rgba(0,0,0,0.06)] ring-1 ring-gray-900/5">
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 ring-1 ring-amber-100">
-                    <Smartphone className="h-6 w-6 text-amber-600" />
+            {MOBILE_MONEY.length > 0 && (
+              <Reveal delay={60}>
+                <div className="card flex h-full flex-col rounded-2xl p-7">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                    <Smartphone aria-hidden="true" className="h-5 w-5 text-leaf-600" />
                   </span>
-                  <h3 className="mt-5 font-playfair text-2xl font-bold text-gray-900">
+
+                  <h3 className="mt-6 font-display text-2xl font-semibold leading-tight tracking-tight text-ink-900">
                     {copy.momo}
                   </h3>
-                  <p className="mt-2 font-inter text-gray-600">{copy.momoBody}</p>
 
-                  <div className="mt-6 space-y-4 border-t border-gray-100 pt-5">
+                  <p className="mt-4 max-w-[48ch] text-base leading-relaxed text-ink-600 text-pretty">
+                    {copy.momoBody}
+                  </p>
+
+                  <ul className="mt-7 space-y-5 border-t border-ink-200 pt-6">
                     {MOBILE_MONEY.map((account) => (
-                      <div key={`${account.provider}-${account.number}`}>
-                        <p className="text-sm font-semibold text-gray-900">
+                      <li key={`${account.provider}-${account.number}`}>
+                        <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-500">
                           {account.provider}
                         </p>
-                        <CopyValue value={account.number} label={copy.number} />
-                        <p className="text-xs text-gray-500">{account.accountName}</p>
-                      </div>
+                        <div className="mt-1.5">
+                          <CopyValue value={account.number} label={copy.number} />
+                        </div>
+                        <p className="mt-1 text-sm text-ink-500">{account.accountName}</p>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
-              )}
-            </div>
-          )}
+              </Reveal>
+            )}
+          </div>
+        )}
 
-          {/* In person — always true, needs no account details */}
-          <div className="mt-6 flex flex-col gap-5 rounded-3xl bg-gradient-to-br from-purple-900 to-indigo-900 p-8 text-white sm:flex-row sm:items-center sm:p-10">
-            <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20">
-              <Church className="h-6 w-6 text-purple-100" />
+        {/* In person — always true, and needs no account details. */}
+        <Reveal delay={120}>
+          <div className="mt-6 flex flex-col gap-6 rounded-2xl bg-plum-950 p-8 sm:flex-row sm:items-start sm:p-10">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+              <Church aria-hidden="true" className="h-5 w-5 text-leaf-300" />
             </span>
+
             <div className="min-w-0 flex-1">
-              <h3 className="font-playfair text-2xl font-bold">{copy.inPerson}</h3>
-              <p className="mt-2 font-inter text-purple-100">{copy.inPersonBody}</p>
-              <p className="mt-3 inline-flex items-start gap-2 text-sm text-purple-200">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
+              <h3 className="font-display text-2xl font-semibold leading-tight tracking-tight text-white">
+                {copy.inPerson}
+              </h3>
+
+              <p className="mt-4 max-w-[52ch] text-base leading-relaxed text-plum-200 text-pretty">
+                {copy.inPersonBody}
+              </p>
+
+              <p className="mt-5 inline-flex items-start gap-2 border-t border-white/10 pt-5 text-sm leading-relaxed text-plum-200">
+                <MapPin aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-leaf-300" />
                 <span>{address}</span>
               </p>
             </div>
           </div>
-        </div>
-      </section>
+        </Reveal>
+      </PageSection>
 
-      {/* Questions */}
-      <section className="border-t border-gray-200 bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
-          <div className="flex flex-col gap-8 rounded-3xl bg-[#fbfbfa] p-8 ring-1 ring-gray-900/5 sm:p-10 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-xl">
-              <h2 className="font-playfair text-2xl font-bold text-gray-900 sm:text-3xl">
-                {copy.contactTitle}
-              </h2>
-              <p className="mt-3 font-inter leading-relaxed text-gray-600">
-                {copy.contactBody}
-              </p>
-            </div>
+      {/* Who to ask. The two contact routes are the same ones offered above,
+          repeated here for anyone who read to the end. */}
+      <PageSection tone="white">
+        <SectionHeading title={copy.contactTitle} standfirst={copy.contactBody} />
 
-            <div className="flex shrink-0 flex-col gap-3">
-              <a
-                href={`tel:${phone.replace(/\s/g, '')}`}
-                className="inline-flex items-center gap-3 rounded-2xl bg-white px-5 py-3 ring-1 ring-gray-900/5 transition-shadow hover:shadow-md"
-              >
-                <Phone className="h-4 w-4 shrink-0 text-emerald-600" />
-                <span className="font-poppins text-sm text-gray-800">{phone}</span>
-              </a>
-              <a
-                href={`mailto:${email}`}
-                className="inline-flex min-w-0 items-center gap-3 rounded-2xl bg-white px-5 py-3 ring-1 ring-gray-900/5 transition-shadow hover:shadow-md"
-              >
-                <Mail className="h-4 w-4 shrink-0 text-emerald-600" />
-                <span className="min-w-0 break-words font-poppins text-sm text-gray-800">
-                  {email}
-                </span>
-              </a>
-            </div>
-          </div>
+        <ul className="mt-11 grid gap-4 sm:grid-cols-2 lg:max-w-2xl">
+          <Reveal as="li">
+            <a
+              href={telHref}
+              className="card card-hover focus-ring flex h-full items-center gap-4 rounded-2xl p-5"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                <Phone aria-hidden="true" className="h-4 w-4 text-leaf-600" />
+              </span>
+              <span className="tnum min-w-0 truncate font-mono text-sm font-medium text-ink-900">
+                {phone}
+              </span>
+            </a>
+          </Reveal>
 
-          <p className="mt-10 text-center font-playfair text-lg italic text-gray-500">
+          <Reveal as="li" delay={60}>
+            <a
+              href={`mailto:${email}`}
+              className="card card-hover focus-ring flex h-full items-center gap-4 rounded-2xl p-5"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                <Mail aria-hidden="true" className="h-4 w-4 text-leaf-600" />
+              </span>
+              <span className="min-w-0 break-words font-ui text-sm font-medium text-ink-900">
+                {email}
+              </span>
+            </a>
+          </Reveal>
+        </ul>
+
+        <Reveal delay={120}>
+          <p className="mt-16 flex items-center gap-3 border-t border-ink-200 pt-9 font-display text-lg italic text-ink-500">
             {copy.thanks}
+            <ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0 text-leaf-600" />
           </p>
-        </div>
-      </section>
-    </div>
+        </Reveal>
+      </PageSection>
+    </>
   );
 }
