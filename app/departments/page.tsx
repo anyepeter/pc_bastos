@@ -1,22 +1,13 @@
 'use client';
 
-import {
-  Building,
-  Heart,
-  GraduationCap,
-  Users,
-  Radio,
-  Briefcase,
-  MessageCircle,
-  Search,
-  MapPin,
-} from 'lucide-react';
+import { Building, Users, MessageCircle, MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import PageLayout from '@/components/PageLayout';
 import PageHero from '@/components/PageHero';
 import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
+import { DEPARTMENTS } from '@/lib/departments';
 
 export default function DepartmentsPage() {
   const { t } = useTranslation();
@@ -25,72 +16,17 @@ export default function DepartmentsPage() {
   // colour. The page this replaced gave each one a stock photograph and a
   // coloured chip; the council has no photography, and the per-department
   // hues were exactly what it objected to.
-  const departments = [
-    {
-      id: 'saf',
-      name: t('about.departments.saf.name'),
-      short: t('about.departments.saf.short'),
-      icon: Briefcase,
-      location: t('about.departments.saf.location'),
-      description: t('about.departments.saf.description'),
-    },
-    {
-      id: 'ds',
-      name: t('about.departments.ds.name'),
-      short: t('about.departments.ds.short'),
-      icon: Heart,
-      location: t('about.departments.ds.location'),
-      description: t('about.departments.ds.description'),
-    },
-    {
-      id: 'oepp',
-      name: t('about.departments.oepp.name'),
-      short: t('about.departments.oepp.short'),
-      icon: GraduationCap,
-      location: t('about.departments.oepp.location'),
-      description: t('about.departments.oepp.description'),
-    },
-    {
-      id: 'dfas',
-      name: t('about.departments.dfas.name'),
-      short: t('about.departments.dfas.short'),
-      icon: Users,
-      location: t('about.departments.dfas.location'),
-      description: t('about.departments.dfas.description'),
-    },
-    {
-      id: 'dtc',
-      name: t('about.departments.dtc.name'),
-      short: t('about.departments.dtc.short'),
-      icon: MessageCircle,
-      location: t('about.departments.dtc.location'),
-      description: t('about.departments.dtc.description'),
-    },
-    {
-      id: 'dj',
-      name: t('about.departments.dj.name'),
-      short: t('about.departments.dj.short'),
-      icon: Users,
-      location: t('about.departments.dj.location'),
-      description: t('about.departments.dj.description'),
-    },
-    {
-      id: 'dic',
-      name: t('about.departments.dic.name'),
-      short: t('about.departments.dic.short'),
-      icon: Radio,
-      location: t('about.departments.dic.location'),
-      description: t('about.departments.dic.description'),
-    },
-    {
-      id: 'bured',
-      name: t('about.departments.bured.name'),
-      short: t('about.departments.bured.short'),
-      icon: Search,
-      location: t('about.departments.bured.location'),
-      description: t('about.departments.bured.description'),
-    },
-  ];
+  // Built from the shared list in `lib/departments.ts`, which the home page's
+  // DepartmentsSection also reads — the order and the glyphs cannot drift
+  // apart. Every string still resolves through i18next.
+  const departments = DEPARTMENTS.map(({ id, Icon }) => ({
+    id,
+    icon: Icon,
+    name: t(`about.departments.${id}.name`),
+    short: t(`about.departments.${id}.short`),
+    location: t(`about.departments.${id}.location`),
+    description: t(`about.departments.${id}.description`),
+  }));
 
   const coordination = [
     {
@@ -116,26 +52,20 @@ export default function DepartmentsPage() {
   return (
     <PageLayout>
       <PageHero
-        eyebrow={t('navbar.departements')}
         title={t('about.departments.pageTitle')}
         lede={t('about.departments.pageSubtitle')}
-        crumbs={[
-          { label: t('navbar.home'), href: '/' },
-          { label: t('navbar.aboutUs'), href: '/about' },
-          { label: t('navbar.departements') },
-        ]}
       >
         {/* The short names double as the page's index — eight jump links
             straight to the matching entry below. Existing copy, no new keys. */}
-        <nav aria-label={t('about.departments.pageTitle')} className="mt-12 border-t border-white/10 pt-7">
-          <ul className="flex flex-wrap gap-2">
+        <nav aria-label={t('about.departments.pageTitle')} className="mt-12 border-t border-ink-200 pt-7">
+          <ul className="flex flex-wrap justify-center gap-2">
             {departments.map((department, i) => (
               <li key={department.id}>
                 <a
                   href={`#${department.id}`}
-                  className="focus-ring inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 font-ui text-sm text-plum-200 transition-colors duration-300 ease-spring hover:border-leaf-300/40 hover:text-leaf-300"
+                  className="focus-ring inline-flex items-center gap-2 rounded-full border border-ink-200 bg-ink-50 px-4 py-2 font-ui text-sm text-ink-600 transition-colors duration-300 ease-spring hover:border-leaf-300/40 hover:text-leaf-600"
                 >
-                  <span className="font-mono text-[0.62rem] tracking-[0.14em] text-plum-400">
+                  <span className="font-mono text-[0.62rem] tracking-[0.14em] text-ink-400">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   {department.short}

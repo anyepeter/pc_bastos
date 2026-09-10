@@ -52,14 +52,8 @@ export default function MissionVisionPage() {
   return (
     <PageLayout>
       <PageHero
-        eyebrow={t('navbar.aboutUs')}
         title={t('about.missionVision.pageTitle')}
         lede={t('about.missionVision.pageSubtitle')}
-        crumbs={[
-          { label: t('navbar.home'), href: '/' },
-          { label: t('navbar.aboutUs'), href: '/about' },
-          { label: t('navbar.ourMissionVision') },
-        ]}
       />
 
       {/* Vision. The standfirst carries the first paragraph opposite the

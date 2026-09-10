@@ -218,24 +218,22 @@ export default function GiveClient({ programs }: GiveClientProps) {
   return (
     <>
       <PageHero
-        eyebrow={copy.eyebrow}
         title={copy.title}
         lede={copy.lead}
-        crumbs={[{ label: t('navbar.home'), href: '/' }, { label: copy.eyebrow }]}
       >
         {/* One obvious primary action — down to the giving details — and one
             quiet alternative for anyone who would rather speak to a person. */}
-        <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-9 sm:flex-row sm:items-center">
+        <div className="mt-12 flex flex-col items-center gap-3 border-t border-ink-200 pt-9 sm:flex-row sm:justify-center">
           <a
             href="#ways-to-give"
-            className="focus-ring group inline-flex items-center justify-center gap-2.5 rounded-full bg-leaf-600 px-7 py-3.5 font-ui text-sm font-semibold text-white transition-all duration-300 ease-spring hover:bg-leaf-500 hover:shadow-[0_18px_40px_-14px_rgba(39,113,78,0.85)] active:translate-y-px"
+            className="focus-ring group inline-flex items-center justify-center gap-2.5 rounded-full bg-leaf-600 px-7 py-3.5 font-ui text-sm font-semibold text-ink-900 transition-all duration-300 ease-spring hover:bg-leaf-500 hover:shadow-[0_18px_40px_-14px_rgba(39,113,78,0.85)] active:translate-y-px"
           >
             <HandHeart aria-hidden="true" className="h-4 w-4" />
             {copy.ctaWays}
           </a>
           <Link
             href="/contact"
-            className="focus-ring inline-flex items-center justify-center gap-2.5 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 font-ui text-sm font-semibold text-white transition-all duration-300 ease-spring hover:border-white/60 hover:bg-white/20 active:translate-y-px"
+            className="focus-ring inline-flex items-center justify-center gap-2.5 rounded-full border border-ink-200 bg-white px-7 py-3.5 font-ui text-sm font-semibold text-ink-900 transition-all duration-300 ease-spring hover:border-plum-400 hover:text-plum-700 active:translate-y-px"
           >
             {copy.ctaTalk}
           </Link>

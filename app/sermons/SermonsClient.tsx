@@ -104,17 +104,12 @@ export default function SermonsClient({ sermons }: { sermons: PublicSermon[] }) 
   return (
     <>
       <PageHero
-        eyebrow={t('sermons.listen')}
         title={language === 'fr' ? 'Prédications' : 'Sermons'}
         lede={
           language === 'fr'
             ? 'Des messages inspirants de nos responsables spirituels dans les Églises membres'
             : 'Inspiring messages from our spiritual leaders across member churches'
         }
-        crumbs={[
-          { label: t('navbar.home'), href: '/' },
-          { label: t('navbar.sermons') },
-        ]}
       />
 
       {/* The archive. No section heading: the hero already names the page, and

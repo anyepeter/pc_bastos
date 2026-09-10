@@ -119,17 +119,12 @@ export default function AnnouncementsClient({
   return (
     <>
       <PageHero
-        eyebrow={t('home.sections.announcements')}
         title={language === 'fr' ? 'Annonces' : 'Announcements'}
         lede={
           language === 'fr'
             ? 'Informations et nouvelles importantes du Conseil des Églises Protestantes'
             : 'Important updates and news from the Council of Protestant Churches'
         }
-        crumbs={[
-          { label: t('navbar.home'), href: '/' },
-          { label: t('navbar.announcements') },
-        ]}
       />
 
       {announcements.length === 0 ? (

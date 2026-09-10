@@ -449,7 +449,9 @@
         "leader": "General Superintendent Rev. SOKENG ALAIN Clément",
         "history": "The Full Gospel Mission emphasizes the complete Gospel message with signs, wonders, and miracles, serving communities with Pentecostal fervor and social engagement."
       }
-    }
+    },
+    "website": "Website",
+    "visitWebsite": "Visit website"
   },
   "home": {
     "eyebrow": "Council of Protestant Churches of Cameroon",
@@ -472,7 +474,8 @@
       "missionVision": "Purpose",
       "workshops": "Training",
       "gallery": "Gallery",
-      "announcements": "Notices"
+      "announcements": "Notices",
+      "departments": "Organisation"
     },
     "visionLabel": "Vision",
     "missionLabel": "Mission",
@@ -502,6 +505,10 @@
       "priorityHigh": "Urgent",
       "priorityMedium": "Notice",
       "priorityLow": "For information"
+    },
+    "departments": {
+      "title": "Our",
+      "titleHighlight": "Departments"
     }
   },
   "impact": {

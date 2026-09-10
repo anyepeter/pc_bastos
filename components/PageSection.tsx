@@ -59,7 +59,7 @@ export default function PageSection({
     <section
       id={id}
       /* Painted bands must not clip: the edges overhang top and bottom. */
-      className={`grain relative ${g.bg} ${paint ? '' : 'overflow-hidden'} py-16 lg:py-24 ${className}`}
+      className={`grain relative ${g.bg} ${paint ? '' : 'overflow-hidden'} py-12 lg:py-20 ${className}`}
     >
       {paintTop && (
         <BrushEdge

@@ -75,13 +75,11 @@ export default function CharityClient({
   return (
     <>
       <PageHero
-        eyebrow={copy.eyebrow}
         title={copy.title}
         lede={copy.subtitle}
-        crumbs={[{ label: t('navbar.home'), href: '/' }, { label: t('navbar.charity') }]}
       >
         {programs.length > 0 && (
-          <p className="mt-12 flex items-center gap-3 border-t border-white/10 pt-7 font-mono text-[0.68rem] uppercase tracking-[0.2em] text-plum-200">
+          <p className="mt-12 flex items-center justify-center gap-3 border-t border-ink-200 pt-7 font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink-600">
             <span aria-hidden="true" className="h-px w-8 shrink-0 bg-leaf-400" />
             <span className="tnum">{copy.count(programs.length)}</span>
           </p>

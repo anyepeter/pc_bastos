@@ -5,11 +5,12 @@ import { ArrowLeft, ArrowRight, Calendar, MapPin, Users } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useTranslation } from 'react-i18next';
-import ImageSlider from './ImageSlider';
+import MediaGallery from '@/components/MediaGallery';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText, readTranslation } from '@/lib/translations';
 import { formatLongDate } from '@/lib/format';
 import PageHero from '@/components/PageHero';
+import MetaRail from '@/components/MetaRail';
 import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
@@ -124,38 +125,10 @@ export default function CharityDetailClient({
       <PageHero
         // The impact headline is optional; the section label stands in for it
         // so the hero never opens on a missing line.
-        eyebrow={impact || t('navbar.charity')}
         title={title}
         lede={description || undefined}
-        crumbs={[
-          { label: t('navbar.home'), href: '/' },
-          { label: t('navbar.charity'), href: '/charity' },
-          { label: title },
-        ]}
       >
-        {facts.length > 0 && (
-          <dl className="mt-12 grid gap-x-10 gap-y-6 border-t border-white/10 pt-8 sm:grid-cols-3">
-            {facts.map((fact) => {
-              const Icon = fact.icon;
-
-              return (
-                <div key={fact.label} className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-                    <Icon aria-hidden="true" className="h-4 w-4 text-leaf-300" />
-                  </span>
-                  <div className="min-w-0">
-                    <dt className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-plum-300">
-                      {fact.label}
-                    </dt>
-                    <dd className="mt-1.5 truncate font-ui text-sm font-medium text-white">
-                      {fact.value}
-                    </dd>
-                  </div>
-                </div>
-              );
-            })}
-          </dl>
-        )}
+        <MetaRail items={facts} className="mt-8" />
       </PageHero>
 
       <PageSection tone="white">
@@ -185,10 +158,19 @@ export default function CharityDetailClient({
         <PageSection tone="tint">
           <SectionHeading title={copy.gallery} />
 
-          <Reveal delay={80} className="mt-11">
-            <div className="overflow-hidden rounded-2xl border border-ink-200">
-              <ImageSlider images={gallery} alt={title} />
-            </div>
+          {/* The same gallery the member pages use — there is one design for
+              this on the site, not two. */}
+          <Reveal delay={80} className="mx-auto mt-11 max-w-4xl">
+            <MediaGallery
+              images={gallery}
+              alt={title}
+              labels={{
+                enlarge: t('home.gallery.view'),
+                close: t('home.gallery.close'),
+                previous: t('home.gallery.previous'),
+                next: t('home.gallery.next'),
+              }}
+            />
           </Reveal>
         </PageSection>
       )}

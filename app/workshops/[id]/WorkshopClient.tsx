@@ -78,14 +78,8 @@ export default function WorkshopClient({
   return (
     <>
       <PageHero
-        eyebrow={t('navbar.workshopsTrainings')}
         title={title}
         lede={description}
-        crumbs={[
-          { label: t('navbar.home'), href: '/' },
-          { label: t('navbar.workshopsTrainings'), href: '/workshops' },
-          { label: title },
-        ]}
       />
 
       {/* The photographs the council actually uploaded, beside the facts

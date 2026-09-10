@@ -38,7 +38,6 @@ export default function WorkshopsClient({
   return (
     <>
       <PageHero
-        eyebrow={t('home.sections.workshops')}
         title={fr ? 'Ateliers et' : 'Workshops &'}
         titleHighlight={fr ? 'Formations' : 'Training'}
         lede={
@@ -46,10 +45,6 @@ export default function WorkshopsClient({
             ? 'Renforcer notre communauté par des programmes de formation complets et le développement des compétences'
             : 'Empowering our community through comprehensive training programs and skill development workshops'
         }
-        crumbs={[
-          { label: t('navbar.home'), href: '/' },
-          { label: t('navbar.workshopsTrainings') },
-        ]}
       />
 
       {/* The register of workshops. The landing page shows three of these in a

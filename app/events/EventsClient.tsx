@@ -43,17 +43,12 @@ export default function EventsClient({ events }: { events: PublicEvent[] }) {
   return (
     <>
       <PageHero
-        eyebrow={t('home.nextGatherings')}
         title={language === 'fr' ? 'Événements à venir' : 'Upcoming Events'}
         lede={
           language === 'fr'
             ? 'Rejoignez-nous pour ces rassemblements et événements communautaires'
             : 'Join us for these meaningful gatherings and community events'
         }
-        crumbs={[
-          { label: t('navbar.home'), href: '/' },
-          { label: t('navbar.futureEvents') },
-        ]}
       />
 
       {events.length === 0 ? (

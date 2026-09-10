@@ -127,10 +127,8 @@ export default function BlogListClient({ initialPosts = [] }: BlogListClientProp
   // file, so the leaf has to be addressed by language.
   const hero = (
     <PageHero
-      eyebrow={t('navbar.blogs')}
       title={t('blogList.pageTitle')}
       lede={t(`blogList.pageSubtitle.${language}`)}
-      crumbs={[{ label: t('navbar.home'), href: '/' }, { label: t('navbar.blogs') }]}
     />
   );
 

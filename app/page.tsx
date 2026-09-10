@@ -3,6 +3,7 @@ import WelcomeSection from '@/components/WelcomeSection';
 import CharitySection from '@/components/CharitySection';
 import MemberChurchesSection from '@/components/MemberChurchesSection';
 import StatsSection from '@/components/StatsSection';
+import DepartmentsSection from '@/components/DepartmentsSection';
 import UpcomingEventsSection from '@/components/UpcomingEventsSection';
 import WorkshopsSection from '@/components/WorkshopsSection';
 import GallerySection from '@/components/GallerySection';
@@ -136,6 +137,9 @@ export default async function Home() {
 
       {/* The council in figures */}
       <StatsSection />
+
+      {/* How the council is organised — the eight departments */}
+      <DepartmentsSection />
 
       {/* Charity Programs — hides itself when nothing is published */}
       <CharitySection programs={charityPrograms} />

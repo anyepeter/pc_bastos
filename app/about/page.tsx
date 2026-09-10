@@ -61,10 +61,8 @@ export default function AboutPage() {
   return (
     <PageLayout>
       <PageHero
-        eyebrow={t('navbar.aboutUs')}
         title={t('about.pageTitle')}
         lede={t('about.pageSubtitle')}
-        crumbs={[{ label: t('navbar.home'), href: '/' }, { label: t('navbar.aboutUs') }]}
       />
 
       {/* The four About chapters. Set as an editorial index rather than as

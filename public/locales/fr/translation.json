@@ -449,7 +449,9 @@
         "leader": "Surintendant Général Rév. SOKENG ALAIN Clément",
         "history": "La Mission du Plein Évangile met l'accent sur le message complet de l'Évangile avec signes, prodiges et miracles, servant les communautés avec ferveur pentecôtiste et engagement social."
       }
-    }
+    },
+    "website": "Site web",
+    "visitWebsite": "Visiter le site"
   },
   "home": {
     "eyebrow": "Conseil des Églises Protestantes du Cameroun",
@@ -472,7 +474,8 @@
       "missionVision": "Raison d'être",
       "workshops": "Formation",
       "gallery": "Galerie",
-      "announcements": "Avis"
+      "announcements": "Avis",
+      "departments": "Organisation"
     },
     "visionLabel": "Vision",
     "missionLabel": "Mission",
@@ -502,6 +505,10 @@
       "priorityHigh": "Urgent",
       "priorityMedium": "Avis",
       "priorityLow": "Pour information"
+    },
+    "departments": {
+      "title": "Nos",
+      "titleHighlight": "Départements"
     }
   },
   "impact": {

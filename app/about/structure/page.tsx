@@ -94,14 +94,8 @@ export default function StructurePage() {
   return (
     <PageLayout>
       <PageHero
-        eyebrow={t('navbar.aboutUs')}
         title={t('about.structure.pageTitle')}
         lede={t('about.structure.pageSubtitle')}
-        crumbs={[
-          { label: t('navbar.home'), href: '/' },
-          { label: t('navbar.aboutUs'), href: '/about' },
-          { label: t('navbar.cepcaStructures') },
-        ]}
       />
 
       {/* The chart, as an indented ladder: authority reads top to bottom and

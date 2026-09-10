@@ -32,14 +32,8 @@ export default function HistoryPage() {
   return (
     <PageLayout>
       <PageHero
-        eyebrow={t('navbar.aboutUs')}
         title={t('about.history.pageTitle')}
         lede={t('about.history.pageSubtitle')}
-        crumbs={[
-          { label: t('navbar.home'), href: '/' },
-          { label: t('navbar.aboutUs'), href: '/about' },
-          { label: t('navbar.ourHistory') },
-        ]}
       />
 
       {/* Chapter 01 — the founding. */}

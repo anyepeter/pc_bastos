@@ -36,14 +36,9 @@ export default function MembersClient({ churches }: { churches: PublicChurch[] }
   return (
     <>
       <PageHero
-        eyebrow={t('members.memberChurches')}
         title={t('members.pageTitle')}
         titleHighlight={t('members.pageTitleHighlight')}
         lede={t('members.pageSubtitle')}
-        crumbs={[
-          { label: t('navbar.home'), href: '/' },
-          { label: t('members.memberChurches') },
-        ]}
       />
 
       {/* The council in figures. Kept ahead of the directory, as it was, so the

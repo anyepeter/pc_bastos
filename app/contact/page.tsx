@@ -178,11 +178,9 @@ export default function ContactPage() {
   return (
     <PageLayout>
       <PageHero
-        eyebrow={t('navbar.contactUs')}
         title={t('contact.pageTitle')}
         titleHighlight={t('contact.pageTitleHighlight')}
         lede={t('contact.pageSubtitle')}
-        crumbs={[{ label: t('navbar.home'), href: '/' }, { label: t('navbar.contactUs') }]}
       />
 
       {/* The channels and the form, side by side. The form takes the wider

@@ -1,10 +1,10 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { Calendar, Mail, MapPin, Phone, User } from 'lucide-react';
+import { ArrowUpRight, Calendar, Globe, Mail, MapPin, Phone, User } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import ImageSlider from './ImageSlider';
+import MediaGallery from '@/components/MediaGallery';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText } from '@/lib/translations';
 import PageHero from '@/components/PageHero';
@@ -56,15 +56,13 @@ export default function MemberDetailClient({ member }: MemberDetailClientProps) 
   const location = getTranslatedText(member.location as any, language);
   const history = getTranslatedText(member.history as any, language);
 
-  /* The profile's identifying facts, as a definition list rather than a row of
-     coloured chips. Anything the record does not carry is simply dropped. */
-  const facts = [
-    { key: 'founded', icon: Calendar, label: t('members.founded'), value: member.founded },
-    { key: 'location', icon: MapPin, label: t('members.location'), value: location },
-    { key: 'leadership', icon: User, label: t('members.leadership'), value: leader },
-  ].filter((fact) => Boolean(fact.value));
-
-  const contact = [
+  /* Identity first, then contact — one list, since they now live in a single
+     card. Anything the record does not carry is dropped rather than shown as a
+     dash. */
+  const details = [
+    { key: 'founded', icon: Calendar, label: t('members.founded'), value: member.founded, href: null },
+    { key: 'location', icon: MapPin, label: t('members.location'), value: location, href: null },
+    { key: 'leadership', icon: User, label: t('members.leadership'), value: leader, href: null },
     {
       key: 'phone',
       icon: Phone,
@@ -80,105 +78,122 @@ export default function MemberDetailClient({ member }: MemberDetailClientProps) 
       href: member.email ? `mailto:${member.email}` : null,
     },
     { key: 'address', icon: MapPin, label: t('members.address'), value: member.address, href: null },
-  ];
+    {
+      key: 'website',
+      icon: Globe,
+      label: t('members.website'),
+      value: member.website,
+      href: member.website,
+    },
+  ].filter((item) => Boolean(item.value));
 
   return (
     <>
-      <PageHero
-        eyebrow={t('members.memberChurches')}
-        title={denomination}
-        crumbs={[
-          { label: t('navbar.home'), href: '/' },
-          { label: t('members.memberChurches'), href: '/members' },
-          { label: denomination },
-        ]}
-      >
-        {/* Identity rail: the church's own mark on a light tile — contained,
-            never cropped — beside the facts that place it. */}
-        <div className="mt-14 flex flex-col gap-9 border-t border-white/10 pt-10 lg:flex-row lg:items-start lg:gap-14">
-          <span className="flex h-28 w-28 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white p-4">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={member.logo || '/images/logo_CEPCA.png'}
-              alt={`${denomination} logo`}
-              className="h-full w-full object-contain"
-            />
-          </span>
+      <PageHero title={denomination} />
 
-          {facts.length > 0 && (
-            <dl className="grid flex-1 gap-x-10 gap-y-7 sm:grid-cols-3">
-              {facts.map((fact) => {
-                const Icon = fact.icon;
-
-                return (
-                  <div key={fact.key}>
-                    <dt className="flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-leaf-300">
-                      <Icon aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
-                      {fact.label}
-                    </dt>
-                    <dd className="mt-3 text-base leading-relaxed text-white">{fact.value}</dd>
-                  </div>
-                );
-              })}
-            </dl>
-          )}
-        </div>
-      </PageHero>
-
+      {/* A profile, not a centred stack. The identity card holds the mark, the
+          facts and every way to reach the church in one place on the left; the
+          photographs and the history run down the right. Previously each of
+          these sat alone in the middle of the page with a large gap under it,
+          which is what made the page feel like loose parts. */}
       <PageSection tone="white">
-        {member.images.length > 0 && (
-          <Reveal className="mb-16 lg:mb-20">
-            <figure className="group overflow-hidden rounded-2xl border border-ink-200">
-              <ImageSlider images={member.images} alt={denomination} />
-            </figure>
-          </Reveal>
-        )}
+        <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
+          {/* Not sticky, and not wrapped in <Reveal>. `PageSection` carries
+              `overflow-hidden` to clip its glow, which makes it the scroll box
+              for any `position: sticky` descendant — the card pinned itself
+              112px below the section's top straight away instead of tracking
+              the scroll, leaving it misaligned with the gallery beside it. */}
+          <aside className="lg:col-span-4">
+            <div className="card rounded-2xl p-6 lg:p-7">
+              <span className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl border border-ink-200 bg-white p-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={member.logo || '/images/logo_CEPCA.png'}
+                  alt={`${denomination} logo`}
+                  className="h-full w-full object-contain"
+                />
+              </span>
 
-        <SectionHeading title={t('members.history')} />
+              {member.website && (
+                <a
+                  href={member.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="focus-ring group mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-leaf-600 px-5 py-3 font-ui text-sm font-semibold text-white transition-all duration-300 ease-spring hover:bg-leaf-700 active:translate-y-px"
+                >
+                  <Globe aria-hidden="true" className="h-4 w-4" />
+                  {t('members.visitWebsite')}
+                  <ArrowUpRight className="h-4 w-4 transition-transform duration-300 ease-spring group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </a>
+              )}
 
-        <Reveal delay={140}>
-          <div className={`mt-11 ${PROSE}`}>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{history}</ReactMarkdown>
-          </div>
-        </Reveal>
-      </PageSection>
+              {details.length > 0 && (
+                <dl className="mt-7 space-y-5 border-t border-ink-200 pt-6">
+                  {details.map((item) => {
+                    const Icon = item.icon;
 
-      <PageSection tone="tint">
-        <SectionHeading title={t('members.contactInformation')} />
+                    return (
+                      <div key={item.key} className="flex items-start gap-3">
+                        <Icon aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-leaf-600" />
+                        <div className="min-w-0">
+                          <dt className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-ink-400">
+                            {item.label}
+                          </dt>
+                          {item.href ? (
+                            <dd>
+                              <a
+                                href={item.href}
+                                className="focus-ring mt-1 block break-words rounded text-sm leading-relaxed text-ink-800 underline-offset-4 transition-colors duration-300 hover:text-plum-700 hover:underline"
+                              >
+                                {item.value}
+                              </a>
+                            </dd>
+                          ) : (
+                            <dd className="mt-1 break-words text-sm leading-relaxed text-ink-800">
+                              {item.value}
+                            </dd>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </dl>
+              )}
+            </div>
+          </aside>
 
-        <ul className="mt-11 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {contact.map((item, i) => {
-            const Icon = item.icon;
-
-            return (
-              <Reveal as="li" key={item.key} delay={Math.min(i, 8) * 60}>
-                <div className="card flex h-full items-start gap-4 rounded-2xl p-6">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white">
-                    <Icon aria-hidden="true" className="h-4 w-4 text-leaf-600" />
-                  </span>
-
-                  <div className="min-w-0">
-                    <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-500">
-                      {item.label}
-                    </p>
-                    {item.value && item.href ? (
-                      <a
-                        href={item.href}
-                        className="focus-ring mt-2.5 block break-words rounded text-base leading-relaxed text-ink-800 underline-offset-4 transition-colors duration-300 hover:text-plum-700 hover:underline"
-                      >
-                        {item.value}
-                      </a>
-                    ) : (
-                      <p className="mt-2.5 break-words text-base leading-relaxed text-ink-800">
-                        {item.value || '—'}
-                      </p>
-                    )}
-                  </div>
-                </div>
+          <div className="lg:col-span-8">
+            {member.images.length > 0 && (
+              <Reveal className="mb-10 lg:mb-12">
+                <MediaGallery
+                  images={member.images}
+                  alt={denomination}
+                  labels={{
+                    enlarge: t('home.gallery.view'),
+                    close: t('home.gallery.close'),
+                    previous: t('home.gallery.previous'),
+                    next: t('home.gallery.next'),
+                  }}
+                />
               </Reveal>
-            );
-          })}
-        </ul>
+            )}
+
+            {history && (
+              <>
+                <Reveal>
+                  <h2 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-tight tracking-tight text-ink-900">
+                    {t('members.history')}
+                  </h2>
+                </Reveal>
+                <Reveal delay={80}>
+                  <div className={`mt-6 ${PROSE}`}>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{history}</ReactMarkdown>
+                  </div>
+                </Reveal>
+              </>
+            )}
+          </div>
+        </div>
       </PageSection>
     </>
   );

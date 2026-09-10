@@ -8,6 +8,7 @@ import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText, readTranslation } from '@/lib/translations';
 import { formatLongDate, formatTime } from '@/lib/format';
 import PageHero from '@/components/PageHero';
+import MetaRail from '@/components/MetaRail';
 import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
@@ -81,33 +82,9 @@ export default function EventDetailClient({ event }: { event: PublicEvent }) {
   return (
     <>
       <PageHero
-        eyebrow={category || t('navbar.futureEvents')}
         title={title}
-        crumbs={[
-          { label: t('navbar.home'), href: '/' },
-          { label: t('navbar.futureEvents'), href: '/events' },
-          { label: title },
-        ]}
       >
-        {meta.length > 0 && (
-          <dl className="mt-14 grid gap-x-10 gap-y-8 border-t border-white/10 pt-9 sm:grid-cols-2 lg:grid-cols-3">
-            {meta.map((item) => {
-              const Icon = item.icon;
-
-              return (
-                <div key={item.key}>
-                  <dt className="flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-leaf-300">
-                    <Icon aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-leaf-300" />
-                    {item.label}
-                  </dt>
-                  <dd className="tnum mt-3 font-ui text-lg font-medium text-white text-pretty">
-                    {item.value}
-                  </dd>
-                </div>
-              );
-            })}
-          </dl>
-        )}
+        <MetaRail items={meta} className="mt-8" />
       </PageHero>
 
       <PageSection tone="white">

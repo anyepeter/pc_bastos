@@ -164,16 +164,10 @@ export default function BlogDetailClient({ post }: BlogDetailClientProps) {
   return (
     <>
       <PageHero
-        eyebrow={t('navbar.blogs')}
         title={translatedTitle}
-        crumbs={[
-          { label: t('navbar.home'), href: '/' },
-          { label: t('navbar.blogs'), href: '/blogs' },
-          { label: translatedTitle },
-        ]}
       >
-        <div className="mt-9 flex items-center gap-3 font-mono text-[0.68rem] uppercase tracking-[0.24em] text-plum-200">
-          <Calendar aria-hidden="true" className="h-4 w-4 text-leaf-300" />
+        <div className="mt-9 flex items-center justify-center gap-3 font-mono text-[0.68rem] uppercase tracking-[0.24em] text-ink-600">
+          <Calendar aria-hidden="true" className="h-4 w-4 text-leaf-600" />
           <time dateTime={isoDate(currentPost.createdAt)} className="tnum">
             {formatLongDate(currentPost.createdAt, language)}
           </time>
