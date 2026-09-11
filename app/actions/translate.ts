@@ -1,6 +1,18 @@
 'use server';
 
 import { Language } from '@/lib/translations';
+import { getSessionRole } from '@/lib/auth/roles';
+
+/** Dashboard-only: the action is a public URL, and each call spends a third-party quota. */
+async function signedIn(): Promise<boolean> {
+  try {
+    return (await getSessionRole()) !== null;
+  } catch {
+    return false;
+  }
+}
+
+const SIGNED_OUT = { success: false, error: 'Please sign in again.' } as const;
 
 /**
  * Machine translation helper used by the admin editor.
@@ -122,6 +134,8 @@ export async function translateFields(input: {
   from: Language;
   to: Language;
 }): Promise<TranslateManyResult> {
+  if (!(await signedIn())) return SIGNED_OUT;
+
   const { texts, from, to } = input;
   const entries = Object.entries(texts).filter(([, text]) => text.trim().length > 0);
 
@@ -159,6 +173,8 @@ export async function translateBlogContent(input: {
   from: Language;
   to: Language;
 }): Promise<TranslateResult> {
+  if (!(await signedIn())) return SIGNED_OUT;
+
   const { title, description, from, to } = input;
 
   if (!title.trim() && !description.trim()) {

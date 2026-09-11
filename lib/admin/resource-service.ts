@@ -101,6 +101,12 @@ export function toPayload(
       continue;
     }
 
+    if (field.type === 'number') {
+      const number = Number(text);
+      payload[field.name] = text && Number.isFinite(number) ? Math.trunc(number) : null;
+      continue;
+    }
+
     payload[field.name] = text || null;
   }
 

@@ -19,7 +19,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText } from '@/lib/translations';
-import { BANK_TRANSFER, MOBILE_MONEY, givingDetailsMissing } from '@/lib/giving';
+import { useSiteSettings } from '@/components/SiteSettingsProvider';
+import { givingDetailsMissing, hasBankTransfer, inLanguage } from '@/lib/site-settings';
 import PageHero from '@/components/PageHero';
 import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
@@ -86,18 +87,27 @@ export default function GiveClient({ programs }: GiveClientProps) {
   const { t } = useTranslation();
   const language = useAppSelector((state) => state.blog.language);
 
-  const phone = t('footer.phone');
-  const email = t('footer.email');
-  const address = t('footer.address');
+  const settings = useSiteSettings();
+  const { phone, email } = settings;
+  const address = inLanguage(settings.address, language);
 
   /**
-   * Nothing on this page takes a payment. `lib/giving.ts` holds the council's
-   * real account details and is deliberately empty until the secretariat fills
-   * it in, so today this is always true and the page offers the office's phone
-   * and email instead. There is no form, no card field and no processor —
-   * inventing one would be a promise the site cannot keep.
+   * Nothing on this page takes a payment. The council's account details are
+   * entered in /admin/settings and stay empty until the secretariat fills them
+   * in; until then the page offers the office's phone and email instead. There
+   * is no form, no card field and no processor — inventing one would be a
+   * promise the site cannot keep.
    */
-  const detailsMissing = givingDetailsMissing();
+  const detailsMissing = givingDetailsMissing(settings);
+  const bankTransfer = hasBankTransfer(settings)
+    ? {
+        bankName: settings.bankName,
+        accountName: settings.bankAccountName,
+        accountNumber: settings.bankAccountNumber,
+        swift: settings.bankSwift,
+      }
+    : null;
+  const mobileMoney = settings.mobileMoney;
 
   const copy =
     language === 'fr'
@@ -417,7 +427,7 @@ export default function GiveClient({ programs }: GiveClientProps) {
           </Reveal>
         ) : (
           <div className="mt-11 grid gap-6 lg:grid-cols-2">
-            {BANK_TRANSFER && (
+            {bankTransfer && (
               <Reveal>
                 <div className="card flex h-full flex-col rounded-2xl p-7">
                   <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-ink-200 bg-white">
@@ -434,11 +444,11 @@ export default function GiveClient({ programs }: GiveClientProps) {
 
                   <dl className="mt-7 space-y-3 border-t border-ink-200 pt-6">
                     {[
-                      [copy.bankName, BANK_TRANSFER.bankName],
-                      [copy.accountName, BANK_TRANSFER.accountName],
-                      [copy.accountNumber, BANK_TRANSFER.accountNumber],
-                      ...(BANK_TRANSFER.swift
-                        ? [[copy.swift, BANK_TRANSFER.swift]]
+                      [copy.bankName, bankTransfer.bankName],
+                      [copy.accountName, bankTransfer.accountName],
+                      [copy.accountNumber, bankTransfer.accountNumber],
+                      ...(bankTransfer.swift
+                        ? [[copy.swift, bankTransfer.swift]]
                         : []),
                     ].map(([label, value]) => (
                       <div key={label} className="flex items-center justify-between gap-4">
@@ -455,7 +465,7 @@ export default function GiveClient({ programs }: GiveClientProps) {
               </Reveal>
             )}
 
-            {MOBILE_MONEY.length > 0 && (
+            {mobileMoney.length > 0 && (
               <Reveal delay={60}>
                 <div className="card flex h-full flex-col rounded-2xl p-7">
                   <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-ink-200 bg-white">
@@ -471,7 +481,7 @@ export default function GiveClient({ programs }: GiveClientProps) {
                   </p>
 
                   <ul className="mt-7 space-y-5 border-t border-ink-200 pt-6">
-                    {MOBILE_MONEY.map((account) => (
+                    {mobileMoney.map((account) => (
                       <li key={`${account.provider}-${account.number}`}>
                         <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-500">
                           {account.provider}

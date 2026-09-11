@@ -6,7 +6,17 @@ import { generateTemporaryPassword, hashPassword } from '@/lib/auth/password';
 import { destroyAllSessionsForUser, normalizeEmail } from '@/lib/auth/session';
 import { memberChurchConfig } from '@/lib/admin/configs';
 import { FormValues } from '@/lib/admin/resource-config';
-import { toFormValues, toPayload, validateValues } from '@/lib/admin/resource-service';
+import {
+  rowIsTranslated,
+  toFormValues,
+  toPayload,
+  validateValues,
+} from '@/lib/admin/resource-service';
+import {
+  collectImages,
+  findOrphanedImages,
+  removeImages,
+} from '@/lib/admin/resource-actions';
 import { generateSlug } from '@/lib/blog-utils';
 import { readTranslation } from '@/lib/translations';
 import {
@@ -22,10 +32,14 @@ import {
 const config = memberChurchConfig;
 
 function revalidateChurch(slug?: string | null) {
+  revalidatePath('/admin');
   revalidatePath('/admin/churches');
   revalidatePath('/admin/my-church');
   revalidatePath('/members');
   if (slug) revalidatePath(`/members/${slug}`);
+  // The home page lists the member churches too, and is otherwise cached for
+  // an hour.
+  revalidatePath('/');
 }
 
 async function uniqueSlug(base: string, excludeId?: string): Promise<string> {
@@ -133,6 +147,7 @@ export async function updateChurch(
     if (!existing) return { success: false, error: 'Church not found' };
 
     const payload = toPayload(config, values);
+    const orphaned = findOrphanedImages(config, existing, values);
 
     // Only the council renames a church (the slug is its public URL) or takes
     // it off the members page.
@@ -150,6 +165,7 @@ export async function updateChurch(
       data: payload as any,
     });
 
+    await removeImages(orphaned);
     revalidateChurch(data.slug);
     if (existing.slug !== data.slug) revalidateChurch(existing.slug);
 
@@ -157,6 +173,11 @@ export async function updateChurch(
   });
 }
 
+/**
+ * Delete a church together with every login attached to it. `User.churchId`
+ * has no foreign key, so without this the accounts would outlive the church
+ * and still be able to sign in to an empty workspace.
+ */
 export async function deleteChurch(id: string): Promise<ActionOutcome> {
   return guarded(async () => {
     await requireSuperAdmin();
@@ -164,7 +185,13 @@ export async function deleteChurch(id: string): Promise<ActionOutcome> {
     const existing = await prisma.memberChurch.findUnique({ where: { id } });
     if (!existing) return { success: false, error: 'Church not found' };
 
-    await prisma.memberChurch.delete({ where: { id } });
+    // Sessions go with their user (Session cascades).
+    await prisma.$transaction([
+      prisma.user.deleteMany({ where: { role: 'church', churchId: id } }),
+      prisma.memberChurch.delete({ where: { id } }),
+    ]);
+
+    await removeImages(collectImages(config, existing));
     revalidateChurch(existing.slug);
 
     return { success: true };
@@ -177,6 +204,15 @@ export async function toggleChurchPublish(id: string): Promise<ActionOutcome> {
 
     const existing = await prisma.memberChurch.findUnique({ where: { id } });
     if (!existing) return { success: false, error: 'Church not found' };
+
+    // Same rule as every other content type: a draft goes live only once the
+    // French translation is complete. Unpublishing is always allowed.
+    if (!existing.published && !rowIsTranslated(config, existing)) {
+      return {
+        success: false,
+        error: 'Add the French translation before publishing this church',
+      };
+    }
 
     const data = await prisma.memberChurch.update({
       where: { id },
@@ -207,6 +243,35 @@ export interface ChurchAccount {
   createdAt: string;
 }
 
+// Never select passwordHash — it has no business leaving the server.
+const accountSelect = {
+  id: true,
+  email: true,
+  mustChangePassword: true,
+  createdAt: true,
+  churchId: true,
+} as const;
+
+function toChurchAccount(user: {
+  id: string;
+  email: string;
+  mustChangePassword: boolean;
+  createdAt: Date;
+}): ChurchAccount {
+  return {
+    id: user.id,
+    email: user.email,
+    status: user.mustChangePassword ? 'pending' : 'active',
+    createdAt: user.createdAt.toISOString(),
+  };
+}
+
+function revalidateAccounts(churchId: string) {
+  revalidatePath(`/admin/churches/${churchId}/edit`);
+  revalidatePath('/admin/churches');
+  revalidatePath('/admin');
+}
+
 /** Every account currently linked to this church. */
 export async function listChurchAccounts(
   churchId: string
@@ -217,23 +282,33 @@ export async function listChurchAccounts(
     const users = await prisma.user.findMany({
       where: { role: 'church', churchId },
       orderBy: { createdAt: 'asc' },
-      // Never select passwordHash — it has no business leaving the server.
-      select: {
-        id: true,
-        email: true,
-        mustChangePassword: true,
-        createdAt: true,
-      },
+      select: accountSelect,
     });
 
-    const accounts: ChurchAccount[] = users.map((user) => ({
-      id: user.id,
-      email: user.email,
-      status: user.mustChangePassword ? 'pending' : 'active',
-      createdAt: user.createdAt.toISOString(),
-    }));
+    return { success: true, data: users.map(toChurchAccount) };
+  });
+}
 
-    return { success: true, data: accounts };
+/** Every church login, keyed by church id — the login column of the list. */
+export async function listAccountsByChurch(): Promise<
+  ActionOutcome<Record<string, ChurchAccount[]>>
+> {
+  return guarded(async () => {
+    await requireSuperAdmin();
+
+    const users = await prisma.user.findMany({
+      where: { role: 'church', churchId: { not: null } },
+      orderBy: { createdAt: 'asc' },
+      select: accountSelect,
+    });
+
+    const byChurch: Record<string, ChurchAccount[]> = {};
+    for (const user of users) {
+      if (!user.churchId) continue;
+      (byChurch[user.churchId] ??= []).push(toChurchAccount(user));
+    }
+
+    return { success: true, data: byChurch };
   });
 }
 
@@ -282,7 +357,7 @@ export async function createChurchAccount(
       },
     });
 
-    revalidatePath(`/admin/churches/${churchId}/edit`);
+    revalidateAccounts(churchId);
     return { success: true, data: { email: address, temporaryPassword } };
   });
 }
@@ -315,7 +390,7 @@ export async function resetChurchAccountPassword(
 
     await destroyAllSessionsForUser(user.id);
 
-    revalidatePath(`/admin/churches/${churchId}/edit`);
+    revalidateAccounts(churchId);
     return { success: true, data: { email: user.email, temporaryPassword } };
   });
 }
@@ -337,7 +412,7 @@ export async function removeChurchAccount(
 
     await prisma.user.delete({ where: { id: user.id } });
 
-    revalidatePath(`/admin/churches/${churchId}/edit`);
+    revalidateAccounts(churchId);
     return { success: true };
   });
 }
@@ -387,6 +462,11 @@ export async function getPublishedChurchBySlug(slug: string): Promise<ActionOutc
 export async function getCurrentRole() {
   const session = await getSessionRole();
   return session
-    ? { role: session.role, churchId: session.churchId, email: session.email }
+    ? {
+        role: session.role,
+        churchId: session.churchId,
+        departmentId: session.departmentId,
+        email: session.email,
+      }
     : null;
 }

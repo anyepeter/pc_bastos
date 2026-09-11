@@ -20,14 +20,15 @@ export default async function CreateChurchPage() {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Add member church</h1>
           <p className="mt-2 text-gray-600">
-            Create the page first — you can invite the church&apos;s own account once
-            it is saved
+            Create the page first — once it is saved you are taken straight to it to
+            create the church&apos;s login
           </p>
         </div>
       </div>
 
       <ResourceForm
         config={memberChurchConfig}
+        afterCreate="edit"
         onCreate={createChurch}
         onUpdate={updateChurch}
       />

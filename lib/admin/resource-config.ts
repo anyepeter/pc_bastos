@@ -13,7 +13,15 @@ import { Language, Translation } from '@/lib/translations';
 export type TranslatableFieldType = 'text' | 'textarea' | 'markdown';
 
 /** Plain fields are stored as a normal scalar column. */
-export type PlainFieldType = 'text' | 'date' | 'time' | 'select' | 'url' | 'image' | 'gallery';
+export type PlainFieldType =
+  | 'text'
+  | 'number'
+  | 'date'
+  | 'time'
+  | 'select'
+  | 'url'
+  | 'image'
+  | 'gallery';
 
 interface BaseField {
   name: string;

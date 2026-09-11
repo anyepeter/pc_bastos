@@ -19,60 +19,83 @@ datasource db {
 // published. See lib/translations.ts and lib/admin/resource-service.ts.
 
 model BlogPost {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id   String @id @default(cuid())
+  slug String @unique
 
   // JSON fields - each translation is full markdown text
   title       Json
   description Json
 
-  imageUrl    String?
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  imageUrl  String?
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Event {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id   String @id @default(cuid())
+  slug String @unique
 
   title       Json
   description Json
   location    Json
   category    Json
 
-  date        DateTime
-  time        String?
-  imageUrl    String?
+  date     DateTime
+  time     String?
+  imageUrl String?
 
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([date])
 }
 
 model Announcement {
-  id          String   @id @default(cuid())
+  id String @id @default(cuid())
 
   title       Json
   description Json
   fullContent Json
 
-  date        DateTime
-  priority    String   @default("medium") // low | medium | high
-  imageUrl    String?
+  date     DateTime
+  priority String   @default("medium") // low | medium | high
+  imageUrl String?
 
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([date])
 }
 
+/// Council news. Distinct from BlogPost (reflection/opinion pieces): these are
+/// reported items — announcements of record, milestones, appointments — and
+/// they carry a category and a short excerpt for the card grid.
+model NewsArticle {
+  id   String @id @default(cuid())
+  slug String @unique
+
+  title    Json
+  excerpt  Json
+  body     Json
+  category Json?
+
+  date     DateTime
+  imageUrl String?
+
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
+  @@index([published, date])
+}
+
 model Workshop {
-  id              String   @id @default(cuid())
-  slug            String   @unique
+  id   String @id @default(cuid())
+  slug String @unique
 
   title           Json
   description     Json
@@ -81,19 +104,19 @@ model Workshop {
   duration        Json
   capacity        Json
 
-  date            DateTime
-  images          String[]
+  date   DateTime
+  images String[]
 
-  published       Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([date])
 }
 
 model CharityProgram {
-  id            String    @id @default(cuid())
-  slug          String    @unique
+  id   String @id @default(cuid())
+  slug String @unique
 
   title           Json
   description     Json
@@ -102,102 +125,234 @@ model CharityProgram {
   beneficiaries   Json
   location        Json
 
-  date          DateTime?
-  amountUsed    String?
-  totalGoal     String?
-  images        String[]
+  date       DateTime?
+  amountUsed String?
+  totalGoal  String?
+  images     String[]
 
-  published     Boolean   @default(false)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 /// A CEPCA member church. Each one can be handed a login that may edit this
 /// record and nothing else — see lib/auth/roles.ts.
 model MemberChurch {
-  id           String   @id @default(cuid())
-  slug         String   @unique
+  id   String @id @default(cuid())
+  slug String @unique
 
   denomination Json
   leader       Json
   location     Json
   history      Json
 
-  founded      String?
-  logo         String?
-  images       String[]
+  founded String?
+  logo    String?
+  images  String[]
 
-  phone        String?
-  email        String?
-  address      String?
-  website      String?
+  phone   String?
+  email   String?
+  address String?
+  website String?
 
-  published    Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// One of the council's departments or services (SAF, DS, OEPP…). Like a
+/// member church, each can be handed a login that may edit this record and its
+/// own activities and nothing else — see lib/auth/roles.ts.
+///
+/// Every optional section is hidden on the public page while it is empty, so a
+/// department with little written about it yet still reads as finished.
+model Department {
+  id   String @id @default(cuid())
+  slug String @unique
+
+  /// The department's short code, e.g. "DS". Shown as its mark.
+  acronym   String
+  /// Position on /departments and the home page, lowest first.
+  sortOrder Int    @default(0)
+
+  name       Json
+  tagline    Json?
+  /// Two or three sentences — the card blurb on /departments and the home page.
+  summary    Json
+  vision     Json?
+  /// Markdown: the mandate and attributions.
+  mission    Json?
+  /// Markdown.
+  objectives Json?
+  /// Markdown: what the department does — services and programme areas.
+  services   Json?
+  /// Markdown: bodies it supervises, components, facilities, composition.
+  structures Json?
+  /// One figure per line, "value | label", in each language. Parsed into the
+  /// figures band on the public page (lib/departments.ts).
+  keyFigures Json?
+  /// Markdown: needs, and how to partner.
+  support    Json?
+  coverage   Json?
+  location   Json?
+  headTitle  Json?
+
+  headName   String?
+  headPhoto  String?
+  logo       String?
+  coverImage String?
+  images     String[]
+
+  phone   String?
+  email   String?
+  address String?
+  website String?
+
+  activities DepartmentActivity[]
+
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, sortOrder])
+}
+
+/// Something a department posts to its own page: an event coming up, a report
+/// of work already done, or a project.
+model DepartmentActivity {
+  id   String @id @default(cuid())
+  slug String @unique
+
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+
+  /// "event" | "activity" (a report of something done) | "project"
+  kind String @default("activity")
+
+  title    Json
+  summary  Json
+  /// Markdown.
+  body     Json?
+  location Json?
+
+  /// Event date, the day an activity was carried out, or a project's start.
+  date     DateTime
+  endDate  DateTime?
+  time     String?
+  imageUrl String?
+  images   String[]
+
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([departmentId])
+  @@index([departmentId, published, date])
 }
 
 model Sermon {
-  id          String   @id @default(cuid())
+  id String @id @default(cuid())
 
   title       Json
   description Json
   location    Json
 
-  date        DateTime
-  duration    String?
-  videoUrl    String?
-  audioUrl    String?
-  thumbnail   String?
+  date      DateTime
+  duration  String?
+  videoUrl  String?
+  audioUrl  String?
+  thumbnail String?
 
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([date])
 }
+
 /// A dashboard login. Replaces the previous third-party auth provider: the
 /// council now owns its own accounts.
 ///
 /// `role` mirrors AppRole in lib/auth/roles.ts — `super_admin` (the council
-/// secretariat) or `church` (one member church). A `church` row carries the
-/// MemberChurch id it may edit; the session is the ONLY place that id is read
-/// from, never the request body.
+/// secretariat), `church` (one member church) or `department` (one council
+/// department). A `church` row carries the MemberChurch id it may edit, a
+/// `department` row the Department id; the session is the ONLY place either id
+/// is read from, never the request body.
 model User {
-  id           String    @id @default(cuid())
+  id           String  @id @default(cuid())
   /// Always stored lowercased — the login form lowercases before it looks up.
-  email        String    @unique
+  email        String  @unique
   /// bcrypt hash, cost 12. Plaintext is never stored or logged.
   passwordHash String
   name         String?
-  /// "super_admin" | "church"
-  role         String    @default("church")
+  /// "super_admin" | "church" | "department"
+  role         String  @default("church")
   /// Set only for `church` accounts — the MemberChurch they may edit.
   churchId     String?
+  /// Set only for `department` accounts — the Department they may edit. No
+  /// foreign key, same as `churchId`: deleting a department removes its logins
+  /// explicitly (app/actions/departments.ts).
+  departmentId String?
 
   /// Set when the secretariat issues a temporary password, cleared on the
   /// first successful password change. Shown as a nudge in the dashboard.
   mustChangePassword Boolean @default(false)
 
-  sessions     Session[]
+  sessions Session[]
 
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([churchId])
+  @@index([departmentId])
 }
 
 /// Server-side half of a login. The cookie only carries this row's id (signed
 /// with SESSION_SECRET), so deleting the row logs the person out everywhere
 /// and role changes take effect on the next request.
 model Session {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   expiresAt DateTime
   createdAt DateTime @default(now())
 
   @@index([userId])
   @@index([expiresAt])
+}
+
+/// The council's own details — logo, contact channels, social links and
+/// giving accounts. A single row (id "site") edited at /admin/settings.
+/// Until that row exists the site renders the defaults in
+/// lib/site-settings.ts; once saved, a blank optional field is hidden rather
+/// than filled in.
+model SiteSettings {
+  id String @id @default("site")
+
+  logo String?
+
+  email       String
+  phone       String
+  /// Shown on the contact page; the first also drives the floating button.
+  whatsapp    String[]
+  /// { en, fr }
+  address     Json
+  /// { en, fr }
+  officeHours Json?
+  mapsUrl     String?
+
+  facebookUrl  String?
+  instagramUrl String?
+  xUrl         String?
+  youtubeUrl   String?
+
+  bankName          String?
+  bankAccountName   String?
+  bankAccountNumber String?
+  bankSwift         String?
+  /// [{ provider, number, accountName }]
+  mobileMoney Json?
+
+  updatedAt DateTime @updatedAt
 }

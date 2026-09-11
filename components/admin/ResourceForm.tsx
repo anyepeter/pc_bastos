@@ -53,6 +53,8 @@ import {
 export interface ResourceActionResult {
   success: boolean;
   error?: string;
+  /** The saved row; only its id is read, for `afterCreate="edit"`. */
+  data?: { id?: string };
 }
 
 interface ResourceFormProps {
@@ -67,6 +69,11 @@ interface ResourceFormProps {
    * used by church accounts, which may edit their page but not take it live.
    */
   mode?: 'publish' | 'save';
+  /**
+   * Where a newly created record lands: back on the list (default), or on its
+   * own edit page — used for member churches, whose logins are created there.
+   */
+  afterCreate?: 'list' | 'edit';
   /** Server actions, passed straight through from the admin page. */
   onCreate: (values: FormValues, publish: boolean) => Promise<ResourceActionResult>;
   onUpdate: (
@@ -88,6 +95,7 @@ export function ResourceForm({
   recordId,
   isPublished = false,
   mode = 'publish',
+  afterCreate = 'list',
   onCreate,
   onUpdate,
 }: ResourceFormProps) {
@@ -198,7 +206,10 @@ export function ResourceForm({
             ? `${config.singular} updated successfully`
             : `${config.singular} created successfully`
         );
-        router.push(config.adminPath);
+        const createdId = !isEditing && afterCreate === 'edit' ? result.data?.id : undefined;
+        router.push(
+          createdId ? `${config.adminPath}/${createdId}/edit?created=1` : config.adminPath
+        );
         router.refresh();
       } else {
         toast.error(result.error || `Failed to save ${config.singular.toLowerCase()}`);
@@ -321,6 +332,18 @@ export function ResourceForm({
             value={value}
             onChange={(event) => setField(field.name, event.target.value)}
             className="max-w-xs"
+          />
+        );
+      case 'number':
+        return (
+          <Input
+            type="number"
+            inputMode="numeric"
+            step={1}
+            value={value}
+            placeholder={field.placeholder}
+            onChange={(event) => setField(field.name, event.target.value)}
+            className="max-w-[8rem]"
           />
         );
       default:

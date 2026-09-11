@@ -11,6 +11,8 @@ import PageHero from '@/components/PageHero';
 import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
+import { useSiteSettings } from '@/components/SiteSettingsProvider';
+import { logoSrc } from '@/lib/site-settings';
 
 export interface PublicChurchDetail {
   id: string;
@@ -50,6 +52,7 @@ const PROSE =
 export default function MemberDetailClient({ member }: MemberDetailClientProps) {
   const { t } = useTranslation();
   const language = useAppSelector((state) => state.blog.language);
+  const councilLogo = logoSrc(useSiteSettings());
 
   const denomination = getTranslatedText(member.denomination as any, language);
   const leader = getTranslatedText(member.leader as any, language);
@@ -108,7 +111,7 @@ export default function MemberDetailClient({ member }: MemberDetailClientProps) 
               <span className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl border border-ink-200 bg-white p-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={member.logo || '/images/logo_CEPCA.png'}
+                  src={member.logo || councilLogo}
                   alt={`${denomination} logo`}
                   className="h-full w-full object-contain"
                 />

@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { logout } from '@/app/actions/auth';
 import type { AppRole } from '@/lib/auth/roles';
+import { ROLE_LABEL } from '@/lib/auth/role-meta';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -76,7 +77,7 @@ export function Header({ onMenuClick, role, email, name }: HeaderProps) {
           <DropdownMenuContent align="end" className="w-64">
             <DropdownMenuLabel className="font-normal">
               <p className="text-sm font-medium text-gray-900">
-                {role === 'super_admin' ? 'Council secretariat' : 'Church account'}
+                {ROLE_LABEL[role]}
               </p>
               {email && (
                 <p className="mt-0.5 truncate text-xs text-gray-500" title={email}>

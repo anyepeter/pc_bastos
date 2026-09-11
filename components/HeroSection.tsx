@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, ArrowUpRight, Heart } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Church } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import BrushEdge from '@/components/BrushEdge';
 
@@ -40,8 +40,8 @@ const MASK_MOBILE = 'radial-gradient(128% 80% at 50% 42%, #000 0%, #000 46%, rgb
 /** The photographs the hero cycles through. */
 const SLIDES = [
   {
-    src: '/images/hero2.jpg',
-    alt: 'A member church of the council, its nave lined with arched windows',
+    src: '/images/d0217420-25ff-4278-a445-7b464abf44a8.jpeg',
+    alt: 'Clergy in gowns and coloured stoles gathered on the steps of a church',
   },
   {
     src: '/images/hero-image.jpg',
@@ -172,16 +172,19 @@ const HeroSection = () => {
             </p>
 
             <div className="relative mt-10 flex flex-wrap items-center gap-x-7 gap-y-4">
+              {/* The hero's primary action is the membership, not a donation:
+                  the council is its twelve churches, and that is where a first
+                  visitor should be sent. Giving stays in the navigation. */}
               <Link
-                href="/give"
+                href="/members"
                 className="focus-ring group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full bg-leaf-600 px-7 py-3.5 font-ui text-sm font-semibold text-white transition-all duration-300 ease-spring hover:bg-leaf-500 hover:shadow-[0_18px_40px_-14px_rgba(39,113,78,0.85)] active:translate-y-px"
               >
                 <span
                   aria-hidden="true"
                   className="absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-white/25 opacity-0 transition-opacity group-hover:animate-sheen group-hover:opacity-100"
                 />
-                <Heart className="h-4 w-4" strokeWidth={2.2} />
-                {t('hero.donateNow')}
+                <Church className="h-4 w-4" strokeWidth={2.2} />
+                {t('members.memberChurches')}
               </Link>
 
               <Link

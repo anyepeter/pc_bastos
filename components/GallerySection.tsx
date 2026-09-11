@@ -15,22 +15,40 @@ import BrushEdge from '@/components/BrushEdge';
  * `public/images/` and list them here — alt text included, since a gallery
  * without it is unreadable to a screen reader.
  */
-const PHOTOS = [
-  { src: '/images/hero2.jpg', alt: 'A member church in brick, its bell tower lined with pointed arched windows' },
+const PHOTOS: Array<{
+  src: string;
+  alt: string;
+  /** `object-position` for the band's landscape crop, where the centre would cut off a face. */
+  position?: string;
+}> = [
+  { src: '/images/d0217420-25ff-4278-a445-7b464abf44a8.jpeg', alt: 'Clergy in gowns and coloured stoles gathered on the steps of a church' },
+  { src: '/images/b7479a26-dac2-4cd1-9ede-2dd4e6ca0332.jpeg', alt: 'A pastor in a black gown and purple stole in a church sanctuary' },
+  { src: '/images/b510667f-1dac-4745-92ee-8ea87f86d2e3.jpeg', alt: "Delegates gathered outside the council's headquarters, beneath the CEPCA banner" },
+  { src: '/images/1e38a4e4-3fbe-44c5-a619-10da677c0e17.jpeg', alt: 'A delegate in an embroidered blue tunic speaking during a council meeting' },
   { src: '/images/hero-image.jpg', alt: 'The Salle Polyvalente CEPCA in Yaoundé, banners across its facade' },
+  { src: '/images/8b1e4fa9-2946-4b81-a8c4-b1e24ec9cb9c.jpeg', alt: 'A pastor in a black gown, red collar and white lace bands in a church sanctuary' },
+  { src: '/images/e9411293-36fa-40c3-b545-2f8cd7d7de3e.jpeg', alt: 'Clergy lining up on the church steps for a group photograph' },
+  { src: '/images/09b6dbcb-814c-4350-81fc-416d0d6e5596.jpeg', alt: 'A clergyman in a purple clerical shirt and dark suit, outdoors', position: 'center 15%' },
+  { src: '/images/9cb6da43-0e3b-41fa-bbd5-4f600dbb27a8.jpeg', alt: "Council delegates standing together beneath the headquarters' CEPCA banner" },
+  { src: '/images/c0b67593-9919-4a59-9a50-91410f2f5949.jpeg', alt: 'A clergyman in a grey suit and red clerical shirt, outdoors', position: 'center 15%' },
   { src: '/images/logo5.jpg', alt: "The council's headquarters wall, a cross-shaped window above the member-church banner" },
 ];
 
-/** Long enough that the seam never lands on screen; the track holds it twice. */
-const REPEATS = 4;
+/** Each half of the track must outrun the widest screen or the loop's seam
+ *  shows; about twelve tiles does. Derived rather than fixed because the
+ *  animation covers one half per cycle — a longer half would also run faster. */
+const REPEATS = Math.max(1, Math.ceil(12 / PHOTOS.length));
 
 function Row({
   reverse = false,
+  offset = 0,
   seconds,
   paused,
   onOpen,
 }: {
   reverse?: boolean;
+  /** Starts the band part-way through the set, so the two rows don't mirror each other. */
+  offset?: number;
   seconds: number;
   paused: boolean;
   onOpen: (index: number) => void;
@@ -48,7 +66,8 @@ function Row({
         }}
       >
         {tiles.map((i) => {
-          const photo = PHOTOS[i % PHOTOS.length];
+          const index = (i + offset) % PHOTOS.length;
+          const photo = PHOTOS[index];
           // Each photograph is reachable by keyboard exactly once; the repeats
           // that make the loop seamless are hidden from assistive tech.
           const isCanonical = !reverse && i < PHOTOS.length;
@@ -57,7 +76,7 @@ function Row({
             <button
               key={i}
               type="button"
-              onClick={() => onOpen(i % PHOTOS.length)}
+              onClick={() => onOpen(index)}
               tabIndex={isCanonical ? 0 : -1}
               aria-hidden={!isCanonical}
               aria-label={isCanonical ? `${photo.alt} — open larger` : undefined}
@@ -69,6 +88,7 @@ function Row({
                 alt=""
                 loading="lazy"
                 draggable={false}
+                style={{ objectPosition: photo.position }}
                 className="h-full w-full select-none object-cover transition-transform duration-700 ease-spring group-hover/tile:scale-[1.06]"
               />
               <span
@@ -230,7 +250,7 @@ export default function GallerySection() {
         className="relative mt-12 flex flex-col gap-4 sm:gap-6 lg:cursor-none"
       >
         <Row seconds={54} paused={paused} onOpen={openAt} />
-        <Row seconds={66} reverse paused={paused} onOpen={openAt} />
+        <Row seconds={66} reverse offset={Math.floor(PHOTOS.length / 2)} paused={paused} onOpen={openAt} />
 
         <div
           aria-hidden="true"

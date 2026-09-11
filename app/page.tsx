@@ -4,6 +4,7 @@ import CharitySection from '@/components/CharitySection';
 import MemberChurchesSection from '@/components/MemberChurchesSection';
 import StatsSection from '@/components/StatsSection';
 import DepartmentsSection from '@/components/DepartmentsSection';
+import NewsSection from '@/components/NewsSection';
 import UpcomingEventsSection from '@/components/UpcomingEventsSection';
 import WorkshopsSection from '@/components/WorkshopsSection';
 import GallerySection from '@/components/GallerySection';
@@ -16,11 +17,15 @@ import { getPublishedEvents } from '@/app/actions/events';
 import { getPublishedChurches } from '@/app/actions/churches';
 import { getPublishedWorkshops } from '@/app/actions/workshops';
 import { getPublishedAnnouncements } from '@/app/actions/announcements';
+import { getPublishedNews } from '@/app/actions/news';
+import { getPublishedDepartments } from '@/app/actions/departments';
+import { toPublicDepartmentSummary } from '@/lib/departments';
 import type { PublicCharityProgram } from '@/app/charity/CharityClient';
 import type { PublicEvent } from '@/app/events/EventsClient';
 import type { PublicChurch } from '@/app/members/MembersClient';
 import type { PublicWorkshop } from '@/app/workshops/WorkshopsClient';
 import type { PublicAnnouncement } from '@/app/announcements/AnnouncementsClient';
+import type { PublicNewsArticle } from '@/app/news/NewsClient';
 
 /**
  * Which events count as "upcoming" changes with the clock, not only with edits,
@@ -63,20 +68,34 @@ function selectHeroEvents(rows: any[]): PublicEvent[] {
 }
 
 export default async function Home() {
-  const [charityResult, eventsResult, churchesResult, workshopsResult, announcementsResult] =
-    await Promise.all([
-      getPublishedCharityPrograms(),
-      getPublishedEvents(),
-      getPublishedChurches(),
-      getPublishedWorkshops(),
-      getPublishedAnnouncements(),
-    ]);
+  const [
+    charityResult,
+    eventsResult,
+    churchesResult,
+    workshopsResult,
+    announcementsResult,
+    newsResult,
+    departmentsResult,
+  ] = await Promise.all([
+    getPublishedCharityPrograms(),
+    getPublishedEvents(),
+    getPublishedChurches(),
+    getPublishedWorkshops(),
+    getPublishedAnnouncements(),
+    getPublishedNews(),
+    getPublishedDepartments(),
+  ]);
 
   const charityRows = charityResult.success ? charityResult.data || [] : [];
   const eventRows = eventsResult.success ? eventsResult.data || [] : [];
   const churchRows = churchesResult.success ? churchesResult.data || [] : [];
   const workshopRows = workshopsResult.success ? workshopsResult.data || [] : [];
   const announcementRows = announcementsResult.success ? announcementsResult.data || [] : [];
+  const newsRows = newsResult.success ? newsResult.data || [] : [];
+  // An empty list makes the section fall back to the locale-file departments.
+  const departments = (departmentsResult.success ? departmentsResult.data || [] : []).map(
+    toPublicDepartmentSummary
+  );
 
   const workshops: PublicWorkshop[] = workshopRows.map((row: any) => ({
     id: row.id,
@@ -86,6 +105,16 @@ export default async function Home() {
     location: row.location,
     date: new Date(row.date).toISOString(),
     images: row.images || [],
+  }));
+
+  const news: PublicNewsArticle[] = newsRows.map((row: any) => ({
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    excerpt: row.excerpt,
+    category: row.category ?? null,
+    date: new Date(row.date).toISOString(),
+    imageUrl: row.imageUrl ?? null,
   }));
 
   const announcements: PublicAnnouncement[] = announcementRows.map((row: any) => ({
@@ -131,15 +160,19 @@ export default async function Home() {
       {/* Introduction to CEPCA */}
       <WelcomeSection />
 
+      <StatsSection />
+
+      <NewsSection articles={news} />
+
       {/* Next gatherings — sits straight after the introduction, and hides
           itself when nothing is published */}
       <UpcomingEventsSection events={selectHeroEvents(eventRows)} />
 
       {/* The council in figures */}
-      <StatsSection />
+  
 
       {/* How the council is organised — the eight departments */}
-      <DepartmentsSection />
+      <DepartmentsSection departments={departments} />
 
       {/* Charity Programs — hides itself when nothing is published */}
       <CharitySection programs={charityPrograms} />
@@ -152,6 +185,9 @@ export default async function Home() {
 
       {/* Gallery — a curated set of the council's own photography */}
       <GallerySection />
+
+      {/* Latest council news — hides itself when nothing is published */}
+    
 
       {/* Announcements from the secretariat */}
       <AnnouncementsSection announcements={announcements} />

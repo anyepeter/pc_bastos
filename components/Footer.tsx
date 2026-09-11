@@ -2,9 +2,12 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Phone, Mail, MapPin, Facebook, Instagram, ArrowUp, ArrowUpRight } from 'lucide-react';
+import { Phone, Mail, MapPin, Facebook, Instagram, Youtube, ArrowUp, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import BrushEdge from '@/components/BrushEdge';
+import { useSiteSettings } from '@/components/SiteSettingsProvider';
+import { useAppSelector } from '@/store/hooks';
+import { inLanguage, logoSrc, socialLinks, telHref } from '@/lib/site-settings';
 
 /** The footer's ground. Shared with the painted edge, which must match it exactly. */
 const GROUND = '#33205C'; // plum-900
@@ -19,14 +22,19 @@ const XIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const SOCIAL_LINKS = [
-  { label: 'Facebook', href: '#', Icon: Facebook },
-  { label: 'Instagram', href: '#', Icon: Instagram },
-  { label: 'X', href: '#', Icon: XIcon },
-];
+const SOCIAL_META = {
+  facebook: { label: 'Facebook', Icon: Facebook },
+  instagram: { label: 'Instagram', Icon: Instagram },
+  x: { label: 'X', Icon: XIcon },
+  youtube: { label: 'YouTube', Icon: Youtube },
+} as const;
 
 const Footer = () => {
   const { t } = useTranslation();
+  const language = useAppSelector((state) => state.blog.language);
+  const settings = useSiteSettings();
+  // Only the profiles set in /admin/settings — an icon that goes nowhere is worse than none.
+  const socials = socialLinks(settings);
 
   const quickLinks = [
     { href: '/members', label: t('footer.members') },
@@ -41,26 +49,26 @@ const Footer = () => {
 
   const contacts = [
     {
-      href: 'https://wa.me/237242657608',
-      external: true,
+      href: telHref(settings.phone),
+      external: false,
       Icon: Phone,
-      value: t('footer.phone'),
+      value: settings.phone,
       className: 'tnum',
     },
     {
-      href: 'mailto:generalsecretarycepca@gmail.com',
+      href: `mailto:${settings.email}`,
       external: false,
       Icon: Mail,
       // The address is one unbroken token — it must be allowed to wrap.
-      value: t('footer.email'),
+      value: settings.email,
       className: 'break-words',
     },
     {
-      href: 'https://www.google.com/maps/search/Presbyterian+Church+Bastos+Yaound%C3%A9+Cameroon',
+      href: settings.mapsUrl,
       external: true,
       Icon: MapPin,
-      value: t('footer.address'),
-      className: '',
+      value: inLanguage(settings.address, language),
+      className: 'whitespace-pre-line',
     },
   ];
 
@@ -89,12 +97,12 @@ const Footer = () => {
             <Link href="/" className="focus-ring group inline-flex items-center gap-3.5">
               <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-colors duration-300 group-hover:border-leaf-400/60">
                 <Image
-                  src="/images/logo_CEPCA.png"
+                  src={logoSrc(settings)}
                   alt=""
                   width={28}
                   height={28}
                   aria-hidden="true"
-                  className="h-auto w-auto"
+                  className="h-7 w-7 object-contain"
                 />
               </span>
               <span className="leading-tight">
@@ -146,13 +154,9 @@ const Footer = () => {
             </h2>
 
             <ul className="mt-6 space-y-1">
-              {contacts.map(({ href, external, Icon, value, className }) => (
-                <li key={href}>
-                  <a
-                    href={href}
-                    {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className="focus-ring group -mx-3 flex items-start gap-3.5 rounded-xl px-3 py-3 transition-colors duration-300 hover:bg-white/5"
-                  >
+              {contacts.map(({ href, external, Icon, value, className }) => {
+                const inner = (
+                  <>
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-colors duration-300 group-hover:border-leaf-400/60">
                       <Icon className="h-4 w-4 text-leaf-300" />
                     </span>
@@ -161,28 +165,52 @@ const Footer = () => {
                     >
                       {value}
                     </span>
-                  </a>
-                </li>
-              ))}
+                  </>
+                );
+                const rowClass = 'group -mx-3 flex items-start gap-3.5 rounded-xl px-3 py-3';
+
+                return (
+                  <li key={value}>
+                    {href ? (
+                      <a
+                        href={href}
+                        {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                        className={`focus-ring ${rowClass} transition-colors duration-300 hover:bg-white/5`}
+                      >
+                        {inner}
+                      </a>
+                    ) : (
+                      <div className={rowClass}>{inner}</div>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
 
-            <div className="mt-8">
-              <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-plum-300">
-                {t('footer.followUs')}
-              </p>
-              <div className="mt-4 flex gap-2.5">
-                {SOCIAL_LINKS.map(({ label, href, Icon }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    aria-label={label}
-                    className="focus-ring flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-plum-200 transition-all duration-300 ease-spring hover:-translate-y-0.5 hover:border-leaf-400/60 hover:bg-leaf-400/10 hover:text-white"
-                  >
-                    <Icon className="h-[17px] w-[17px]" />
-                  </a>
-                ))}
+            {socials.length > 0 && (
+              <div className="mt-8">
+                <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-plum-300">
+                  {t('footer.followUs')}
+                </p>
+                <div className="mt-4 flex gap-2.5">
+                  {socials.map(([network, href]) => {
+                    const { label, Icon } = SOCIAL_META[network];
+                    return (
+                      <a
+                        key={network}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={label}
+                        className="focus-ring flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-plum-200 transition-all duration-300 ease-spring hover:-translate-y-0.5 hover:border-leaf-400/60 hover:bg-leaf-400/10 hover:text-white"
+                      >
+                        <Icon className="h-[17px] w-[17px]" />
+                      </a>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 

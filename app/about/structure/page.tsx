@@ -8,6 +8,8 @@ import PageHero from '@/components/PageHero';
 import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
+import { useSiteSettings } from '@/components/SiteSettingsProvider';
+import { logoSrc } from '@/lib/site-settings';
 
 /**
  * How the council is governed.
@@ -19,6 +21,7 @@ import Reveal from '@/components/Reveal';
  */
 export default function StructurePage() {
   const { t } = useTranslation();
+  const councilLogo = logoSrc(useSiteSettings());
 
   /** The two governing bodies, in order of authority. */
   const tiers = [
@@ -264,7 +267,7 @@ export default function StructurePage() {
               <dd className="mt-4">
                 <span className="inline-flex rounded-2xl border border-ink-200 bg-white p-4">
                   <Image
-                    src="/images/logo_CEPCA.png"
+                    src={councilLogo}
                     alt="CEPCA Logo - Map of Cameroon with cross"
                     width={96}
                     height={96}

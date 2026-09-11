@@ -1,19 +1,22 @@
 import { redirect } from 'next/navigation';
 import { getSession } from './session';
+import { ROLE_HOME } from './role-meta';
 import type { AppRole, SessionRole } from './session';
 
 /**
  * Who may do what in /admin.
  *
  * - `super_admin` — the council secretariat. Full control of every content type
- *   and of church accounts.
+ *   and of church and department accounts.
  * - `church` — one member church. May edit that church's own profile and
  *   nothing else.
+ * - `department` — one council department. May edit that department's own
+ *   profile and its own events and activities, and nothing else.
  *
  * The role lives on the `User` row and is read from the database on every
  * request via `getSession()` (lib/auth/session.ts). The session cookie carries
- * only an opaque session id, so there is no role and no churchId anywhere in
- * the request for the browser to tamper with.
+ * only an opaque session id, so there is no role, churchId or departmentId
+ * anywhere in the request for the browser to tamper with.
  */
 
 export type { AppRole, SessionRole };
@@ -57,18 +60,27 @@ export async function getSessionRole(): Promise<SessionRole | null> {
 
   if (!session) return null;
 
-  const { userId, email, churchId } = session;
+  const { userId, email, churchId, departmentId } = session;
 
+  // Each confined role is matched explicitly and carries only its own id.
   if (session.role === 'church') {
-    return { userId, role: 'church', churchId, email };
+    return { userId, role: 'church', churchId, departmentId: null, email };
   }
+
+  if (session.role === 'department') {
+    return { userId, role: 'department', churchId: null, departmentId, email };
+  }
+
+  // Only a row actually marked `super_admin` reaches this point — nothing falls
+  // through to it by default.
+  if (session.role !== 'super_admin') return null;
 
   const allowList = allowedSuperAdminEmails();
   if (allowList.length > 0 && !(email && allowList.includes(email))) {
     return null;
   }
 
-  return { userId, role: 'super_admin', churchId: null, email };
+  return { userId, role: 'super_admin', churchId: null, departmentId: null, email };
 }
 
 export class AccessError extends Error {
@@ -90,15 +102,16 @@ export async function requireSuperAdmin(): Promise<SessionRole> {
 }
 
 /**
- * Page-level guard for council-only screens. Sends a church account to its own
- * page instead of throwing, so a stray URL is a redirect rather than an error.
- * Server actions keep using `requireSuperAdmin`, which throws.
+ * Page-level guard for council-only screens. Sends a church or department
+ * account to its own workspace instead of throwing, so a stray URL is a
+ * redirect rather than an error. Server actions keep using
+ * `requireSuperAdmin`, which throws.
  */
 export async function requireSuperAdminPage(): Promise<SessionRole> {
   const session = await getSessionRole();
 
   if (!session) redirect('/sign-in');
-  if (session.role !== 'super_admin') redirect('/admin/my-church');
+  if (session.role !== 'super_admin') redirect(ROLE_HOME[session.role]);
 
   return session;
 }
@@ -124,12 +137,42 @@ export async function resolveEditableChurchId(
     return requestedId;
   }
 
+  if (session.role !== 'church') {
+    throw new AccessError('This account cannot edit member churches');
+  }
+
   if (!session.churchId) {
     throw new AccessError('This account is not linked to a church yet');
   }
 
   // A church account ignores whatever id the browser sent.
   return session.churchId;
+}
+
+/**
+ * The department a `department` account is allowed to edit.
+ * Super admins pass an explicit id; department accounts may only ever use
+ * their own — whatever id the browser sent is discarded.
+ */
+export async function resolveEditableDepartmentId(
+  requestedId?: string
+): Promise<string> {
+  const session = await requireAdminSession();
+
+  if (session.role === 'super_admin') {
+    if (!requestedId) throw new AccessError('No department specified');
+    return requestedId;
+  }
+
+  if (session.role !== 'department') {
+    throw new AccessError('This account cannot edit departments');
+  }
+
+  if (!session.departmentId) {
+    throw new AccessError('This account is not linked to a department yet');
+  }
+
+  return session.departmentId;
 }
 
 /** Result shape shared by the admin server actions. */

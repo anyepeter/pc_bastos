@@ -74,15 +74,19 @@ export default function MemberChurchesSection({ churches }: MemberChurchesSectio
                   href={`/members/${church.slug}`}
                   className="card card-hover focus-ring group flex h-full flex-col items-center gap-4 rounded-2xl p-5 text-center"
                 >
-                  <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-1.5 ring-1 ring-inset ring-ink-200 transition-colors duration-300 group-hover:ring-plum-200">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={church.logo || '/images/logo_CEPCA.png'}
-                      alt=""
-                      aria-hidden="true"
-                      loading="lazy"
-                      className="h-full w-full object-contain"
-                    />
+                  {/* No circular frame — the logo shows as-is. A church without
+                      a logo simply leaves this space blank, so tiles stay aligned. */}
+                  <span className="flex h-16 w-16 shrink-0 items-center justify-center">
+                    {church.logo && (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={church.logo}
+                        alt=""
+                        aria-hidden="true"
+                        loading="lazy"
+                        className="h-full w-full object-contain"
+                      />
+                    )}
                   </span>
                   <span className="line-clamp-3 font-display text-sm font-medium leading-snug text-ink-900 transition-colors duration-300 group-hover:text-plum-700">
                     {denomination}

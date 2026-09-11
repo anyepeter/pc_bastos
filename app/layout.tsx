@@ -3,6 +3,9 @@ import type { Metadata } from 'next';
 import { Inter, Playfair_Display, Poppins, Outfit, JetBrains_Mono } from 'next/font/google';
 import StoreProvider from '@/components/StoreProvider';
 import I18nProvider from '@/components/I18nProvider';
+import SiteSettingsProvider from '@/components/SiteSettingsProvider';
+import { getSiteSettings } from '@/app/actions/settings';
+import { logoSrc } from '@/lib/site-settings';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair', display: 'swap' });
@@ -29,7 +32,7 @@ const jetbrains = JetBrains_Mono({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   metadataBase: new URL('https://cepca.org'),
   title: {
     default: 'CEPCA — Council of Protestant Churches of Cameroon',
@@ -52,17 +55,21 @@ export const metadata: Metadata = {
     description: 'Twelve Protestant churches, one voice.',
     images: ['/images/hero-image.jpg'],
   },
-  icons: {
-    icon: '/images/logo_CEPCA.png',
-    apple: '/images/logo_CEPCA.png',
-  },
 };
 
-export default function RootLayout({
+/** The tab icon follows the logo set in /admin/settings. */
+export async function generateMetadata(): Promise<Metadata> {
+  const logo = logoSrc(await getSiteSettings());
+  return { ...metadata, icons: { icon: logo, apple: logo } };
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const settings = await getSiteSettings();
+
   // The inline script in <body> adds `class="js"` to <html> before hydration,
   // which React would otherwise report as an extra server attribute — the exact
   // warning .bolt/prompt forbids. That element's attributes are script-owned,
@@ -82,14 +89,16 @@ export default function RootLayout({
         />
         <StoreProvider>
           <I18nProvider>
-            {/* Keyboard users can jump the 30-odd nav links. */}
-            <a
-              href="#main"
-              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-plum-600 focus:px-5 focus:py-2.5 focus:font-ui focus:text-sm focus:font-semibold focus:text-white"
-            >
-              Skip to content
-            </a>
-            <main id="main">{children}</main>
+            <SiteSettingsProvider value={settings}>
+              {/* Keyboard users can jump the 30-odd nav links. */}
+              <a
+                href="#main"
+                className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-plum-600 focus:px-5 focus:py-2.5 focus:font-ui focus:text-sm focus:font-semibold focus:text-white"
+              >
+                Skip to content
+              </a>
+              <main id="main">{children}</main>
+            </SiteSettingsProvider>
           </I18nProvider>
         </StoreProvider>
       </body>

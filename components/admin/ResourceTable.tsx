@@ -35,11 +35,49 @@ import { rowIsTranslated, rowTitle } from '@/lib/admin/resource-service';
 
 type Row = Record<string, any>;
 
+/** One cell of the optional extra column, e.g. a church's login status. */
+export interface StatusCell {
+  label: string;
+  tone: 'green' | 'amber' | 'gray';
+  /** Secondary line under the badge, e.g. the login email. */
+  detail?: string;
+}
+
+const TONE_CLASSES: Record<StatusCell['tone'], string> = {
+  green: 'bg-green-100 text-green-700 hover:bg-green-100',
+  amber: 'bg-amber-100 text-amber-700 hover:bg-amber-100',
+  gray: 'bg-gray-100 text-gray-600 hover:bg-gray-100',
+};
+
 interface ResourceTableProps {
   config: ResourceConfig;
   rows: Row[];
   onDelete: (id: string) => Promise<{ success: boolean; error?: string }>;
   onTogglePublish: (id: string) => Promise<{ success: boolean; error?: string }>;
+  /**
+   * An extra column keyed by row id. Plain data rather than a render function,
+   * so a server page can build it.
+   */
+  statusColumn?: { header: string; cells: Record<string, StatusCell> };
+  /** Overrides the delete confirmation text when deleting takes more with it. */
+  deleteDescription?: string;
+}
+
+function StatusCellView({ cell }: { cell?: StatusCell }) {
+  if (!cell) return <span className="text-gray-400">—</span>;
+
+  return (
+    <div className="min-w-0">
+      <Badge variant="secondary" className={TONE_CLASSES[cell.tone]}>
+        {cell.label}
+      </Badge>
+      {cell.detail && (
+        <p className="mt-1 max-w-[14rem] truncate text-xs text-gray-500" title={cell.detail}>
+          {cell.detail}
+        </p>
+      )}
+    </div>
+  );
 }
 
 /** EN / FR chips showing which translations a row already has. */
@@ -108,6 +146,8 @@ export function ResourceTable({
   rows,
   onDelete,
   onTogglePublish,
+  statusColumn,
+  deleteDescription,
 }: ResourceTableProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
@@ -121,18 +161,18 @@ export function ResourceTable({
     const query = searchQuery.trim().toLowerCase();
     if (!query) return rows;
 
-    return rows.filter((row) =>
-      config.fields
-        .filter(isTranslatable)
-        .some((field) => {
+    return rows.filter(
+      (row) =>
+        config.fields.filter(isTranslatable).some((field) => {
           const translation = readTranslation(row[field.name]);
           return (
             translation.en.toLowerCase().includes(query) ||
             translation.fr.toLowerCase().includes(query)
           );
-        })
+        }) ||
+        (statusColumn?.cells[row.id]?.detail ?? '').toLowerCase().includes(query)
     );
-  }, [rows, searchQuery, config]);
+  }, [rows, searchQuery, config, statusColumn]);
 
   /** A draft can only go live once French is done; unpublishing is always fine. */
   const canTogglePublish = (row: Row) => row.published || rowIsTranslated(config, row);
@@ -261,6 +301,7 @@ export function ResourceTable({
                     <TableHead>Title</TableHead>
                     <TableHead>Languages</TableHead>
                     <TableHead>Status</TableHead>
+                    {statusColumn && <TableHead>{statusColumn.header}</TableHead>}
                     <TableHead>Date</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -311,6 +352,11 @@ export function ResourceTable({
                             {row.published ? 'Published' : 'Draft'}
                           </Badge>
                         </TableCell>
+                        {statusColumn && (
+                          <TableCell>
+                            <StatusCellView cell={statusColumn.cells[row.id]} />
+                          </TableCell>
+                        )}
                         <TableCell className="text-gray-600">
                           {rowDate(config, row)}
                         </TableCell>
@@ -410,6 +456,11 @@ export function ResourceTable({
                           {rowDate(config, row)}
                         </span>
                       </div>
+                      {statusColumn && (
+                        <div className="mt-2">
+                          <StatusCellView cell={statusColumn.cells[row.id]} />
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="mt-4 flex items-center space-x-2">
@@ -466,7 +517,10 @@ export function ResourceTable({
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleDeleteConfirm}
         title={`Delete this ${config.singular.toLowerCase()}?`}
-        description="This permanently removes the item and any images uploaded for it. This action cannot be undone."
+        description={
+          deleteDescription ??
+          'This permanently removes the item and any images uploaded for it. This action cannot be undone.'
+        }
         isDeleting={isDeleting}
       />
 

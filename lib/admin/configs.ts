@@ -110,6 +110,58 @@ export const announcementConfig: ResourceConfig = {
   ],
 };
 
+export const newsConfig: ResourceConfig = {
+  key: 'news',
+  singular: 'News article',
+  plural: 'News',
+  adminPath: '/admin/news',
+  publicPath: '/news',
+  slugFrom: 'title',
+  titleField: 'title',
+  orderBy: { date: 'desc' },
+  fields: [
+    {
+      kind: 'translatable',
+      type: 'text',
+      name: 'title',
+      label: 'Headline',
+      required: true,
+      placeholder: 'Council opens new theological seminary campus',
+    },
+    {
+      kind: 'translatable',
+      type: 'textarea',
+      name: 'excerpt',
+      label: 'Standfirst',
+      required: true,
+      description: 'One or two sentences. This is the paragraph on the news card.',
+    },
+    {
+      kind: 'translatable',
+      type: 'markdown',
+      name: 'body',
+      label: 'Article',
+      required: true,
+      description: 'The full article. Markdown supported.',
+    },
+    {
+      kind: 'translatable',
+      type: 'text',
+      name: 'category',
+      label: 'Category',
+      description: 'Optional. Shown as a kicker above the headline, e.g. Assembly, Health, Education.',
+    },
+    { kind: 'plain', type: 'date', name: 'date', label: 'Publication date', required: true },
+    {
+      kind: 'plain',
+      type: 'image',
+      name: 'imageUrl',
+      label: 'Featured image',
+      description: 'Shown on the card and at the head of the article.',
+    },
+  ],
+};
+
 export const workshopConfig: ResourceConfig = {
   key: 'workshops',
   singular: 'Workshop',
@@ -369,6 +421,316 @@ export const memberChurchConfig: ResourceConfig = {
     { kind: 'plain', type: 'url', name: 'website', label: 'Website' },
   ],
 };
+
+/**
+ * A council department's profile. Editable by the council, and by the
+ * department's own account through /admin/my-department — minus the fields in
+ * `COUNCIL_ONLY_DEPARTMENT_FIELDS`.
+ *
+ * The attributes follow what the departments themselves supplied (the Health
+ * Department's profile and roll-up, the DTC/DJ/DFAS attributions, the DIC
+ * facilities list, the council presentation), and what a full member-church
+ * profile carries: vision, mandate, objectives, services, structures, figures,
+ * leadership, needs and contact.
+ */
+export const departmentConfig: ResourceConfig = {
+  key: 'departments',
+  singular: 'Department',
+  plural: 'Departments',
+  adminPath: '/admin/departments',
+  publicPath: '/departments',
+  slugFrom: 'name',
+  titleField: 'name',
+  orderBy: { sortOrder: 'asc' },
+  fields: [
+    {
+      kind: 'translatable',
+      type: 'text',
+      name: 'name',
+      label: 'Department name',
+      required: true,
+      placeholder: 'Department of Health (DS)',
+      description: 'The full official name, with the acronym in brackets.',
+    },
+    {
+      kind: 'translatable',
+      type: 'text',
+      name: 'tagline',
+      label: 'Tagline',
+      description:
+        'Optional. One line under the name at the top of the page, e.g. "Restoring health through faith-based excellence."',
+    },
+    {
+      kind: 'translatable',
+      type: 'textarea',
+      name: 'summary',
+      label: 'Summary',
+      required: true,
+      description:
+        'Two or three sentences on what the department is for. Shown on the departments page and the home page.',
+    },
+    {
+      kind: 'translatable',
+      type: 'textarea',
+      name: 'vision',
+      label: 'Vision',
+      description: 'Optional. A short paragraph, set as a quotation on the page.',
+    },
+    {
+      kind: 'translatable',
+      type: 'markdown',
+      name: 'mission',
+      label: 'Mission and mandate',
+      description:
+        'What the council has charged the department with — its attributions. A bulleted list reads well.',
+    },
+    {
+      kind: 'translatable',
+      type: 'markdown',
+      name: 'objectives',
+      label: 'Objectives',
+      description: 'Goals and objectives. Use "### " headings to group them.',
+    },
+    {
+      kind: 'translatable',
+      type: 'markdown',
+      name: 'services',
+      label: 'What we do',
+      description: 'Services, programme areas and regular activities.',
+    },
+    {
+      kind: 'translatable',
+      type: 'markdown',
+      name: 'structures',
+      label: 'Structures',
+      description:
+        'The bodies the department supervises, its components, its facilities or who it is made up of.',
+    },
+    {
+      kind: 'translatable',
+      type: 'textarea',
+      name: 'keyFigures',
+      label: 'Key figures',
+      placeholder: '450+ | Hospitals and health centres\n12 | Healthcare training schools',
+      description:
+        'One figure per line, written as the number, a vertical bar, then what it counts — for example "450+ | Hospitals and health centres". Shown as a band of large figures near the top of the page. Write the labels in each language; lines without a "|" are ignored.',
+    },
+    {
+      kind: 'translatable',
+      type: 'markdown',
+      name: 'support',
+      label: 'Support our work',
+      description:
+        'Optional. What the department needs and how partners can help. Shown as a call to action near the end of the page.',
+    },
+    {
+      kind: 'translatable',
+      type: 'text',
+      name: 'coverage',
+      label: 'Coverage',
+      placeholder: 'All 10 regions of Cameroon',
+      description: 'Optional. Where the department works.',
+    },
+    {
+      kind: 'translatable',
+      type: 'text',
+      name: 'location',
+      label: 'Based in',
+      placeholder: 'CEPCA headquarters, Yaoundé',
+    },
+    {
+      kind: 'translatable',
+      type: 'text',
+      name: 'headTitle',
+      label: "Head's title",
+      placeholder: 'Executive Secretary',
+      description: 'Shown under the name of the head of department.',
+    },
+    {
+      kind: 'plain',
+      type: 'text',
+      name: 'acronym',
+      label: 'Acronym',
+      required: true,
+      placeholder: 'DS',
+      description: "The department's short code, shown as its mark.",
+    },
+    {
+      kind: 'plain',
+      type: 'text',
+      name: 'slug',
+      label: 'Page address',
+      placeholder: 'health',
+      description:
+        'The end of the public address — "health" gives /departments/health. Leave blank to build it from the English name.',
+    },
+    {
+      kind: 'plain',
+      type: 'number',
+      name: 'sortOrder',
+      label: 'Position',
+      placeholder: '1',
+      description: 'Order on the departments page and the home page — 1 comes first.',
+    },
+    {
+      kind: 'plain',
+      type: 'image',
+      name: 'logo',
+      label: 'Logo',
+      description: 'Optional. Without one, the acronym is used as the mark.',
+    },
+    {
+      kind: 'plain',
+      type: 'image',
+      name: 'coverImage',
+      label: 'Cover photo',
+      description: 'Optional. A wide photograph shown under the title.',
+    },
+    {
+      kind: 'plain',
+      type: 'text',
+      name: 'headName',
+      label: 'Head of department',
+      placeholder: 'Rev. Jane Doe',
+      description: 'Full name with title. The leadership card only appears once this is filled in.',
+    },
+    { kind: 'plain', type: 'image', name: 'headPhoto', label: "Head's photo" },
+    {
+      kind: 'plain',
+      type: 'gallery',
+      name: 'images',
+      label: 'Photo gallery',
+      description: 'Photographs of the department at work, shown as a gallery on its page.',
+    },
+    {
+      kind: 'plain',
+      type: 'text',
+      name: 'phone',
+      label: 'Phone',
+      placeholder: '+237 6XX XXX XXX',
+      description: 'Separate several numbers with " / ".',
+    },
+    { kind: 'plain', type: 'text', name: 'email', label: 'Email' },
+    { kind: 'plain', type: 'text', name: 'address', label: 'Postal address' },
+    { kind: 'plain', type: 'url', name: 'website', label: 'Website' },
+  ],
+};
+
+/**
+ * Fields only the council sets: the public address, the mark and the running
+ * order. A department account's editor leaves them out, and the server drops
+ * them from anything a department account submits.
+ */
+export const COUNCIL_ONLY_DEPARTMENT_FIELDS = ['slug', 'acronym', 'sortOrder'];
+
+/** The profile editor as a department account sees it. */
+export const departmentProfileConfig: ResourceConfig = {
+  ...departmentConfig,
+  adminPath: '/admin/my-department',
+  fields: departmentConfig.fields.filter(
+    (field) => !COUNCIL_ONLY_DEPARTMENT_FIELDS.includes(field.name)
+  ),
+};
+
+export const ACTIVITY_KINDS = [
+  { value: 'event', label: 'Event' },
+  { value: 'activity', label: 'Activity report' },
+  { value: 'project', label: 'Project' },
+] as const;
+
+/**
+ * An event, activity report or project posted by a department to its own
+ * page. `adminPath` differs by who is editing — see `activityConfigFor`.
+ */
+export const departmentActivityConfig: ResourceConfig = {
+  key: 'department-activities',
+  singular: 'Activity',
+  plural: 'Events & Activities',
+  adminPath: '/admin/my-department/activities',
+  publicPath: '/departments',
+  slugFrom: 'title',
+  titleField: 'title',
+  orderBy: { date: 'desc' },
+  fields: [
+    {
+      kind: 'translatable',
+      type: 'text',
+      name: 'title',
+      label: 'Title',
+      required: true,
+      placeholder: 'Regional training for health coordinators',
+    },
+    {
+      kind: 'translatable',
+      type: 'textarea',
+      name: 'summary',
+      label: 'Summary',
+      required: true,
+      description: 'One or two sentences for the card on the department page.',
+    },
+    {
+      kind: 'translatable',
+      type: 'markdown',
+      name: 'body',
+      label: 'Full account',
+      description:
+        'Optional. The programme of an event, the report of an activity, or the detail of a project.',
+    },
+    {
+      kind: 'translatable',
+      type: 'text',
+      name: 'location',
+      label: 'Place',
+      placeholder: 'Maroua, Far North Region',
+    },
+    {
+      kind: 'plain',
+      type: 'select',
+      name: 'kind',
+      label: 'Type',
+      required: true,
+      options: ACTIVITY_KINDS.map((kind) => ({ ...kind })),
+      description:
+        'An event appears under "Upcoming events" until its date has passed, then with the activities. A report is something the department has already done.',
+    },
+    {
+      kind: 'plain',
+      type: 'date',
+      name: 'date',
+      label: 'Date',
+      required: true,
+      description:
+        'The day of the event, the day the activity took place, or the day a project starts.',
+    },
+    {
+      kind: 'plain',
+      type: 'date',
+      name: 'endDate',
+      label: 'End date',
+      description: 'Optional. For anything that runs over several days, or a project.',
+    },
+    { kind: 'plain', type: 'time', name: 'time', label: 'Start time' },
+    {
+      kind: 'plain',
+      type: 'image',
+      name: 'imageUrl',
+      label: 'Cover image',
+      description: 'Shown on the card and at the head of the page.',
+    },
+    {
+      kind: 'plain',
+      type: 'gallery',
+      name: 'images',
+      label: 'Photos',
+      description: 'Photographs of the event or activity, shown as a gallery on its page.',
+    },
+  ],
+};
+
+/** The activity editor, pointed at the list it belongs to. */
+export function activityConfigFor(adminPath: string): ResourceConfig {
+  return { ...departmentActivityConfig, adminPath };
+}
 
 export const RESOURCE_CONFIGS: ResourceConfig[] = [
   eventConfig,

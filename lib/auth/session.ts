@@ -13,19 +13,22 @@ import {
  * Server-side sessions for /admin.
  *
  * The browser holds a signed, httpOnly cookie containing nothing but a session
- * id. Everything that matters — who you are, your role, the church you may
- * edit — is read from the database here, on every request. That is what makes
- * `resolveEditableChurchId` safe: there is no role or churchId anywhere in the
- * request for a caller to tamper with.
+ * id. Everything that matters — who you are, your role, the church or
+ * department you may edit — is read from the database here, on every request.
+ * That is what makes `resolveEditableChurchId` and
+ * `resolveEditableDepartmentId` safe: there is no role, churchId or
+ * departmentId anywhere in the request for a caller to tamper with.
  */
 
-export type AppRole = 'super_admin' | 'church';
+export type AppRole = 'super_admin' | 'church' | 'department';
 
 export interface SessionRole {
   userId: string;
   role: AppRole;
   /** Set only for `church` accounts — the MemberChurch they may edit. */
   churchId: string | null;
+  /** Set only for `department` accounts — the Department they may edit. */
+  departmentId: string | null;
   email: string | null;
 }
 
@@ -36,9 +39,15 @@ export interface SessionUser extends SessionRole {
   expiresAt: Date;
 }
 
-/** A stored role string is only ever one of the two we know. */
+/**
+ * A stored role string is only ever one of the three we know. Anything
+ * unrecognised becomes `church` — a role confined to a single record — and
+ * never `super_admin`.
+ */
 export function normalizeRole(role: string | null | undefined): AppRole {
-  return role === 'super_admin' ? 'super_admin' : 'church';
+  if (role === 'super_admin') return 'super_admin';
+  if (role === 'department') return 'department';
+  return 'church';
 }
 
 /** Emails are compared and stored lowercased, so the login form is case-blind. */
@@ -72,6 +81,7 @@ export const getSession = cache(async (): Promise<SessionUser | null> => {
     userId: row.user.id,
     role: normalizeRole(row.user.role),
     churchId: row.user.churchId ?? null,
+    departmentId: row.user.departmentId ?? null,
     email: row.user.email,
     name: row.user.name ?? null,
     mustChangePassword: row.user.mustChangePassword,

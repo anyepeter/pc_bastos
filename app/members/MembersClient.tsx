@@ -9,6 +9,8 @@ import PageHero from '@/components/PageHero';
 import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
+import { useSiteSettings } from '@/components/SiteSettingsProvider';
+import { logoSrc } from '@/lib/site-settings';
 
 export interface PublicChurch {
   id: string;
@@ -23,6 +25,7 @@ export interface PublicChurch {
 export default function MembersClient({ churches }: { churches: PublicChurch[] }) {
   const { t } = useTranslation();
   const language = useAppSelector((state) => state.blog.language);
+  const councilLogo = logoSrc(useSiteSettings());
 
   /* Figures are rendered as literal strings rather than through <CountUp>:
      `15,500` is separated copy, and toLocaleString() would re-punctuate it
@@ -85,7 +88,7 @@ export default function MembersClient({ churches }: { churches: PublicChurch[] }
                     <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-ink-200 bg-white p-2 transition-colors duration-300 group-hover:border-leaf-300">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={member.logo || '/images/logo_CEPCA.png'}
+                        src={member.logo || councilLogo}
                         alt={`${denomination} logo`}
                         loading="lazy"
                         className="h-full w-full object-contain"

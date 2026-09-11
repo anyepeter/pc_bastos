@@ -18,9 +18,11 @@ import PageHero from '@/components/PageHero';
 import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
-
-/** The council's own map pin. Linked out rather than proxied — the footer does the same. */
-const MAPS_URL = 'https://maps.app.goo.gl/ehjxm8QprKj2Jpv16';
+import { useSiteSettings } from '@/components/SiteSettingsProvider';
+import { useAppSelector } from '@/store/hooks';
+import { sendContactMessage } from '@/app/actions/contact';
+import { CONTACT_LIMITS } from '@/lib/contact';
+import { inLanguage, mapEmbedSrc, telHref, whatsappHref } from '@/lib/site-settings';
 
 const FIELDS = ['name', 'email', 'phone', 'subject', 'message'] as const;
 type FieldName = (typeof FIELDS)[number];
@@ -55,27 +57,26 @@ const labelClass = 'block font-ui text-[13px] font-semibold tracking-wide text-i
 
 export default function ContactPage() {
   const { t } = useTranslation();
+  const language = useAppSelector((state) => state.blog.language);
+  const settings = useSiteSettings();
 
   const [formData, setFormData] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   /**
-   * There is no submit target. This project has no API routes and no mailer —
-   * every server round-trip goes through a Server Action in `app/actions/`,
-   * and none of them accepts a contact enquiry. The original page faked the
-   * send with a `setTimeout` and an `alert()`; that behaviour is kept exactly,
-   * with the confirmation moved out of the modal alert and into the polite
-   * live region below the button so assistive technology hears it in place.
-   *
-   * When a real endpoint exists, replace the timeout — nothing else here
-   * needs to change.
+   * Validated here, then handed to the `sendContactMessage` Server Action,
+   * which emails it to the secretariat through Brevo. The outcome is announced
+   * in the polite live region below the button. A failed send keeps what was
+   * typed and offers the address to write to directly.
    */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     setSent(false);
+    setFailed(false);
 
     // Constraint validation, reported inline. The messages come from the
     // browser itself, so they arrive already translated into the user's
@@ -95,10 +96,17 @@ export default function ContactPage() {
 
     setErrors({});
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const honeypot = form.querySelector<HTMLInputElement>('[name="website"]')?.value ?? '';
+    const result = await sendContactMessage({ ...formData, website: honeypot }).catch(() => null);
+    setIsSubmitting(false);
+
+    if (!result?.success) {
+      setFailed(true);
+      return;
+    }
 
     setFormData(EMPTY_FORM);
-    setIsSubmitting(false);
     setSent(true);
   };
 
@@ -126,16 +134,19 @@ export default function ContactPage() {
   };
 
   /**
-   * The four ways to reach the council. Values match the footer exactly — one
-   * set of numbers and one address across the site.
+   * The ways to reach the council, all from /admin/settings — the same
+   * numbers and address the footer shows. A channel with nothing set is left
+   * out rather than shown empty.
    */
   const channels = [
     {
       id: 'visit',
       Icon: MapPin,
       title: t('contact.visitUs.title'),
-      body: t('contact.visitUs.address'),
-      links: [{ href: MAPS_URL, label: t('contact.visitUs.getDirections'), external: true }],
+      body: inLanguage(settings.address, language),
+      links: settings.mapsUrl
+        ? [{ href: settings.mapsUrl, label: t('contact.visitUs.getDirections'), external: true }]
+        : [],
       note: undefined,
     },
     {
@@ -143,21 +154,15 @@ export default function ContactPage() {
       Icon: Phone,
       title: t('contact.callUs.title'),
       body: undefined,
-      links: [{ href: 'https://wa.me/237242657608', label: '+237 242 657 608', external: true }],
-      note: t('contact.callUs.hours'),
+      links: [{ href: telHref(settings.phone), label: settings.phone, external: false }],
+      note: inLanguage(settings.officeHours, language) || undefined,
     },
     {
       id: 'email',
       Icon: Mail,
       title: t('contact.emailUs.title'),
       body: undefined,
-      links: [
-        {
-          href: 'mailto:generalsecretarycepca@gmail.com',
-          label: 'generalsecretarycepca@gmail.com',
-          external: false,
-        },
-      ],
+      links: [{ href: `mailto:${settings.email}`, label: settings.email, external: false }],
       note: t('contact.emailUs.response'),
     },
     {
@@ -165,13 +170,14 @@ export default function ContactPage() {
       Icon: MessageCircle,
       title: t('contact.whatsapp.title'),
       body: undefined,
-      links: [
-        { href: 'https://wa.me/237677875300', label: '+237 677 875 300', external: true },
-        { href: 'https://wa.me/237656779874', label: '+237 656 779 874', external: true },
-      ],
+      links: settings.whatsapp.map((number) => ({
+        href: whatsappHref(number),
+        label: number,
+        external: true,
+      })),
       note: t('contact.whatsapp.quickResponses'),
     },
-  ];
+  ].filter((channel) => channel.id !== 'whatsapp' || channel.links.length > 0);
 
   const required = t('contact.form.required');
 
@@ -274,6 +280,7 @@ export default function ContactPage() {
                       name="name"
                       autoComplete="name"
                       required
+                      maxLength={CONTACT_LIMITS.name}
                       value={formData.name}
                       onChange={handleChange}
                       disabled={isSubmitting}
@@ -305,6 +312,7 @@ export default function ContactPage() {
                       autoComplete="email"
                       spellCheck={false}
                       required
+                      maxLength={CONTACT_LIMITS.email}
                       value={formData.email}
                       onChange={handleChange}
                       disabled={isSubmitting}
@@ -335,6 +343,7 @@ export default function ContactPage() {
                     name="phone"
                     inputMode="tel"
                     autoComplete="tel"
+                    maxLength={CONTACT_LIMITS.phone}
                     value={formData.phone}
                     onChange={handleChange}
                     disabled={isSubmitting}
@@ -363,6 +372,7 @@ export default function ContactPage() {
                     id="subject"
                     name="subject"
                     autoComplete="off"
+                    maxLength={CONTACT_LIMITS.subject}
                     value={formData.subject}
                     onChange={handleChange}
                     disabled={isSubmitting}
@@ -391,6 +401,7 @@ export default function ContactPage() {
                     name="message"
                     rows={6}
                     required
+                    maxLength={CONTACT_LIMITS.message}
                     value={formData.message}
                     onChange={handleChange}
                     disabled={isSubmitting}
@@ -410,6 +421,14 @@ export default function ContactPage() {
                   )}
                 </div>
 
+                {/* Honeypot. Out of sight, out of the tab order and hidden
+                    from assistive tech — only a bot fills it in, and the
+                    server then drops the message. */}
+                <div aria-hidden="true" className="sr-only">
+                  <label htmlFor="website">Website</label>
+                  <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
+                </div>
+
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -418,12 +437,12 @@ export default function ContactPage() {
                   {isSubmitting ? (
                     <>
                       <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />
-                      Sending...
+                      {t('contact.form.sending')}
                     </>
                   ) : (
                     <>
                       <Send aria-hidden="true" className="h-4 w-4" />
-                      Send Message
+                      {t('contact.form.send')}
                     </>
                   )}
                 </button>
@@ -436,7 +455,22 @@ export default function ContactPage() {
                   {sent && (
                     <p className="flex items-start gap-2.5 rounded-xl border border-leaf-200 bg-leaf-50 px-4 py-3 font-ui text-sm leading-relaxed text-leaf-800">
                       <CheckCircle2 aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
-                      <span>Thank you for your message! We&apos;ll get back to you soon.</span>
+                      <span>{t('contact.form.success')}</span>
+                    </p>
+                  )}
+                  {failed && (
+                    <p className="flex items-start gap-2.5 rounded-xl border border-plum-200 bg-plum-50 px-4 py-3 font-ui text-sm leading-relaxed text-plum-800">
+                      <AlertCircle aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
+                      <span>
+                        {t('contact.form.sendError')}{' '}
+                        <a
+                          href={`mailto:${settings.email}`}
+                          className="focus-ring break-words rounded font-semibold underline underline-offset-4"
+                        >
+                          {settings.email}
+                        </a>
+                        .
+                      </span>
                     </p>
                   )}
                 </div>
@@ -468,9 +502,9 @@ export default function ContactPage() {
         </Reveal>
       </PageSection>
 
-      {/* Where to find the secretariat. The embed is kept as it was; the two
-          links below it are the reliable route, and they are the same pin the
-          footer uses. */}
+      {/* Where to find the secretariat. The embed is drawn from the address
+          in /admin/settings; the links below it go to the map pin set there,
+          the same one the footer uses. */}
       <PageSection tone="tint">
         <SectionHeading
           title={t('contact.map.title')}
@@ -482,7 +516,7 @@ export default function ContactPage() {
           <div className="card overflow-hidden rounded-2xl">
             <iframe
               title={t('contact.map.title')}
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3980.8947!2d11.5021!3d3.8480!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x108bcf1a1a1a1a1a%3A0x1a1a1a1a1a1a1a1a!2sPresbyterian%20Church%2C%20Bastos%2C%20Yaound%C3%A9%2C%20Cameroon!5e0!3m2!1sen!2sus!4v1640995200000!5m2!1sen!2sus"
+              src={mapEmbedSrc(settings.address)}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               allowFullScreen
@@ -491,27 +525,29 @@ export default function ContactPage() {
           </div>
         </Reveal>
 
-        <Reveal delay={120} className="mt-8">
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <a
-              href={MAPS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="focus-ring inline-flex items-center justify-center gap-2.5 rounded-full bg-plum-600 px-7 py-3.5 font-ui text-sm font-semibold text-white shadow-[0_14px_30px_-14px_rgba(93,50,166,0.7)] transition-all duration-300 ease-spring hover:bg-plum-700 active:translate-y-px"
-            >
-              <MapPin aria-hidden="true" className="h-4 w-4" />
-              Get Directions
-            </a>
-            <a
-              href={MAPS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="focus-ring inline-flex items-center justify-center gap-2.5 rounded-full border border-ink-300 bg-white px-7 py-3.5 font-ui text-sm font-semibold text-ink-800 transition-all duration-300 ease-spring hover:border-plum-400 hover:bg-plum-50 active:translate-y-px"
-            >
-              {t('contact.map.viewOnGoogleMaps')}
-            </a>
-          </div>
-        </Reveal>
+        {settings.mapsUrl && (
+          <Reveal delay={120} className="mt-8">
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <a
+                href={settings.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="focus-ring inline-flex items-center justify-center gap-2.5 rounded-full bg-plum-600 px-7 py-3.5 font-ui text-sm font-semibold text-white shadow-[0_14px_30px_-14px_rgba(93,50,166,0.7)] transition-all duration-300 ease-spring hover:bg-plum-700 active:translate-y-px"
+              >
+                <MapPin aria-hidden="true" className="h-4 w-4" />
+                {t('contact.visitUs.getDirections')}
+              </a>
+              <a
+                href={settings.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="focus-ring inline-flex items-center justify-center gap-2.5 rounded-full border border-ink-300 bg-white px-7 py-3.5 font-ui text-sm font-semibold text-ink-800 transition-all duration-300 ease-spring hover:border-plum-400 hover:bg-plum-50 active:translate-y-px"
+              >
+                {t('contact.map.viewOnGoogleMaps')}
+              </a>
+            </div>
+          </Reveal>
+        )}
       </PageSection>
     </PageLayout>
   );

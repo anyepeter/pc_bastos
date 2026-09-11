@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ArrowLeft, ArrowRight, Expand, X } from 'lucide-react';
 
 interface MediaGalleryProps {
@@ -31,8 +32,15 @@ export default function MediaGallery({ images, alt, labels }: MediaGalleryProps)
   const l = { ...DEFAULT_LABELS, ...labels };
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(false);
+  /* The dialog is portalled to <body>. Any ancestor with a transform — such as
+     the `.reveal` wrapper this sits inside — becomes the containing block for
+     `position: fixed`, which trapped the dialog inside the gallery box instead
+     of covering the screen. A portal removes it from that subtree entirely. */
+  const [mounted, setMounted] = useState(false);
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => setMounted(true), []);
 
   const step = useCallback(
     (delta: number) => setActive((i) => (i + delta + images.length) % images.length),
@@ -117,7 +125,7 @@ export default function MediaGallery({ images, alt, labels }: MediaGalleryProps)
         </ul>
       )}
 
-      {open && (
+      {open && mounted && createPortal(
         <div
           role="dialog"
           aria-modal="true"
@@ -169,7 +177,8 @@ export default function MediaGallery({ images, alt, labels }: MediaGalleryProps)
               </figcaption>
             )}
           </figure>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );

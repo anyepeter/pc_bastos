@@ -56,3 +56,30 @@ export const isUpcoming = (value: string | Date): boolean => {
   const date = value instanceof Date ? value : new Date(value);
   return !Number.isNaN(date.getTime()) && date.getTime() > Date.now();
 };
+
+/** "March 2026" / "mars 2026". */
+export function formatMonthYear(value: string | Date, language: Language): string {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+
+  return date.toLocaleDateString(localeFor(language), { year: 'numeric', month: 'long' });
+}
+
+/**
+ * A span of days. One date when there is no end or it falls on the same day,
+ * otherwise "start – end". `precision: 'month'` gives "January 2026 – December
+ * 2027", which is how a project's period reads best.
+ */
+export function formatDateRange(
+  start: string | Date,
+  end: string | Date | null | undefined,
+  language: Language,
+  precision: 'day' | 'month' = 'day'
+): string {
+  const format = precision === 'month' ? formatMonthYear : formatLongDate;
+  const first = format(start, language);
+  if (!end) return first;
+
+  const last = format(end, language);
+  return last && last !== first ? `${first} – ${last}` : first;
+}

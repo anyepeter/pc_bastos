@@ -14,20 +14,25 @@ npm run build                # prisma generate && next build
 npm run lint                 # next lint (NOT run during build — see next.config.js)
 npx tsc --noEmit             # typecheck (the only real "test" in this repo)
 npx prisma generate          # regenerate client into lib/generated/prisma
-npx prisma migrate dev       # apply schema changes
+npx prisma db push           # apply schema changes (there are no migrations)
 npx prisma studio            # inspect the DB
+npm run create-admin         # seed or reset a super admin (see Auth)
+npm run seed-departments     # insert the eight council departments — missing slugs only
 ```
 
 There is no test framework. Verification = `npx tsc --noEmit` + `npm run build`.
 
 `lib/generated/prisma` is gitignored, so `npx prisma generate` must run before typechecking a fresh checkout (`postinstall` handles it after `npm install`). ESLint is skipped during builds, so lint errors will not fail CI — run `npm run lint` explicitly.
 
+**After `prisma db push` / `generate`, restart `next dev`.** A running dev server keeps the old Prisma client: new models are `undefined` on it, so new pages error and `getSiteSettings()` quietly serves its defaults. Never run `npm run build` in the same tree as a running `next dev` — they share `.next`; build a copy instead.
+
 ## Architecture
 
 ### Data: two very different sources
 
-1. **Database-backed, editable in `/admin`** — `BlogPost`, `Event`, `Announcement`, `Workshop`, `CharityProgram`, `Sermon` in [prisma/schema.prisma](prisma/schema.prisma). Every translatable attribute is a **JSON column holding `{ en, fr }`**, not a column or row per locale.
-2. **Still hardcoded** — members, departments, and the remaining home-page sections keep `const xData = [...]` arrays at the top of the component. Changing that content means editing the file.
+1. **Database-backed, editable in `/admin`** — `BlogPost`, `NewsArticle`, `Event`, `Announcement`, `Workshop`, `CharityProgram`, `Sermon`, `MemberChurch`, `Department` and `DepartmentActivity` in [prisma/schema.prisma](prisma/schema.prisma). A `DepartmentActivity` is an upcoming event, a report of work done, or a project, shown on its department's page; a department's key figures are one `value | label` per line, parsed in [lib/departments.ts](lib/departments.ts) (which otherwise only holds the public data shapes and the locale-file fallback used when the table is empty). `NewsArticle` (reported items: milestones, appointments, communiqués) is deliberately separate from `BlogPost` (reflection pieces); both sit under the News menu. Every translatable attribute is a **JSON column holding `{ en, fr }`**, not a column or row per locale.
+2. **Still hardcoded** — the remaining home-page sections keep `const xData = [...]` arrays at the top of the component. Changing that content means editing the file.
+3. **Site settings** — the council's logo, email, phone, WhatsApp numbers, address, opening hours, map link, social links and giving accounts. One `SiteSettings` row edited at `/admin/settings`; see [Site settings](#site-settings) below. None of these live in the locale files any more.
 
 There are no migrations in `prisma/migrations`; the schema is applied with `npx prisma db push`.
 
@@ -51,6 +56,17 @@ There are **no API routes** (`app/api/` does not exist). All server data flows t
 - [blog-public.ts](app/actions/blog-public.ts) — published-only reads; casts the Prisma `Json` fields to `Translation`.
 - [upload.ts](app/actions/upload.ts) — Cloudinary upload (5MB cap, folder `church/blog`) and delete. Updating or deleting a post deletes its old Cloudinary image.
 - [translate.ts](app/actions/translate.ts) — machine translation for the admin editor. Calls Google's public translate endpoint over `fetch`, splitting on paragraph breaks so markdown survives. Do **not** use the `free-translate` package for this — it drives Puppeteer, which cannot run in a serverless action.
+- [contact.ts](app/actions/contact.ts) — the public contact form, and the project's only outgoing email. Delivers each message to the email in site settings through Brevo's transactional API over `fetch`, with the visitor as reply-to. Needs **`BREVO_API_KEY`** in every environment. The sender is fixed to `info@cepcacameroun.com` because Brevo refuses unverified senders (that one is verified, on an authenticated domain); the recipient can be any inbox. A honeypot field and an in-memory per-IP limit (5 per 10 minutes) protect the daily quota.
+- [settings.ts](app/actions/settings.ts) — `getSiteSettings()` (public, cached under the `site-settings` tag, never throws) and `updateSiteSettings()` (super admin).
+
+### Site settings
+
+[lib/site-settings.ts](lib/site-settings.ts) holds the `SiteSettingsValues` type, `DEFAULT_SITE_SETTINGS` (what renders until `/admin/settings` is first saved) and the link helpers (`telHref`, `whatsappHref`, `mapEmbedSrc`, `logoSrc`, `socialLinks`, `givingDetailsMissing`). The root layout calls `getSiteSettings()` once and wraps the app in [SiteSettingsProvider](components/SiteSettingsProvider.tsx); client components read it with `useSiteSettings()`, server components call `getSiteSettings()` directly. Saving revalidates the tag and the whole layout.
+
+- `getSiteSettings()` swallows database errors and returns the defaults, because every page renders through it — a missing table must not take the site down.
+- Once saved, a blank optional field is **hidden**, not defaulted: no social link means no icon, no WhatsApp number means no floating button, no giving accounts means `/give` offers the office phone and email instead.
+- The logo is limited to Cloudinary uploads or `/images/…`: `next/image` renders it in the header and footer and only allows `res.cloudinary.com`, so any other host would crash every page.
+- Bank details are all-or-nothing (bank, account name, account number) — half an account sends a gift nowhere.
 
 ### The bilingual publishing rule
 
@@ -90,22 +106,29 @@ Self-hosted email + password. Accounts are `User` rows; passwords are bcrypt has
 
 [middleware.ts](middleware.ts) protects `/admin(.*)`. It only verifies the cookie's signature — the Edge runtime cannot reach the database — so it is a redirect convenience, not the authorisation check.
 
-Two roles, defined in [lib/auth/roles.ts](lib/auth/roles.ts) and stored on the `User` row:
+Three roles, defined in [lib/auth/roles.ts](lib/auth/roles.ts) and stored on the `User` row (each role's landing page and label are in [lib/auth/role-meta.ts](lib/auth/role-meta.ts)):
 
-- **`super_admin`** — the council secretariat. Every content type plus church accounts.
+- **`super_admin`** — the council secretariat. Every content type, site settings, and church and department accounts.
 - **`church`** — one member church. May edit only its own `MemberChurch` record, via `/admin/my-church`.
+- **`department`** — one council department (`User.departmentId`). May edit only its own `Department` profile (not its slug, acronym, position or publish state) and its own activities, via `/admin/my-department`.
+
+Only a row actually marked `super_admin` gets council access; an unrecognised role string is normalised to `church` (confined to one record), never upwards.
 
 Enforced in three layers, and all three matter:
 
 1. [app/admin/layout.tsx](app/admin/layout.tsx) resolves the role server-side and renders [AdminShell](app/admin/AdminShell.tsx) with role-specific navigation.
-2. Every council page calls `requireSuperAdminPage()` (redirects a church account to `/admin/my-church`).
-3. Every write action calls `requireSuperAdmin()` (throws) — centralised in [lib/admin/resource-actions.ts](lib/admin/resource-actions.ts) and [app/actions/blog.ts](app/actions/blog.ts). Church writes go through [app/actions/churches.ts](app/actions/churches.ts), where `resolveEditableChurchId` **discards any id sent by the browser** and substitutes the session's own `churchId`.
+2. Every council page calls `requireSuperAdminPage()` (redirects a church or department account to its own workspace).
+3. Every write action calls `requireSuperAdmin()` (throws) — centralised in [lib/admin/resource-actions.ts](lib/admin/resource-actions.ts) and [app/actions/blog.ts](app/actions/blog.ts). Church writes go through [app/actions/churches.ts](app/actions/churches.ts), where `resolveEditableChurchId` **discards any id sent by the browser** and substitutes the session's own `churchId`. Department writes do the same through `resolveEditableDepartmentId` in [app/actions/departments.ts](app/actions/departments.ts), and every activity read/write in [app/actions/department-activities.ts](app/actions/department-activities.ts) checks the activity belongs to the caller's department ("not yours" answers exactly like "not found").
 
-A church account is created from `/admin/churches/<id>/edit`, which writes a `User` row with role `church` and that church's id, and shows a generated temporary password **once**. There is no mailer in this project — the secretariat passes the password on by hand. `/admin/account` lets any account change its own password; `resetChurchAccountPassword` issues a new temporary one and drops every open session.
+`uploadImage`, `deleteImage` and the translate actions refuse unless some dashboard account is signed in — server actions are public URLs.
+
+A church account is created from `/admin/churches/<id>/edit`, which writes a `User` row with role `church` and that church's id, and shows a generated temporary password **once**. Creating a church lands on that page (`afterCreate="edit"` on `ResourceForm`), and the `/admin/churches` list shows each church's login status. `User.churchId` has no foreign key, so `deleteChurch` deletes the church's logins itself — keep that if you touch it. Passwords are never emailed — the secretariat passes them on by hand (the contact form is the only outgoing mail). `/admin/account` lets any account change its own password; `resetChurchAccountPassword` issues a new temporary one and drops every open session.
+
+Department logins are created the same way from `/admin/departments/<id>/edit` ("Department logins"), except the secretariat may type the password (min 10 characters) or leave it blank to generate one. `deleteDepartment` removes the department's logins itself (no foreign key); its activities cascade.
 
 Seed or reset a super admin with `npm run create-admin` (`ADMIN_EMAIL` + `ADMIN_PASSWORD`, or two arguments). Credentials are never hardcoded.
 
-**`SUPER_ADMIN_EMAILS`** (comma-separated) restricts who counts as super admin. While unset, any signed-in account without role metadata is treated as super admin — convenient now, but set it before launch.
+**`SUPER_ADMIN_EMAILS`** (comma-separated) is a second lock: when set, even a row marked `super_admin` is refused unless its address is listed. Set it before launch.
 
 ## Conventions
 

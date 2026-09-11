@@ -3,19 +3,59 @@
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useAppSelector } from '@/store/hooks';
+import { getTranslatedText, readTranslation } from '@/lib/translations';
 import Reveal from '@/components/Reveal';
-import { DEPARTMENTS } from '@/lib/departments';
+import {
+  DEPARTMENTS,
+  departmentIcon,
+  type PublicDepartmentSummary,
+} from '@/lib/departments';
+
+interface DepartmentsSectionProps {
+  /** Published departments, fetched by the page. */
+  departments?: PublicDepartmentSummary[];
+}
 
 /**
  * The eight departments, on the home page.
  *
  * Sits between the council's figures and its programmes: the numbers say how
  * large the council is, this says how it is organised to act, and the charity
- * band then shows what that produces. Each tile deep-links to its own entry on
- * `/departments`, which already carries an anchor per department.
+ * band then shows what that produces. Each tile opens the department's own
+ * page. Until the database holds any department (or when it cannot be
+ * reached) the tiles fall back to the council's original list in the locale
+ * files, each deep-linking to its entry on `/departments`.
  */
-export default function DepartmentsSection() {
+export default function DepartmentsSection({ departments = [] }: DepartmentsSectionProps) {
   const { t } = useTranslation();
+  const language = useAppSelector((state) => state.blog.language);
+  const read = (value: unknown) => getTranslatedText(readTranslation(value), language).trim();
+
+  const tiles =
+    departments.length > 0
+      ? departments.map((department) => {
+          // The founding eight keep their short names; a later one shows its acronym.
+          const known = DEPARTMENTS.find(
+            (entry) => entry.acronym === department.acronym.toUpperCase()
+          );
+          return {
+            key: department.id,
+            href: `/departments/${department.slug}`,
+            Icon: departmentIcon(department.acronym),
+            short: known ? t(`about.departments.${known.id}.short`) : department.acronym,
+            name: read(department.name),
+            location: read(department.location),
+          };
+        })
+      : DEPARTMENTS.map(({ id, Icon }) => ({
+          key: id,
+          href: `/departments#${id}`,
+          Icon,
+          short: t(`about.departments.${id}.short`),
+          name: t(`about.departments.${id}.name`),
+          location: t(`about.departments.${id}.location`),
+        }));
 
   return (
     <section className="grain relative overflow-hidden bg-ink-50 py-14 lg:py-20">
@@ -52,10 +92,10 @@ export default function DepartmentsSection() {
         </div>
 
         <ul className="mt-11 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {DEPARTMENTS.map(({ id, Icon }, i) => (
-            <Reveal as="li" key={id} delay={Math.min(i, 8) * 60}>
+          {tiles.map(({ key, href, Icon, short, name, location }, i) => (
+            <Reveal as="li" key={key} delay={Math.min(i, 8) * 60}>
               <Link
-                href={`/departments#${id}`}
+                href={href}
                 className="card card-hover focus-ring group flex h-full flex-col p-5 lg:p-6"
               >
                 <div className="flex items-start justify-between gap-4">
@@ -68,16 +108,19 @@ export default function DepartmentsSection() {
                 </div>
 
                 <span className="mt-5 block font-mono text-[0.62rem] uppercase tracking-[0.2em] text-plum-700">
-                  {t(`about.departments.${id}.short`)}
+                  {short}
                 </span>
 
                 <span className="mt-2 block font-display text-base font-semibold leading-snug tracking-tight text-ink-900 transition-colors duration-300 group-hover:text-plum-700">
-                  {t(`about.departments.${id}.name`)}
+                  {name}
                 </span>
 
                 <span className="mt-auto pt-4 inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.16em] text-ink-500">
-                  {t(`about.departments.${id}.location`)}
-                  <ArrowUpRight className="h-3 w-3 shrink-0 text-ink-400 opacity-0 transition-all duration-300 ease-spring group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-plum-700 group-hover:opacity-100" />
+                  {location}
+                  <ArrowUpRight
+                    aria-hidden="true"
+                    className="h-3 w-3 shrink-0 text-ink-400 opacity-0 transition-all duration-300 ease-spring group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-plum-700 group-hover:opacity-100"
+                  />
                 </span>
               </Link>
             </Reveal>

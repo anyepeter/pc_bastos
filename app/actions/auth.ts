@@ -162,6 +162,7 @@ export async function getCurrentUser() {
     name: session.name,
     role: session.role,
     churchId: session.churchId,
+    departmentId: session.departmentId,
     mustChangePassword: session.mustChangePassword,
   };
 }

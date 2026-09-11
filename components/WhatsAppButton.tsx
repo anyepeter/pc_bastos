@@ -1,5 +1,8 @@
 'use client';
 
+import { useSiteSettings } from './SiteSettingsProvider';
+import { whatsappHref } from '@/lib/site-settings';
+
 /**
  * WhatsApp's own glyph — lucide's MessageCircle reads as a generic chat bubble
  * and gave no signal about which app the button opens.
@@ -11,9 +14,11 @@ const WhatsAppGlyph = ({ className }: { className?: string }) => (
 );
 
 export default function WhatsAppButton() {
-  const phoneNumber = '237677875300';
-  const message = 'Hello! I would like to get in touch with CEPCA.';
-  const href = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  // The first WhatsApp number in /admin/settings; none set, no button.
+  const [number] = useSiteSettings().whatsapp;
+  if (!number) return null;
+
+  const href = whatsappHref(number, 'Hello! I would like to get in touch with CEPCA.');
 
   return (
     <a

@@ -1,6 +1,7 @@
 'use server';
 
 import { v2 as cloudinary } from 'cloudinary';
+import { getSessionRole } from '@/lib/auth/roles';
 
 // Configure Cloudinary
 cloudinary.config({
@@ -14,11 +15,26 @@ export interface UploadResult {
 }
 
 /**
+ * Server actions are reachable by anyone who finds their id, so both of these
+ * refuse unless a dashboard account is signed in — otherwise a stranger could
+ * fill the Cloudinary account or delete the council's images.
+ */
+async function signedIn(): Promise<boolean> {
+  try {
+    return (await getSessionRole()) !== null;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Upload an image to Cloudinary
  * @param formData - FormData containing the image file
  * @returns Upload result with URL or error
  */
 export async function uploadImage(formData: FormData): Promise<UploadResult> {
+  if (!(await signedIn())) return { success: false, error: 'Please sign in again.' };
+
   try {
     const file = formData.get('file') as File;
 
@@ -89,6 +105,8 @@ export async function uploadImage(formData: FormData): Promise<UploadResult> {
  * @returns Success status
  */
 export async function deleteImage(imageUrl: string): Promise<{ success: boolean; error?: string }> {
+  if (!(await signedIn())) return { success: false, error: 'Please sign in again.' };
+
   try {
     // Extract public_id from Cloudinary URL
     const urlParts = imageUrl.split('/');

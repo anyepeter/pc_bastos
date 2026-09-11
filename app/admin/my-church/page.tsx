@@ -1,10 +1,12 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { ExternalLink, Info } from 'lucide-react';
 import { ResourceForm } from '@/components/admin/ResourceForm';
 import { memberChurchConfig } from '@/lib/admin/configs';
 import { toFormValues } from '@/lib/admin/resource-service';
 import { readTranslation } from '@/lib/translations';
 import { requireAdminSession } from '@/lib/auth/roles';
+import { ROLE_HOME } from '@/lib/auth/role-meta';
 import { getMyChurch, createChurch, updateChurch } from '@/app/actions/churches';
 
 /**
@@ -14,6 +16,9 @@ import { getMyChurch, createChurch, updateChurch } from '@/app/actions/churches'
  */
 export default async function MyChurchPage() {
   const session = await requireAdminSession();
+
+  // A department account has its own workspace.
+  if (session.role === 'department') redirect(ROLE_HOME.department);
 
   if (session.role === 'super_admin') {
     return (

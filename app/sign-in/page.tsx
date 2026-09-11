@@ -5,6 +5,8 @@ import { redirect } from 'next/navigation';
 import { ArrowLeft, ShieldCheck } from 'lucide-react';
 import { getSession } from '@/lib/auth/session';
 import { sanitizeRedirect } from '@/lib/auth/redirect';
+import { getSiteSettings } from '@/app/actions/settings';
+import { logoSrc } from '@/lib/site-settings';
 import LoginForm from './LoginForm';
 
 export const metadata: Metadata = {
@@ -28,6 +30,8 @@ export default async function SignInPage({
 
   const session = await getSession();
   if (session) redirect(redirectTo);
+
+  const logo = logoSrc(await getSiteSettings());
 
   return (
     <div className="min-h-screen bg-ink-50">
@@ -55,7 +59,7 @@ export default async function SignInPage({
               className="focus-ring inline-flex items-center gap-3 rounded-lg text-white/90 transition-colors hover:text-white"
             >
               <Image
-                src="/images/logo_CEPCA.png"
+                src={logo}
                 alt=""
                 width={44}
                 height={44}

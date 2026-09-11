@@ -6,6 +6,9 @@ import {
   GraduationCap,
   HeartHandshake,
   Mic,
+  Church,
+  Network,
+  Newspaper,
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,6 +18,9 @@ import { getAllAnnouncements } from '@/app/actions/announcements';
 import { getAllWorkshops } from '@/app/actions/workshops';
 import { getAllCharityPrograms } from '@/app/actions/charity';
 import { getAllSermons } from '@/app/actions/sermons';
+import { getAllNews } from '@/app/actions/news';
+import { getAllChurches, listAccountsByChurch } from '@/app/actions/churches';
+import { getAllDepartments, listAccountsByDepartment } from '@/app/actions/departments';
 import { readTranslation } from '@/lib/translations';
 import { requireSuperAdminPage } from '@/lib/auth/roles';
 
@@ -42,6 +48,11 @@ export default async function AdminDashboard() {
     workshopsResult,
     charityResult,
     sermonsResult,
+    newsResult,
+    churchesResult,
+    accountsResult,
+    departmentsResult,
+    departmentAccountsResult,
   ] = await Promise.all([
     getAllBlogPosts(),
     getAllEvents(),
@@ -49,6 +60,11 @@ export default async function AdminDashboard() {
     getAllWorkshops(),
     getAllCharityPrograms(),
     getAllSermons(),
+    getAllNews(),
+    getAllChurches(),
+    listAccountsByChurch(),
+    getAllDepartments(),
+    listAccountsByDepartment(),
   ]);
 
   const blogPosts = rowsOf(blogPostsResult);
@@ -57,8 +73,47 @@ export default async function AdminDashboard() {
   const workshops = rowsOf(workshopsResult);
   const charityPrograms = rowsOf(charityResult);
   const sermons = rowsOf(sermonsResult);
+  const news = rowsOf(newsResult);
+  const churches = rowsOf(churchesResult);
+
+  const accountsByChurch = accountsResult.success ? accountsResult.data || {} : {};
+  const churchesWithLogin = churches.filter(
+    (church) => accountsByChurch[church.id]?.length
+  ).length;
+
+  const departments = rowsOf(departmentsResult);
+  const accountsByDepartment = departmentAccountsResult.success
+    ? departmentAccountsResult.data || {}
+    : {};
+  const departmentsWithLogin = departments.filter(
+    (department) => accountsByDepartment[department.id]?.length
+  ).length;
 
   const stats = [
+    {
+      title: 'Member Churches',
+      value: churches.length,
+      description:
+        churches.length === 0
+          ? 'Nothing added yet'
+          : `${churches.filter((church) => church.published).length} published · ${churchesWithLogin} with a login`,
+      icon: Church,
+      href: '/admin/churches',
+      color: 'text-indigo-600',
+      bgColor: 'bg-indigo-100',
+    },
+    {
+      title: 'Departments',
+      value: departments.length,
+      description:
+        departments.length === 0
+          ? 'Nothing added yet'
+          : `${departments.filter((department) => department.published).length} published · ${departmentsWithLogin} with a login`,
+      icon: Network,
+      href: '/admin/departments',
+      color: 'text-violet-600',
+      bgColor: 'bg-violet-100',
+    },
     {
       title: 'Blog Posts',
       value: blogPosts.length,
@@ -76,6 +131,15 @@ export default async function AdminDashboard() {
       href: '/admin/events',
       color: 'text-green-600',
       bgColor: 'bg-green-100',
+    },
+    {
+      title: 'News',
+      value: news.length,
+      description: describe(news),
+      icon: Newspaper,
+      href: '/admin/news',
+      color: 'text-sky-600',
+      bgColor: 'bg-sky-100',
     },
     {
       title: 'Announcements',
@@ -128,7 +192,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Stats grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <Link key={stat.title} href={stat.href}>
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">

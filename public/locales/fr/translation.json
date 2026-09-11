@@ -40,9 +40,6 @@
     "getInTouch": "Contact",
     "followUs": "Suivez-Nous",
     "copyright": "© 2025 CEPCA. Tous droits réservés.",
-    "phone": "+237 242 657 608",
-    "email": "generalsecretarycepca@gmail.com",
-    "address": "Yaoundé, B.P. 491 Rue Ceper, Elig-Essono",
     "members": "Membres",
     "contact": "Contact",
     "about": "À Propos",
@@ -141,12 +138,10 @@
     "description": "Notre équipe est prête à répondre à vos questions, à prier avec vous ou à vous aider à franchir votre prochaine étape dans la foi. N'hésitez pas à nous contacter !",
     "visitUs": {
       "title": "Visitez-Nous",
-      "address": "CEPCA\nBastos, Yaoundé, Cameroun",
       "getDirections": "Obtenir l'Itinéraire →"
     },
     "callUs": {
-      "title": "Appelez-Nous",
-      "hours": "Lundi - Vendredi: 9h00 - 17h00\nUrgence: Disponible 24h/24 et 7j/7"
+      "title": "Appelez-Nous"
     },
     "emailUs": {
       "title": "Envoyez-nous un Email",
@@ -169,7 +164,11 @@
       "phonePlaceholder": "671 23 45 67",
       "subjectPlaceholder": "De quoi aimeriez-vous discuter ?",
       "messagePlaceholder": "Dites-nous comment nous pouvons vous aider...",
-      "required": "*"
+      "required": "*",
+      "send": "Envoyer le message",
+      "sending": "Envoi en cours...",
+      "success": "Merci pour votre message ! Nous vous répondrons très bientôt.",
+      "sendError": "Votre message n'a pas pu être envoyé. Réessayez dans quelques minutes ou écrivez-nous directement à"
     },
     "prayer": {
       "title": "Besoin de Prière ?",
@@ -178,7 +177,7 @@
     },
     "map": {
       "title": "Trouvez-Nous",
-      "description": "Nous sommes situés à Bastos, Yaoundé, au service de la communauté presbytérienne avec foi et fraternité.",
+      "description": "Le secrétariat du Conseil à Yaoundé. Venez nous rencontrer aux heures d'ouverture.",
       "viewOnGoogleMaps": "Voir sur Google Maps"
     }
   },
@@ -475,7 +474,8 @@
       "workshops": "Formation",
       "gallery": "Galerie",
       "announcements": "Avis",
-      "departments": "Organisation"
+      "departments": "Organisation",
+      "news": "Actualités"
     },
     "visionLabel": "Vision",
     "missionLabel": "Mission",
@@ -509,6 +509,10 @@
     "departments": {
       "title": "Nos",
       "titleHighlight": "Départements"
+    },
+    "news": {
+      "title": "Dernières",
+      "titleHighlight": "Actualités"
     }
   },
   "impact": {
@@ -550,6 +554,62 @@
         "label": "Institutions de microfinance",
         "description": "Au service de l'autonomisation économique"
       }
+    }
+  },
+  "news": {
+    "pageTitle": "Actualités",
+    "pageSubtitle": "Comptes rendus, étapes marquantes et nominations au sein du conseil et de ses églises membres",
+    "readArticle": "Lire l'article",
+    "allNews": "Toute l'actualité",
+    "empty": "Aucune actualité n'a encore été publiée.",
+    "date": "Date",
+    "category": "Catégorie"
+  },
+  "departments": {
+    "visit": "Découvrir le département",
+    "figuresEyebrow": "Chiffres clés",
+    "figuresTitle": "L'action,",
+    "figuresTitleHighlight": "en chiffres",
+    "vision": "Vision",
+    "mission": "Mission et attributions",
+    "objectives": "Objectifs",
+    "services": "Ce que nous faisons",
+    "structures": "Structures",
+    "leadership": "Direction",
+    "contact": "Contact",
+    "location": "Siège",
+    "coverage": "Couverture",
+    "address": "Adresse",
+    "phone": "Téléphone",
+    "email": "E-mail",
+    "website": "Site web",
+    "visitWebsite": "Visiter le site",
+    "upcoming": "Événements à venir",
+    "recent": "Activités récentes",
+    "projects": "Projets",
+    "gallery": "Galerie",
+    "support": "Soutenir notre action",
+    "writeToUs": "Écrire au département",
+    "contactCouncil": "Contacter le Conseil",
+    "allDepartments": "Tous les départements",
+    "notFound": "Département introuvable",
+    "backToDepartments": "Retour aux départements",
+    "activity": {
+      "event": "Événement",
+      "activity": "Activité",
+      "project": "Projet",
+      "upcoming": "À venir",
+      "readMore": "Lire la suite",
+      "date": "Date",
+      "time": "Heure",
+      "place": "Lieu",
+      "type": "Type",
+      "department": "Département",
+      "details": "En détail",
+      "photos": "Photos",
+      "backTo": "Retour à la page",
+      "more": "Autres actions du département",
+      "notFound": "Cette page est introuvable"
     }
   }
 }

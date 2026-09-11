@@ -40,9 +40,6 @@
     "getInTouch": "Get In Touch",
     "followUs": "Follow Us",
     "copyright": "© 2025 CEPCA. All rights reserved.",
-    "phone": "+237 242 657 608",
-    "email": "generalsecretarycepca@gmail.com",
-    "address": "Yaoundé, P.O. Box 491 Rue Ceper, Elig-Essono",
     "members": "Members",
     "contact": "Contact",
     "about": "About",
@@ -141,12 +138,10 @@
     "description": "Our team is ready to answer your questions, pray with you, or help you take your next step in faith. Don't hesitate to reach out!",
     "visitUs": {
       "title": "Visit Us",
-      "address": "CEPCA\nBastos, Yaoundé, Cameroon",
       "getDirections": "Get Directions →"
     },
     "callUs": {
-      "title": "Call Us",
-      "hours": "Monday - Friday: 9:00 AM - 5:00 PM\nEmergency: Available 24/7"
+      "title": "Call Us"
     },
     "emailUs": {
       "title": "Email Us",
@@ -169,7 +164,11 @@
       "phonePlaceholder": "671 23 45 67",
       "subjectPlaceholder": "What would you like to discuss?",
       "messagePlaceholder": "Tell us how we can help you...",
-      "required": "*"
+      "required": "*",
+      "send": "Send Message",
+      "sending": "Sending...",
+      "success": "Thank you for your message! We'll get back to you soon.",
+      "sendError": "Your message could not be sent. Please try again in a few minutes, or write to us directly at"
     },
     "prayer": {
       "title": "Need Prayer?",
@@ -178,7 +177,7 @@
     },
     "map": {
       "title": "Find Us",
-      "description": "We're located in Bastos, Yaoundé, serving the Presbyterian community with faith and fellowship.",
+      "description": "The council's secretariat in Yaoundé. Come and see us during office hours.",
       "viewOnGoogleMaps": "View on Google Maps"
     }
   },
@@ -475,7 +474,8 @@
       "workshops": "Training",
       "gallery": "Gallery",
       "announcements": "Notices",
-      "departments": "Organisation"
+      "departments": "Organisation",
+      "news": "Newsroom"
     },
     "visionLabel": "Vision",
     "missionLabel": "Mission",
@@ -509,6 +509,10 @@
     "departments": {
       "title": "Our",
       "titleHighlight": "Departments"
+    },
+    "news": {
+      "title": "Latest",
+      "titleHighlight": "News"
     }
   },
   "impact": {
@@ -550,6 +554,62 @@
         "label": "Microfinance Institutions",
         "description": "Supporting economic empowerment"
       }
+    }
+  },
+  "news": {
+    "pageTitle": "News",
+    "pageSubtitle": "Reports, milestones and appointments from across the council and its member churches",
+    "readArticle": "Read article",
+    "allNews": "All news",
+    "empty": "No news has been published yet.",
+    "date": "Date",
+    "category": "Category"
+  },
+  "departments": {
+    "visit": "Visit the department",
+    "figuresEyebrow": "Key figures",
+    "figuresTitle": "The work,",
+    "figuresTitleHighlight": "in numbers",
+    "vision": "Vision",
+    "mission": "Mission and mandate",
+    "objectives": "Objectives",
+    "services": "What we do",
+    "structures": "Structures",
+    "leadership": "Leadership",
+    "contact": "Contact",
+    "location": "Based in",
+    "coverage": "Coverage",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "website": "Website",
+    "visitWebsite": "Visit website",
+    "upcoming": "Upcoming events",
+    "recent": "Recent activities",
+    "projects": "Projects",
+    "gallery": "Gallery",
+    "support": "Support our work",
+    "writeToUs": "Write to the department",
+    "contactCouncil": "Contact the council",
+    "allDepartments": "All departments",
+    "notFound": "Department not found",
+    "backToDepartments": "Back to the departments",
+    "activity": {
+      "event": "Event",
+      "activity": "Activity",
+      "project": "Project",
+      "upcoming": "Upcoming",
+      "readMore": "Read more",
+      "date": "Date",
+      "time": "Time",
+      "place": "Place",
+      "type": "Type",
+      "department": "Department",
+      "details": "In detail",
+      "photos": "Photos",
+      "backTo": "Back to",
+      "more": "More from this department",
+      "notFound": "This page could not be found"
     }
   }
 }

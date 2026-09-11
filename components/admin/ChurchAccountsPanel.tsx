@@ -16,6 +16,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import type { ChurchAccount } from '@/app/actions/churches';
 
@@ -24,10 +34,18 @@ interface Issued {
   temporaryPassword: string;
 }
 
+/** An account action waiting for confirmation — both are hard to undo. */
+interface PendingAction {
+  kind: 'reset' | 'remove';
+  account: ChurchAccount;
+}
+
 interface ChurchAccountsPanelProps {
   churchId: string;
   churchName: string;
   accounts: ChurchAccount[];
+  /** Pre-fills the email box while the church has no login, e.g. its contact email. */
+  suggestedEmail?: string;
   onCreate: (
     churchId: string,
     email: string
@@ -53,16 +71,26 @@ export function ChurchAccountsPanel({
   churchId,
   churchName,
   accounts,
+  suggestedEmail = '',
   onCreate,
   onResetPassword,
   onRemove,
 }: ChurchAccountsPanelProps) {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(accounts.length === 0 ? suggestedEmail : '');
   const [isCreating, setIsCreating] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [issued, setIssued] = useState<Issued | null>(null);
   const [copied, setCopied] = useState(false);
+  const [pending, setPending] = useState<PendingAction | null>(null);
+
+  const confirmPending = () => {
+    if (!pending) return;
+    const { kind, account } = pending;
+    setPending(null);
+    if (kind === 'reset') resetPassword(account);
+    else remove(account);
+  };
 
   const create = async () => {
     if (!email.trim()) {
@@ -114,27 +142,36 @@ export function ChurchAccountsPanel({
     setBusyId(null);
   };
 
-  const copyPassword = async () => {
+  /** Everything the church needs in one paste — ready for a message to them. */
+  const copyLoginDetails = async () => {
     if (!issued) return;
+    const details = [
+      `${churchName} — CEPCA dashboard login`,
+      `Sign in at: ${window.location.origin}/sign-in`,
+      `Email: ${issued.email}`,
+      `Temporary password: ${issued.temporaryPassword}`,
+      'You will be asked to choose your own password after signing in.',
+    ].join('\n');
+
     try {
-      await navigator.clipboard.writeText(issued.temporaryPassword);
+      await navigator.clipboard.writeText(details);
       setCopied(true);
-      toast.success('Password copied');
+      toast.success('Login details copied');
     } catch {
       toast.error('Could not copy — select the password and copy it by hand');
     }
   };
 
   return (
-    <Card>
+    <Card id="accounts" className="scroll-mt-6">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-base">
           <ShieldCheck className="h-4 w-4" />
-          Church accounts
+          Church logins
         </CardTitle>
         <CardDescription>
-          People who can sign in and edit this church&apos;s page. They cannot see or
-          change anything else in the dashboard.
+          People who can sign in at /sign-in and edit this church&apos;s page. They
+          cannot see or change anything else in the dashboard.
         </CardDescription>
       </CardHeader>
 
@@ -162,7 +199,7 @@ export function ChurchAccountsPanel({
             ) : (
               <>
                 <UserPlus className="mr-2 h-4 w-4" />
-                Create account
+                Create login
               </>
             )}
           </Button>
@@ -180,11 +217,11 @@ export function ChurchAccountsPanel({
               nothing is emailed. They will be asked to choose their own password
               after signing in.
             </p>
-            <div className="mt-3 flex items-center gap-2">
-              <code className="flex-1 select-all rounded border border-amber-300 bg-white px-3 py-2 font-mono text-sm text-gray-900">
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <code className="min-w-[12rem] flex-1 select-all rounded border border-amber-300 bg-white px-3 py-2 font-mono text-sm text-gray-900">
                 {issued.temporaryPassword}
               </code>
-              <Button type="button" variant="outline" size="sm" onClick={copyPassword}>
+              <Button type="button" variant="outline" size="sm" onClick={copyLoginDetails}>
                 {copied ? (
                   <>
                     <Check className="mr-2 h-4 w-4" />
@@ -193,7 +230,7 @@ export function ChurchAccountsPanel({
                 ) : (
                   <>
                     <Copy className="mr-2 h-4 w-4" />
-                    Copy
+                    Copy login details
                   </>
                 )}
               </Button>
@@ -211,7 +248,7 @@ export function ChurchAccountsPanel({
 
         {accounts.length === 0 ? (
           <p className="rounded-lg border border-dashed border-gray-300 px-4 py-6 text-center text-sm text-gray-500">
-            No account yet. Create one for someone at {churchName} to let them keep
+            No login yet. Create one for someone at {churchName} to let them keep
             this page up to date.
           </p>
         ) : (
@@ -223,7 +260,12 @@ export function ChurchAccountsPanel({
               >
                 <div className="flex min-w-0 items-center gap-3">
                   <Mail className="h-4 w-4 shrink-0 text-gray-400" />
-                  <span className="truncate text-sm text-gray-800">{account.email}</span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm text-gray-800">{account.email}</p>
+                    <p className="text-xs text-gray-500">
+                      Created {new Date(account.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
                   <Badge
@@ -239,18 +281,24 @@ export function ChurchAccountsPanel({
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => resetPassword(account)}
+                    onClick={() => setPending({ kind: 'reset', account })}
                     disabled={busyId === account.id}
                     title="Issue a new temporary password"
+                    aria-label={`Reset the password for ${account.email}`}
                   >
-                    <KeyRound className="h-4 w-4 text-gray-600" />
+                    {busyId === account.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-gray-600" />
+                    ) : (
+                      <KeyRound className="h-4 w-4 text-gray-600" />
+                    )}
                   </Button>
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => remove(account)}
+                    onClick={() => setPending({ kind: 'remove', account })}
                     disabled={busyId === account.id}
                     title="Remove access"
+                    aria-label={`Remove access for ${account.email}`}
                   >
                     <Trash2 className="h-4 w-4 text-red-600" />
                   </Button>
@@ -260,6 +308,36 @@ export function ChurchAccountsPanel({
           </ul>
         )}
       </CardContent>
+
+      <AlertDialog open={pending !== null} onOpenChange={(open) => !open && setPending(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {pending?.kind === 'reset'
+                ? 'Issue a new temporary password?'
+                : 'Remove this login?'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {pending?.kind === 'reset'
+                ? `${pending.account.email} will be signed out everywhere and their current password will stop working. You will be shown the new one to pass on.`
+                : pending
+                  ? `${pending.account.email} will be signed out and will no longer be able to edit ${churchName}. You can create a new login at any time.`
+                  : ''}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmPending}
+              className={
+                pending?.kind === 'remove' ? 'bg-red-600 hover:bg-red-700' : undefined
+              }
+            >
+              {pending?.kind === 'reset' ? 'Reset password' : 'Remove login'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }

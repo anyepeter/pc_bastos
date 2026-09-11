@@ -7,6 +7,8 @@ import { usePathname } from 'next/navigation';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from './LanguageSelector';
+import { useSiteSettings } from './SiteSettingsProvider';
+import { logoSrc } from '@/lib/site-settings';
 
 interface MenuItem {
   name: string;
@@ -19,6 +21,7 @@ interface MenuItem {
 const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
   const { t } = useTranslation();
   const pathname = usePathname();
+  const settings = useSiteSettings();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdowns, setOpenDropdowns] = useState<string[]>([]);
   const [isScrolled, setIsScrolled] = useState(scroll);
@@ -81,7 +84,7 @@ const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
       href: '/about',
       submenu: [
         { name: t('navbar.ourMissionVision'), href: '/about/mission-vision' },
-        { name: t('navbar.leadership'), href: '/about/departments' },
+        { name: t('navbar.leadership'), href: '/departments' },
         { name: t('navbar.ourHistory'), href: '/about/history' },
         { name: t('navbar.cepcaStructures'), href: '/about/structure' },
       ],
@@ -106,20 +109,27 @@ const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
     },
     { name: t('navbar.departements'), href: '/departments' },
     {
+      // Events are things the council does, so they sit with the other
+      // activities rather than under News.
       name: t('navbar.activities'),
       submenu: [
+        { name: t('navbar.futureEvents'), href: '/events' },
         { name: t('navbar.charity'), href: '/charity' },
         { name: t('navbar.workshopsTrainings'), href: '/workshops' },
       ],
     },
     {
+      // Everything the council publishes, in one place. Blogs moved in from the
+      // top level: that keeps the bar to six items, which is the range church
+      // web guidance recommends.
       name: t('navbar.news'),
+      href: '/news',
       submenu: [
-        { name: t('navbar.futureEvents'), href: '/events' },
+        { name: t('news.pageTitle'), href: '/news' },
         { name: t('navbar.announcements'), href: '/announcements' },
+        { name: t('navbar.blogs'), href: '/blogs' },
       ],
     },
-    { name: t('navbar.blogs'), href: '/blogs' },
     { name: t('navbar.contactUs'), href: '/contact' },
   ];
 
@@ -162,12 +172,12 @@ const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
                 }`}
               >
                 <Image
-                src="/images/logo_CEPCA.png"
+                src={logoSrc(settings)}
                 alt=""
                 width={26}
                 height={26}
                 aria-hidden="true"
-                className="h-auto w-auto"
+                className="h-[26px] w-[26px] object-contain"
               />
               </span>
               <span className="leading-none">

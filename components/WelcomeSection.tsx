@@ -67,9 +67,9 @@ const WelcomeSection = () => {
                   <div className="overflow-hidden rounded-2xl">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/images/hero2.jpg"
-                      alt="A red-brick member church with a tall bell tower and rows of pointed arched windows"
-                      className="aspect-[3/4] w-full object-cover object-[72%_center] transition-transform duration-1000 ease-spring hover:scale-[1.04]"
+                      src="/images/b7479a26-dac2-4cd1-9ede-2dd4e6ca0332.jpeg"
+                      alt="A pastor in a black gown and purple stole in a church sanctuary"
+                      className="aspect-[3/4] w-full object-cover object-[42%_center] transition-transform duration-1000 ease-spring hover:scale-[1.04]"
                       loading="lazy"
                     />
                   </div>

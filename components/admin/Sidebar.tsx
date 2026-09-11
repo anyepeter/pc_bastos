@@ -7,15 +7,20 @@ import {
   LayoutDashboard,
   FileText,
   Calendar,
+  CalendarDays,
   Megaphone,
+  Newspaper,
   GraduationCap,
   HeartHandshake,
   Church,
   Mic,
+  Network,
+  Settings,
   X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { AppRole } from '@/lib/auth/roles';
+import { ROLE_HOME, ROLE_LABEL } from '@/lib/auth/role-meta';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -29,19 +34,55 @@ const SUPER_ADMIN_NAV = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Blog Posts', href: '/admin/blog', icon: FileText },
   { name: 'Events', href: '/admin/events', icon: Calendar },
+  { name: 'News', href: '/admin/news', icon: Newspaper },
   { name: 'Announcements', href: '/admin/announcements', icon: Megaphone },
   { name: 'Workshops', href: '/admin/workshops', icon: GraduationCap },
   { name: 'Charity', href: '/admin/charity', icon: HeartHandshake },
   { name: 'Sermons', href: '/admin/sermons', icon: Mic },
   { name: 'Member Churches', href: '/admin/churches', icon: Church },
+  { name: 'Departments', href: '/admin/departments', icon: Network },
+  { name: 'Site Settings', href: '/admin/settings', icon: Settings },
 ];
 
 /** A member church only ever sees its own page. */
 const CHURCH_NAV = [{ name: 'My Church', href: '/admin/my-church', icon: Church }];
 
+/** A department sees its own page and its own events and activities. */
+const DEPARTMENT_NAV = [
+  { name: 'My Department', href: '/admin/my-department', icon: Network },
+  { name: 'Events & Activities', href: '/admin/my-department/activities', icon: CalendarDays },
+];
+
+const NAV_BY_ROLE = {
+  super_admin: SUPER_ADMIN_NAV,
+  church: CHURCH_NAV,
+  department: DEPARTMENT_NAV,
+} satisfies Record<AppRole, unknown>;
+
+/** Title beside the logo. */
+const SHELL_TITLE: Record<AppRole, string> = {
+  super_admin: 'Church Admin',
+  church: 'My Church',
+  department: 'My Department',
+};
+
 export function Sidebar({ isOpen, onClose, role, email }: SidebarProps) {
-  const pathname = usePathname();
-  const navigation = role === 'super_admin' ? SUPER_ADMIN_NAV : CHURCH_NAV;
+  const pathname = usePathname() || '';
+  const navigation = NAV_BY_ROLE[role];
+
+  // The deepest matching entry wins, so "My Department" is not lit up as well
+  // while its own "Events & Activities" page is open. The dashboard is the
+  // parent of every admin path, so it only counts on an exact match.
+  const activeHref = navigation
+    .filter(
+      (item) =>
+        pathname === item.href ||
+        (item.href !== '/admin' && pathname.startsWith(item.href + '/'))
+    )
+    .reduce<string | null>(
+      (best, item) => (!best || item.href.length > best.length ? item.href : best),
+      null
+    );
 
   return (
     <>
@@ -63,15 +104,12 @@ export function Sidebar({ isOpen, onClose, role, email }: SidebarProps) {
         <div className="flex flex-col h-full">
           {/* Logo/Header */}
           <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
-            <Link
-              href={role === 'super_admin' ? '/admin' : '/admin/my-church'}
-              className="flex items-center space-x-2"
-            >
+            <Link href={ROLE_HOME[role]} className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">C</span>
               </div>
               <span className="font-semibold text-gray-900">
-                {role === 'super_admin' ? 'Church Admin' : 'My Church'}
+                {SHELL_TITLE[role]}
               </span>
             </Link>
             <Button
@@ -87,7 +125,7 @@ export function Sidebar({ isOpen, onClose, role, email }: SidebarProps) {
           {/* Navigation */}
           <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
             {navigation.map((item) => {
-              const isActive = pathname === item.href || pathname?.startsWith(item.href + '/');
+              const isActive = item.href === activeHref;
               return (
                 <Link
                   key={item.name}
@@ -115,7 +153,7 @@ export function Sidebar({ isOpen, onClose, role, email }: SidebarProps) {
           {/* Footer — who you are signed in as */}
           <div className="border-t border-gray-200 p-4">
             <p className="text-xs font-medium text-gray-700">
-              {role === 'super_admin' ? 'Council secretariat' : 'Church account'}
+              {ROLE_LABEL[role]}
             </p>
             {email && (
               <p className="mt-0.5 truncate text-xs text-gray-500" title={email}>

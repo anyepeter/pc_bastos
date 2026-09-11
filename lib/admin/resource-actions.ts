@@ -58,7 +58,7 @@ const galleryFieldNames = (config: ResourceConfig) =>
     .map((field) => field.name);
 
 /** Every Cloudinary URL a row currently references. */
-function collectImages(config: ResourceConfig, row: Record<string, unknown>): string[] {
+export function collectImages(config: ResourceConfig, row: Record<string, unknown>): string[] {
   const urls: string[] = [];
 
   for (const name of imageFieldNames(config)) {
@@ -77,10 +77,23 @@ function collectImages(config: ResourceConfig, row: Record<string, unknown>): st
 /** Only remove files we host; pasted third-party URLs are left alone. */
 const isCloudinaryUrl = (url: string) => url.includes('res.cloudinary.com');
 
-async function removeImages(urls: string[]) {
+export async function removeImages(urls: string[]) {
   for (const url of urls.filter(isCloudinaryUrl)) {
     await deleteImage(url);
   }
+}
+
+/** Images the stored row references that the submitted values no longer keep. */
+export function findOrphanedImages(
+  config: ResourceConfig,
+  existing: Record<string, unknown>,
+  values: FormValues
+): string[] {
+  const keptUrls = new Set([
+    ...imageFieldNames(config).map((name) => asString(values[name])),
+    ...galleryFieldNames(config).flatMap((name) => asStringArray(values[name])),
+  ]);
+  return collectImages(config, existing).filter((url) => !keptUrls.has(url));
 }
 
 function revalidate(config: ResourceConfig, slug?: string | null) {
@@ -228,11 +241,7 @@ export async function updateRow(
     payload.published = publish;
 
     // Drop images that are no longer referenced.
-    const keptUrls = new Set([
-      ...imageFieldNames(config).map((name) => asString(values[name])),
-      ...galleryFieldNames(config).flatMap((name) => asStringArray(values[name])),
-    ]);
-    const orphaned = collectImages(config, existing).filter((url) => !keptUrls.has(url));
+    const orphaned = findOrphanedImages(config, existing, values);
 
     const data = await delegate.update({ where: { id }, data: payload });
 
