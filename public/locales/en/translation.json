@@ -17,7 +17,8 @@
     "home": "Home",
     "aboutUs": "About Us",
     "ourMissionVision": "Our Mission & Vision",
-    "leadership": "Leadership",
+    "generalSecretariat": "General Secretariat",
+    "departmentsAndServices": "Departments & Attached Services",
     "ourHistory": "Our History",
     "cepcaStructures": "CEPCA Structures",
     "members": "Members",
@@ -30,7 +31,7 @@
     "announcements": "Announcements",
     "blogs": "Blogs",
     "contactUs": "Contact Us",
-    "departements": "Departments"
+    "board": "Board of CEPCA"
   },
   "footer": {
     "tagline": "Council of Protestant Churches",
@@ -202,9 +203,9 @@
       "evolutionText2": "Today, CEPCA stands as a testament to the power of unity in diversity, bringing together twelve member churches under the banner of Christian love and service to the community.",
       "keyMilestones": "Key Milestones",
       "milestone1969": "Creation of FEMEC (Federation of Evangelical Churches and Missions of Cameroon)",
-      "milestone1970s": "Establishment of Education and Health Committees",
+      "milestone1970s": "During the 1970s: establishment of the Education and Health Committees",
       "milestone2009": "Opening to admission of other Protestant Churches",
-      "milestoneToday": "12 member churches serving 13+ million believers"
+      "milestoneToday": "Today, 12 member churches serve more than 13 million believers"
     },
     "missionVision": {
       "title": "Mission & Vision",
@@ -309,7 +310,7 @@
       "executiveCommittee": "Executive Committee",
       "executiveCommitteeShort": "Policy Execution",
       "meetsTwiceYearly": "Meets twice yearly",
-      "executiveCommitteeLong": "Executes CEPCA's policies. Meets twice a year under the President's convening. Includes 11 Church Leaders, the General Secretary, Executive Secretaries of Departments, and the Head of Administration and Finance (SAF).",
+      "executiveCommitteeLong": "Executes CEPCA's policies. Meets twice a year under the President's convening. Includes the heads of the 12 member churches, the General Secretary, Executive Secretaries of Departments, and the Head of Administration and Finance (SAF).",
       "executiveCommitteeFull": "Executes CEPCA's policies and meets twice a year under the President's convening.",
       "commissionsTitle": "Commissions",
       "commissionsFull": "Each department has a commission responsible for planning and monitoring programs.",
@@ -317,7 +318,7 @@
       "electsLeadership": "Elects leadership positions",
       "approvesPlans": "Approves strategic plans",
       "reviewsPerformance": "Reviews organizational performance",
-      "churchLeaders": "11 Church Leaders",
+      "churchLeaders": "Heads of the 12 member churches",
       "generalSecretary": "General Secretary",
       "executiveSecretaries": "Executive Secretaries",
       "headOfAdmin": "Head of Administration (SAF)",
@@ -327,7 +328,6 @@
       "performanceEvaluation": "Performance evaluation",
       "headquartersInfo": "Headquarters Information",
       "address": "Address",
-      "addressText": "Yaoundé, P.O. Box 491 – Rue Ceper, Elig-Essono",
       "logo": "Logo",
       "logoDescription": "The map of Cameroon with a cross inside, set against green, violet, and white backgrounds",
       "motto": "Motto",
@@ -339,6 +339,27 @@
       "believers": "Believers",
       "educationalInstitutions": "Educational Institutions",
       "healthCenters": "Health Centers"
+    },
+    "generalSecretariat": {
+      "title": "General Secretariat",
+      "pageTitle": "The General Secretariat of CEPCA",
+      "description": "The General Secretariat is the coordinating and liaison body between the various national Secretariats, Services and Offices.",
+      "preview": "The council's departments and services are attached to it, from Health and Education to Youth and Communication.",
+      "summary": "Coordination and liaison",
+      "attachedTitle": "Departments and Attached Services",
+      "attachedLede": "The departments and services attached to the General Secretariat. Each one coordinates its area of work across the member churches.",
+      "attachedTo": "Attached to the General Secretariat",
+      "secretaryTitle": "The General Secretary",
+      "secretaryRole": "The General Secretary heads the General Secretariat, which coordinates the departments and services attached to it, and sits on the Executive Committee, the board of CEPCA.",
+      "seeBoard": "See the Board of CEPCA",
+      "photoAlt": "The General Secretary of CEPCA"
+    },
+    "board": {
+      "pageTitle": "The Board of CEPCA",
+      "lede": "CEPCA's board is its Executive Committee. It carries out the council's policies and meets twice a year, convened by the President of CEPCA.",
+      "president": "President of CEPCA",
+      "firstVicePresident": "First Vice-President",
+      "secondVicePresident": "Second Vice-President"
     }
   },
   "sermons": {

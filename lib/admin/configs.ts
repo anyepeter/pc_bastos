@@ -1,4 +1,5 @@
 import { ResourceConfig } from './resource-config';
+import { BOARD_OFFICES } from '@/lib/board';
 
 /**
  * Field definitions for every admin-managed content type.
@@ -410,6 +411,14 @@ export const memberChurchConfig: ResourceConfig = {
     { kind: 'plain', type: 'image', name: 'logo', label: 'Logo' },
     {
       kind: 'plain',
+      type: 'image',
+      name: 'leaderPhoto',
+      label: "Leader's photo",
+      description:
+        "Optional. A portrait of the church's head, shown beside their name on the church page. The face is centred automatically.",
+    },
+    {
+      kind: 'plain',
       type: 'gallery',
       name: 'images',
       label: 'Photos',
@@ -732,10 +741,91 @@ export function activityConfigFor(adminPath: string): ResourceConfig {
   return { ...departmentActivityConfig, adminPath };
 }
 
+/**
+ * The board of CEPCA, drawn as the organogram on /board. `office` decides the
+ * row; `sortOrder` the place within it. The General Secretary's photo and name
+ * also head /about/general-secretariat.
+ */
+export const boardMemberConfig: ResourceConfig = {
+  key: 'board',
+  singular: 'Board member',
+  plural: 'Board of CEPCA',
+  adminPath: '/admin/board',
+  publicPath: '/board',
+  titleField: 'name',
+  orderBy: { sortOrder: 'asc' },
+  alsoRevalidate: ['/about/general-secretariat'],
+  fields: [
+    {
+      kind: 'plain',
+      type: 'text',
+      name: 'name',
+      label: 'Full name',
+      required: true,
+      placeholder: 'Rev Sokeng Alain Clément',
+      description: 'With the title they use, exactly as it should appear on the site.',
+    },
+    {
+      kind: 'plain',
+      type: 'select',
+      name: 'office',
+      label: 'Place in the organogram',
+      required: true,
+      options: BOARD_OFFICES.map(({ value, label }) => ({ value, label })),
+      description:
+        'Which row of the chart the box sits in. The departments always hang below the General Secretary.',
+    },
+    {
+      kind: 'translatable',
+      type: 'text',
+      name: 'title',
+      label: 'Title',
+      required: true,
+      placeholder: 'Second Vice-President',
+      description: 'The office as written on the box, e.g. President of CEPCA.',
+    },
+    {
+      kind: 'translatable',
+      type: 'text',
+      name: 'detail',
+      label: 'Other office',
+      placeholder: 'General Superintendent, Full Gospel Mission (MPE)',
+      description: 'Optional. A second line under the name, such as the church they lead.',
+    },
+    {
+      kind: 'plain',
+      type: 'image',
+      name: 'photo',
+      label: 'Photo',
+      description:
+        'Optional. A clear portrait; the chart centres it on the face automatically. Without one, the box shows an icon.',
+    },
+    {
+      kind: 'plain',
+      type: 'text',
+      name: 'link',
+      label: 'Link',
+      format: 'link',
+      placeholder: '/members/mpe',
+      description:
+        'Optional. The page the box opens: a page on this site such as /members/mpe, or a full https:// address.',
+    },
+    {
+      kind: 'plain',
+      type: 'number',
+      name: 'sortOrder',
+      label: 'Order in the row',
+      placeholder: '1',
+      description: 'Left to right within the same row — 1 comes first.',
+    },
+  ],
+};
+
 export const RESOURCE_CONFIGS: ResourceConfig[] = [
   eventConfig,
   announcementConfig,
   workshopConfig,
   charityConfig,
   sermonConfig,
+  boardMemberConfig,
 ];

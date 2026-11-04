@@ -43,6 +43,12 @@ export interface PlainField extends BaseField {
   type: PlainFieldType;
   /** For `select` fields. */
   options?: { value: string; label: string }[];
+  /**
+   * `link`: a page on this site or a full https:// address — anything else is
+   * refused (see lib/safe-link.ts). Plain data rather than a function, because
+   * configs are passed from server pages into the client editor.
+   */
+  format?: 'link';
 }
 
 export type ResourceField = TranslatableField | PlainField;
@@ -60,6 +66,8 @@ export interface ResourceConfig {
   titleField: string;
   fields: ResourceField[];
   orderBy: Record<string, 'asc' | 'desc'>;
+  /** Other public pages that show this content and must refresh on a save. */
+  alsoRevalidate?: string[];
 }
 
 /** A single field's value in the editor. */

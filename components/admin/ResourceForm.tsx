@@ -48,6 +48,7 @@ import {
   describeMissingField,
   emptyValues,
   findMissingField,
+  findFormatError,
 } from '@/lib/admin/resource-service';
 
 export interface ResourceActionResult {
@@ -190,6 +191,12 @@ export function ResourceForm({
     if (missing) {
       if (missing.language) setCurrentLang(missing.language);
       toast.error(describeMissingField(missing, publish));
+      return;
+    }
+
+    const formatError = findFormatError(config, values);
+    if (formatError) {
+      toast.error(formatError);
       return;
     }
 

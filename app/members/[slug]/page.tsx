@@ -39,6 +39,7 @@ export default async function MemberDetailPage({
     images: row.images || [],
     founded: row.founded,
     logo: row.logo,
+    leaderPhoto: row.leaderPhoto ?? null,
     phone: row.phone,
     email: row.email,
     address: row.address,

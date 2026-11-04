@@ -429,3 +429,24 @@
   margin-top: 2em;
   margin-bottom: 2em;
 }
+
+/* The footer paints its brush edge up to 56px into the band above it, which
+   is more than that band's own bottom padding on phones and tablets, so the
+   strokes ran over its last line of text. The last band on every page keeps
+   clear room under its content instead.
+   `:last-of-type`, not `:has(+ footer)`: older phones still in use do not
+   support `:has`. Inner pages put their bands straight inside <main> and the
+   home page inside `.page-root`, so in both the last <section> is the one
+   right above the footer. `#main` lifts the specificity above the `py-*`
+   utilities on the section. */
+#main > section:last-of-type,
+#main > .page-root > section:last-of-type {
+  padding-bottom: 9rem;
+}
+
+@media (min-width: 1024px) {
+  #main > section:last-of-type,
+  #main > .page-root > section:last-of-type {
+    padding-bottom: 10rem;
+  }
+}

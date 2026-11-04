@@ -13,7 +13,7 @@ import { logoSrc } from '@/lib/site-settings';
 interface MenuItem {
   name: string;
   href?: string;
-  submenu?: { name: string; href: string }[];
+  submenu?: { name: string; href: string; nested?: boolean }[];
   /** Long lists (the member churches) open as a two-column panel. */
   wide?: boolean;
 }
@@ -84,7 +84,10 @@ const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
       href: '/about',
       submenu: [
         { name: t('navbar.ourMissionVision'), href: '/about/mission-vision' },
-        { name: t('navbar.leadership'), href: '/departments' },
+        { name: t('navbar.generalSecretariat'), href: '/about/general-secretariat' },
+        // The departments report to the General Secretary, so they hang off the
+        // Secretariat rather than sitting in the top bar.
+        { name: t('navbar.departmentsAndServices'), href: '/departments', nested: true },
         { name: t('navbar.ourHistory'), href: '/about/history' },
         { name: t('navbar.cepcaStructures'), href: '/about/structure' },
       ],
@@ -107,7 +110,7 @@ const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
         { name: 'FULL GOSPEL Mission (Mission du plein Evangile)(MPE)', href: '/members/mpe' },
       ],
     },
-    { name: t('navbar.departements'), href: '/departments' },
+    { name: t('navbar.board'), href: '/board' },
     {
       // Events are things the council does, so they sit with the other
       // activities rather than under News.
@@ -252,7 +255,9 @@ const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
                                   key={subitem.href}
                                   href={subitem.href}
                                   aria-current={subCurrent ? 'page' : undefined}
-                                  className={`focus-ring block rounded-xl px-3.5 py-2.5 text-[0.82rem] leading-snug transition-colors duration-200 ${
+                                  className={`focus-ring block rounded-xl py-2.5 pr-3.5 text-[0.82rem] leading-snug transition-colors duration-200 ${
+                                    subitem.nested ? 'pl-7' : 'pl-3.5'
+                                  } ${
                                     subCurrent
                                       ? 'bg-plum-50 font-medium text-plum-700'
                                       : 'text-ink-600 hover:bg-ink-50 hover:text-ink-900'
@@ -376,7 +381,9 @@ const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
                                   href={subitem.href}
                                   onClick={closeMenu}
                                   aria-current={pathname === subitem.href ? 'page' : undefined}
-                                  className={`focus-ring block rounded-lg px-3 py-2.5 text-sm leading-snug transition-colors ${
+                                  className={`focus-ring block rounded-lg py-2.5 pr-3 text-sm leading-snug transition-colors ${
+                                    subitem.nested ? 'pl-7' : 'pl-3'
+                                  } ${
                                     pathname === subitem.href
                                       ? 'bg-plum-50 font-medium text-plum-700'
                                       : 'text-ink-600 hover:bg-ink-50 hover:text-ink-900'

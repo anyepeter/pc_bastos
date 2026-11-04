@@ -101,6 +101,8 @@ function revalidate(config: ResourceConfig, slug?: string | null) {
   revalidatePath(config.publicPath);
   if (slug) revalidatePath(`${config.publicPath}/${slug}`);
 
+  for (const path of config.alsoRevalidate ?? []) revalidatePath(path);
+
   // The home page pulls the hero events and the charity band from these same
   // tables, so it has to be refreshed whenever any of them changes.
   revalidatePath('/');

@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { Users, Crown, Building, FileText } from 'lucide-react';
+import Link from 'next/link';
+import { Users, Crown, Building, FileText, Landmark } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import PageLayout from '@/components/PageLayout';
 import PageHero from '@/components/PageHero';
@@ -9,7 +10,8 @@ import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
 import { useSiteSettings } from '@/components/SiteSettingsProvider';
-import { logoSrc } from '@/lib/site-settings';
+import { useAppSelector } from '@/store/hooks';
+import { inLanguage, logoSrc } from '@/lib/site-settings';
 
 /**
  * How the council is governed.
@@ -21,9 +23,11 @@ import { logoSrc } from '@/lib/site-settings';
  */
 export default function StructurePage() {
   const { t } = useTranslation();
-  const councilLogo = logoSrc(useSiteSettings());
+  const language = useAppSelector((state) => state.blog.language);
+  const settings = useSiteSettings();
+  const councilLogo = logoSrc(settings);
 
-  /** The two governing bodies, in order of authority. */
+  /** The governing bodies and the Secretariat, in order of authority. */
   const tiers = [
     {
       id: 'assembly',
@@ -32,6 +36,7 @@ export default function StructurePage() {
       summary: t('about.structure.generalAssemblyShort'),
       cadence: t('about.structure.meetsEvery2Years'),
       body: t('about.structure.generalAssemblyLong'),
+      href: null,
     },
     {
       id: 'executive',
@@ -40,6 +45,16 @@ export default function StructurePage() {
       summary: t('about.structure.executiveCommitteeShort'),
       cadence: t('about.structure.meetsTwiceYearly'),
       body: t('about.structure.executiveCommitteeLong'),
+      href: null,
+    },
+    {
+      id: 'secretariat',
+      icon: Landmark,
+      title: t('about.generalSecretariat.title'),
+      summary: t('about.generalSecretariat.summary'),
+      cadence: null,
+      body: t('about.generalSecretariat.description'),
+      href: '/about/general-secretariat',
     },
   ];
 
@@ -131,7 +146,16 @@ export default function StructurePage() {
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <h3 className="font-display text-2xl font-semibold leading-tight tracking-tight text-ink-900">
-                      {tier.title}
+                      {tier.href ? (
+                        <Link
+                          href={tier.href}
+                          className="focus-ring rounded transition-colors duration-300 hover:text-plum-700"
+                        >
+                          {tier.title}
+                        </Link>
+                      ) : (
+                        tier.title
+                      )}
                     </h3>
                   </div>
 
@@ -139,9 +163,11 @@ export default function StructurePage() {
                     {tier.summary}
                   </p>
 
-                  <p className="mt-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-ink-500">
-                    {tier.cadence}
-                  </p>
+                  {tier.cadence && (
+                    <p className="mt-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-ink-500">
+                      {tier.cadence}
+                    </p>
+                  )}
 
                   <p className="mt-5 max-w-[70ch] text-base leading-relaxed text-ink-600 text-pretty">
                     {tier.body}
@@ -151,9 +177,7 @@ export default function StructurePage() {
             );
           })}
 
-          {/* Tier three. The departments have no heading of their own in the
-              copy, so the existing Departments label is reused rather than a
-              new locale key being invented. */}
+          {/* Tier four: everything attached to the General Secretariat. */}
           <Reveal as="li" delay={120} className="relative pl-16 sm:pl-20">
             <span className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-xl border border-ink-200 bg-white">
               <Building aria-hidden="true" className="h-5 w-5 text-leaf-600" />
@@ -161,10 +185,10 @@ export default function StructurePage() {
 
             <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2 pt-2">
               <span className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-ink-400">
-                03
+                04
               </span>
               <h3 className="font-display text-2xl font-semibold leading-tight tracking-tight text-ink-900">
-                {t('about.departments.title')}
+                {t('about.generalSecretariat.attachedTitle')}
               </h3>
             </div>
 
@@ -245,7 +269,7 @@ export default function StructurePage() {
                 {t('about.structure.address')}
               </dt>
               <dd className="mt-4 max-w-[28ch] font-display text-2xl font-semibold leading-snug tracking-tight text-ink-900">
-                {t('about.structure.addressText')}
+                {inLanguage(settings.address, language)}
               </dd>
 
               <div className="mt-10 border-t border-ink-200 pt-10">

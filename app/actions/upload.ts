@@ -74,7 +74,10 @@ export async function uploadImage(formData: FormData): Promise<UploadResult> {
           folder,
           resource_type: 'auto',
           transformation: [
-            { width: 1200, height: 630, crop: 'limit' },
+            // Banners are wide; board portraits are tall and need the height.
+            requestedFolder === 'board'
+              ? { width: 1200, height: 1500, crop: 'limit' }
+              : { width: 1200, height: 630, crop: 'limit' },
             { quality: 'auto' },
             { fetch_format: 'auto' }
           ]

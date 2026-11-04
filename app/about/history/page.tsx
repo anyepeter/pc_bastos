@@ -22,11 +22,11 @@ export default function HistoryPage() {
 
   const milestones = [
     { year: '1969', text: t('about.history.milestone1969') },
-    { year: '1970s', text: t('about.history.milestone1970s') },
+    // Every label is a plain four-digit year. The committees have no exact date
+    // in the council's records, so the text says "during the 1970s".
+    { year: '1970', text: t('about.history.milestone1970s') },
     { year: '2009', text: t('about.history.milestone2009') },
-    // Untranslated in the source copy, and left that way: this is a visual
-    // redesign, and the locale files are off-limits.
-    { year: 'Today', text: t('about.history.milestoneToday') },
+    { year: String(new Date().getFullYear()), text: t('about.history.milestoneToday') },
   ];
 
   return (

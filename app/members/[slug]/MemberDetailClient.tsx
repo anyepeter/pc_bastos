@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import { ArrowUpRight, Calendar, Globe, Mail, MapPin, Phone, User } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -13,6 +14,7 @@ import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
 import { useSiteSettings } from '@/components/SiteSettingsProvider';
 import { logoSrc } from '@/lib/site-settings';
+import { faceAvatar } from '@/lib/cloudinary-image';
 
 export interface PublicChurchDetail {
   id: string;
@@ -24,6 +26,8 @@ export interface PublicChurchDetail {
   images: string[];
   founded: string | null;
   logo: string | null;
+  /** Portrait of the church's head; without one the name stays in the list. */
+  leaderPhoto: string | null;
   phone: string | null;
   email: string | null;
   address: string | null;
@@ -65,7 +69,14 @@ export default function MemberDetailClient({ member }: MemberDetailClientProps) 
   const details = [
     { key: 'founded', icon: Calendar, label: t('members.founded'), value: member.founded, href: null },
     { key: 'location', icon: MapPin, label: t('members.location'), value: location, href: null },
-    { key: 'leadership', icon: User, label: t('members.leadership'), value: leader, href: null },
+    // With a portrait, the head gets a block of their own above this list.
+    {
+      key: 'leadership',
+      icon: User,
+      label: t('members.leadership'),
+      value: member.leaderPhoto ? '' : leader,
+      href: null,
+    },
     {
       key: 'phone',
       icon: Phone,
@@ -128,6 +139,26 @@ export default function MemberDetailClient({ member }: MemberDetailClientProps) 
                   {t('members.visitWebsite')}
                   <ArrowUpRight className="h-4 w-4 transition-transform duration-300 ease-spring group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </a>
+              )}
+
+              {member.leaderPhoto && leader && (
+                <div className="mt-7 flex items-center gap-4 border-t border-ink-200 pt-6">
+                  <Image
+                    src={faceAvatar(member.leaderPhoto)}
+                    alt={leader}
+                    width={128}
+                    height={128}
+                    className="h-16 w-16 shrink-0 rounded-full border border-ink-200 object-cover object-top"
+                  />
+                  <div className="min-w-0">
+                    <p className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-ink-400">
+                      {t('members.leadership')}
+                    </p>
+                    <p className="mt-1 font-display text-base font-semibold leading-snug tracking-tight text-ink-900 text-pretty">
+                      {leader}
+                    </p>
+                  </div>
+                </div>
               )}
 
               {details.length > 0 && (

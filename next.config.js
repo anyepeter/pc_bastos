@@ -20,6 +20,9 @@ const nextConfig = {
     return [
       { source: '/donate', destination: '/give', permanent: false },
       { source: '/donate/:path*', destination: '/give', permanent: false },
+      // The old "Leadership" menu entry. Links to it may still be out there.
+      { source: '/about/leadership', destination: '/about/general-secretariat', permanent: false },
+      { source: '/about/departments', destination: '/about/general-secretariat', permanent: false },
     ];
   },
 };

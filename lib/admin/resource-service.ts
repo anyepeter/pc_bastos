@@ -5,6 +5,7 @@ import {
   readTranslation,
 } from '@/lib/translations';
 import { generateSlug } from '@/lib/blog-utils';
+import { linkError } from '@/lib/safe-link';
 import {
   FormValues,
   ResourceConfig,
@@ -167,7 +168,30 @@ export function validateValues(
   publishing: boolean
 ): string | null {
   const missing = findMissingField(config, values, publishing);
-  return missing ? describeMissingField(missing, publishing) : null;
+  if (missing) return describeMissingField(missing, publishing);
+  return findFormatError(config, values);
+}
+
+/** First field whose value is present but in the wrong shape, e.g. a bad link. */
+export function findFormatError(config: ResourceConfig, values: FormValues): string | null {
+  for (const field of config.fields) {
+    if (isTranslatable(field)) continue;
+    const value = asString(values[field.name]).trim();
+
+    // A select only accepts its own options; anything else came from a
+    // hand-made request, not the editor.
+    if (field.type === 'select' && value && field.options) {
+      if (!field.options.some((option) => option.value === value)) {
+        return `Choose a valid ${field.label.toLowerCase()}`;
+      }
+    }
+
+    if (field.format === 'link') {
+      const error = linkError(value, field.label);
+      if (error) return error;
+    }
+  }
+  return null;
 }
 
 /** Slug generated from the English text of the configured source field. */

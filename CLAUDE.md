@@ -13,7 +13,7 @@ npm run dev                  # dev server
 npm run build                # prisma generate && next build
 npm run lint                 # next lint (NOT run during build — see next.config.js)
 npx tsc --noEmit             # typecheck (the only real "test" in this repo)
-npx prisma generate          # regenerate client into lib/generated/prisma
+npx prisma generate          # regenerate the client (node_modules/.prisma/client)
 npx prisma db push           # apply schema changes (there are no migrations)
 npx prisma studio            # inspect the DB
 npm run create-admin         # seed or reset a super admin (see Auth)
@@ -22,7 +22,9 @@ npm run seed-departments     # insert the eight council departments — missing 
 
 There is no test framework. Verification = `npx tsc --noEmit` + `npm run build`.
 
-`lib/generated/prisma` is gitignored, so `npx prisma generate` must run before typechecking a fresh checkout (`postinstall` handles it after `npm install`). ESLint is skipped during builds, so lint errors will not fail CI — run `npm run lint` explicitly.
+`npx prisma generate` must run before typechecking a fresh checkout (`postinstall` handles it after `npm install`). ESLint is skipped during builds, so lint errors will not fail CI — run `npm run lint` explicitly.
+
+**Keep the standard `prisma-client-js` generator with no custom `output`, and import from `@prisma/client`.** A custom output folder (`lib/generated/prisma`, used until 2026-09-11) builds fine on Vercel but leaves the query engine out of the serverless functions: every request-time query then fails ("could not locate the Query Engine for runtime rhel-openssl-3.0.x"), the live login breaks, and ISR pages re-render empty while build-time pages still look fine. `binaryTargets` includes `rhel-openssl-3.0.x`, Vercel's runtime. The production project is `pc-bastos` in the `anyepeters-projects` Vercel team; it needs `DATABASE_URL`, `SESSION_SECRET`, `BREVO_API_KEY` and `CLOUDINARY_URL`.
 
 **After `prisma db push` / `generate`, restart `next dev`.** A running dev server keeps the old Prisma client: new models are `undefined` on it, so new pages error and `getSiteSettings()` quietly serves its defaults. Never run `npm run build` in the same tree as a running `next dev` — they share `.next`; build a copy instead.
 
@@ -30,7 +32,7 @@ There is no test framework. Verification = `npx tsc --noEmit` + `npm run build`.
 
 ### Data: two very different sources
 
-1. **Database-backed, editable in `/admin`** — `BlogPost`, `NewsArticle`, `Event`, `Announcement`, `Workshop`, `CharityProgram`, `Sermon`, `MemberChurch`, `Department` and `DepartmentActivity` in [prisma/schema.prisma](prisma/schema.prisma). A `DepartmentActivity` is an upcoming event, a report of work done, or a project, shown on its department's page; a department's key figures are one `value | label` per line, parsed in [lib/departments.ts](lib/departments.ts) (which otherwise only holds the public data shapes and the locale-file fallback used when the table is empty). `NewsArticle` (reported items: milestones, appointments, communiqués) is deliberately separate from `BlogPost` (reflection pieces); both sit under the News menu. Every translatable attribute is a **JSON column holding `{ en, fr }`**, not a column or row per locale.
+1. **Database-backed, editable in `/admin`** — `BlogPost`, `NewsArticle`, `Event`, `Announcement`, `Workshop`, `CharityProgram`, `Sermon`, `MemberChurch`, `Department`, `DepartmentActivity` and `BoardMember` in [prisma/schema.prisma](prisma/schema.prisma). A `DepartmentActivity` is an upcoming event, a report of work done, or a project, shown on its department's page; a department's key figures are one `value | label` per line, parsed in [lib/departments.ts](lib/departments.ts) (which otherwise only holds the public data shapes and the locale-file fallback used when the table is empty). `NewsArticle` (reported items: milestones, appointments, communiqués) is deliberately separate from `BlogPost` (reflection pieces); both sit under the News menu. Every translatable attribute is a **JSON column holding `{ en, fr }`**, not a column or row per locale.
 2. **Still hardcoded** — the remaining home-page sections keep `const xData = [...]` arrays at the top of the component. Changing that content means editing the file.
 3. **Site settings** — the council's logo, email, phone, WhatsApp numbers, address, opening hours, map link, social links and giving accounts. One `SiteSettings` row edited at `/admin/settings`; see [Site settings](#site-settings) below. None of these live in the locale files any more.
 
@@ -43,7 +45,8 @@ Everything except the blog is driven by field configs rather than hand-written f
 - [lib/admin/configs.ts](lib/admin/configs.ts) — field definitions per content type. This is the file you usually want.
 - [lib/admin/resource-config.ts](lib/admin/resource-config.ts) — the `ResourceConfig` / `ResourceField` types and value narrowing helpers.
 - [lib/admin/resource-service.ts](lib/admin/resource-service.ts) — isomorphic conversion + validation (`toFormValues`, `toPayload`, `findMissingField`), used by both the editor and the server.
-- [lib/admin/resource-actions.ts](lib/admin/resource-actions.ts) — shared CRUD bound to a Prisma delegate, including slug de-duplication and Cloudinary cleanup of orphaned images.
+- [lib/admin/resource-actions.ts](lib/admin/resource-actions.ts) — shared CRUD bound to a Prisma delegate, including slug de-duplication and Cloudinary cleanup of orphaned images. A config's `alsoRevalidate` lists other public pages to refresh on save.
+- Configs are passed from server pages into the client editor, so they must stay plain data — **no functions**. Extra checks are declared instead: a plain field with `format: 'link'` only accepts a site path or an `https://` address ([lib/safe-link.ts](lib/safe-link.ts)), and a `select` only accepts its own options; both run in `findFormatError`, in the editor and on the server.
 - [components/admin/ResourceForm.tsx](components/admin/ResourceForm.tsx) / [ResourceTable.tsx](components/admin/ResourceTable.tsx) — the shared editor and list.
 - `app/actions/<type>.ts` — thin `'use server'` wrappers binding a delegate + config to the shared CRUD. Server actions are passed straight into the client components as props.
 
@@ -98,6 +101,8 @@ SSR hydration pattern instead: the server page fetches via a Server Action and p
 
 - Public pages wrap content in [components/PageLayout.tsx](components/PageLayout.tsx) (Navigation + Footer + WhatsAppButton). [app/page.tsx](app/page.tsx) composes those pieces manually instead.
 - Server page → `Client` component split is the norm for interactive pages (`MembersClient`, `BlogDetailClient`, `WorkshopClient`, `CharityDetailClient`).
+- `/board` opens with the organogram, drawn from `BoardMember` rows edited at `/admin/board`. `office` picks the row (president → vice_president → member → general_secretary), `sortOrder` the place in it, and the departments always hang below the General Secretary. The page shows the chart and nothing else. The published General Secretary also heads `/about/general-secretariat`. Board photos go to Cloudinary `church/board`, and [lib/board.ts](lib/board.ts) crops them on the face through URL transforms (`boardAvatar`, `boardPortrait`, built on [lib/cloudinary-image.ts](lib/cloudinary-image.ts)).
+- A member church's `leaderPhoto` (optional, editable by the council and the church's own login) puts a face-cropped portrait beside the head's name on `/members/[slug]`; without one the name stays in the details list.
 - Blog detail routes use `[id]` as the URL segment but the value is the **slug** — `generateStaticParams` maps `post.slug` into `id`.
 
 ### Auth and roles

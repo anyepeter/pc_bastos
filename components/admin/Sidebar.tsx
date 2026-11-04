@@ -17,6 +17,7 @@ import {
   Network,
   Settings,
   X,
+  UsersRound,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { AppRole } from '@/lib/auth/roles';
@@ -41,6 +42,7 @@ const SUPER_ADMIN_NAV = [
   { name: 'Sermons', href: '/admin/sermons', icon: Mic },
   { name: 'Member Churches', href: '/admin/churches', icon: Church },
   { name: 'Departments', href: '/admin/departments', icon: Network },
+  { name: 'Board of CEPCA', href: '/admin/board', icon: UsersRound },
   { name: 'Site Settings', href: '/admin/settings', icon: Settings },
 ];
 

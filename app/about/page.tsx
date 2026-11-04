@@ -32,14 +32,12 @@ export default function AboutPage() {
       href: '/about/mission-vision',
     },
     {
-      id: 'departments',
-      title: t('about.departments.title'),
+      id: 'general-secretariat',
+      title: t('about.generalSecretariat.title'),
       icon: Building,
-      description: t('about.departments.description'),
-      preview: t('about.departments.preview'),
-      // The council's departments live at /departments; `/about/departments`
-      // was linked here and is a 404 — there is no such route.
-      href: '/departments',
+      description: t('about.generalSecretariat.description'),
+      preview: t('about.generalSecretariat.preview'),
+      href: '/about/general-secretariat',
     },
     {
       id: 'structure',

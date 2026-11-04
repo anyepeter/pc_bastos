@@ -4,9 +4,15 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// The standard client, generated into node_modules: Next.js and Vercel know to
+// ship its query engine with every serverless function. A custom `output`
+// folder left the engine behind on Vercel, so every request on the live site
+// failed to reach the database while the build (which still had the file)
+// worked. "rhel-openssl-3.0.x" is Vercel's Node runtime; "native" is whatever
+// machine runs `prisma generate`.
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
@@ -148,6 +154,8 @@ model MemberChurch {
 
   founded String?
   logo    String?
+  /// Portrait of the church's head, shown beside their name on its page.
+  leaderPhoto String?
   images  String[]
 
   phone   String?
@@ -355,4 +363,30 @@ model SiteSettings {
   mobileMoney Json?
 
   updatedAt DateTime @updatedAt
+}
+
+/// A member of the board of CEPCA, drawn as the organogram on /board and
+/// edited at /admin/board. `office` places the box in the chart; the General
+/// Secretary's photo and name also head /about/general-secretariat.
+model BoardMember {
+  id     String @id @default(cuid())
+  /// Full name with the title they use, e.g. "Rev Sokeng Alain Clément".
+  name   String
+  /// 'president' | 'vice_president' | 'member' | 'general_secretary'.
+  office String
+  /// The office as shown on the box, `{ en, fr }`.
+  title  Json
+  /// Optional second line, e.g. the church they lead, `{ en, fr }`.
+  detail Json?
+  photo  String?
+  /// A page the box links to, e.g. /members/mpe.
+  link   String?
+  /// Left to right within the row, lowest first.
+  sortOrder Int @default(0)
+
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, sortOrder])
 }

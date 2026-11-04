@@ -150,8 +150,9 @@ export default async function Home() {
 
   return (
     // The wrapper carries the canvas colour so overscroll and any gap
-    // between sections stays on-theme.
-    <div className="bg-white">
+    // between sections stays on-theme. `page-root` lets the last section keep
+    // clear of the footer's painted edge (see globals.css).
+    <div className="page-root bg-white">
       <Navigation />
 
       {/* Hero — photographic carousel with the painted foot */}

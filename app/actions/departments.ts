@@ -63,6 +63,9 @@ function revalidateDepartment(slug?: string | null) {
   revalidatePath('/admin/my-department');
   revalidatePath('/departments');
   if (slug) revalidatePath(`/departments/${slug}`, 'layout');
+  // Both list the departments: the Secretariat page and the organogram.
+  revalidatePath('/about/general-secretariat');
+  revalidatePath('/board');
   // The home page lists the departments too, and is otherwise cached for an
   // hour.
   revalidatePath('/');

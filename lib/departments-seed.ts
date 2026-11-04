@@ -260,7 +260,7 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
     headTitle: EXECUTIVE_SECRETARY,
     phone: '+237 698 834 015 / +237 675 528 381',
     email: 'executifsantecepcacm@gmail.com',
-    address: 'Rue Ceper, Elig-Essono — BP 491 Yaoundé, Cameroon',
+    address: 'Yaoundé, B.P. 491 Rue Ceper, Elig-Essono',
     website: 'https://www.cepca-cpcc.org',
   },
 

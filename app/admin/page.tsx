@@ -9,6 +9,7 @@ import {
   Church,
   Network,
   Newspaper,
+  UsersRound,
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,7 @@ import { getAllSermons } from '@/app/actions/sermons';
 import { getAllNews } from '@/app/actions/news';
 import { getAllChurches, listAccountsByChurch } from '@/app/actions/churches';
 import { getAllDepartments, listAccountsByDepartment } from '@/app/actions/departments';
+import { getAllBoardMembers } from '@/app/actions/board';
 import { readTranslation } from '@/lib/translations';
 import { requireSuperAdminPage } from '@/lib/auth/roles';
 
@@ -53,6 +55,7 @@ export default async function AdminDashboard() {
     accountsResult,
     departmentsResult,
     departmentAccountsResult,
+    boardResult,
   ] = await Promise.all([
     getAllBlogPosts(),
     getAllEvents(),
@@ -65,6 +68,7 @@ export default async function AdminDashboard() {
     listAccountsByChurch(),
     getAllDepartments(),
     listAccountsByDepartment(),
+    getAllBoardMembers(),
   ]);
 
   const blogPosts = rowsOf(blogPostsResult);
@@ -75,6 +79,7 @@ export default async function AdminDashboard() {
   const sermons = rowsOf(sermonsResult);
   const news = rowsOf(newsResult);
   const churches = rowsOf(churchesResult);
+  const boardMembers = rowsOf(boardResult);
 
   const accountsByChurch = accountsResult.success ? accountsResult.data || {} : {};
   const churchesWithLogin = churches.filter(
@@ -176,6 +181,15 @@ export default async function AdminDashboard() {
       href: '/admin/sermons',
       color: 'text-purple-600',
       bgColor: 'bg-purple-100',
+    },
+    {
+      title: 'Board of CEPCA',
+      value: boardMembers.length,
+      description: describe(boardMembers),
+      icon: UsersRound,
+      href: '/admin/board',
+      color: 'text-indigo-600',
+      bgColor: 'bg-indigo-100',
     },
   ];
 

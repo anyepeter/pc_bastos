@@ -105,6 +105,19 @@ export default function DepartmentsClient({
         title={t('about.departments.pageTitle')}
         lede={t('about.departments.pageSubtitle')}
       >
+        <div className="mt-5 flex justify-center">
+          <Link
+            href="/about/general-secretariat"
+            className="focus-ring group inline-flex items-center gap-2 rounded font-ui text-sm font-medium text-plum-700 transition-colors duration-300 hover:text-plum-800"
+          >
+            {t('about.generalSecretariat.attachedTo')}
+            <ArrowRight
+              aria-hidden="true"
+              className="h-4 w-4 text-leaf-600 transition-transform duration-300 ease-spring group-hover:translate-x-1"
+            />
+          </Link>
+        </div>
+
         {/* The short names double as the page's index — one jump link per
             entry straight to the matching row below. */}
         <nav aria-label={t('about.departments.pageTitle')} className="mt-12 border-t border-ink-200 pt-7">

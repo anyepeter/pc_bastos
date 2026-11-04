@@ -17,7 +17,8 @@
     "home": "Accueil",
     "aboutUs": "À Propos",
     "ourMissionVision": "Notre Mission & Vision",
-    "leadership": "Direction",
+    "generalSecretariat": "Secrétariat Général",
+    "departmentsAndServices": "Départements et Services rattachés",
     "ourHistory": "Notre Histoire",
     "cepcaStructures": "Structures CEPCA",
     "members": "Membres",
@@ -30,7 +31,7 @@
     "announcements": "Annonces",
     "blogs": "Blogs",
     "contactUs": "Contact",
-    "departements": "Départements"
+    "board": "Bureau du CEPCA"
   },
   "footer": {
     "tagline": "Conseil des Églises Protestantes",
@@ -202,9 +203,9 @@
       "evolutionText2": "Aujourd'hui, le CEPCA témoigne de la puissance de l'unité dans la diversité, rassemblant douze églises membres sous la bannière de l'amour chrétien et du service à la communauté.",
       "keyMilestones": "Jalons Importants",
       "milestone1969": "Création de la FEMEC (Fédération des Églises et Missions Évangéliques du Cameroun)",
-      "milestone1970s": "Établissement des Comités de l'Éducation et de la Santé",
+      "milestone1970s": "Au cours des années 1970 : établissement des Comités de l'Éducation et de la Santé",
       "milestone2009": "Ouverture à l'admission d'autres Églises Protestantes",
-      "milestoneToday": "12 églises membres servant plus de 13 millions de croyants"
+      "milestoneToday": "Aujourd'hui, 12 Églises membres servent plus de 13 millions de croyants"
     },
     "missionVision": {
       "title": "Mission & Vision",
@@ -309,7 +310,7 @@
       "executiveCommittee": "Comité Exécutif",
       "executiveCommitteeShort": "Exécution des Politiques",
       "meetsTwiceYearly": "Se réunit deux fois par an",
-      "executiveCommitteeLong": "Exécute les politiques du CEPCA. Se réunit deux fois par an sous la convocation du Président. Comprend 11 Dirigeants d'Église, le Secrétaire Général, les Secrétaires Exécutifs des Départements et le Chef de l'Administration et des Finances (SAF).",
+      "executiveCommitteeLong": "Exécute les politiques du CEPCA. Se réunit deux fois par an sous la convocation du Président. Comprend les Chefs des 12 Églises membres, le Secrétaire Général, les Secrétaires Exécutifs des Départements et le Chef de l'Administration et des Finances (SAF).",
       "executiveCommitteeFull": "Exécute les politiques du CEPCA et se réunit deux fois par an sous la convocation du Président.",
       "commissionsTitle": "Commissions",
       "commissionsFull": "Chaque département a une commission responsable de la planification et du suivi des programmes.",
@@ -317,7 +318,7 @@
       "electsLeadership": "Élit les postes de direction",
       "approvesPlans": "Approuve les plans stratégiques",
       "reviewsPerformance": "Examine les performances organisationnelles",
-      "churchLeaders": "11 Dirigeants d'Église",
+      "churchLeaders": "Chefs des 12 Églises membres",
       "generalSecretary": "Secrétaire Général",
       "executiveSecretaries": "Secrétaires Exécutifs",
       "headOfAdmin": "Chef de l'Administration (SAF)",
@@ -327,7 +328,6 @@
       "performanceEvaluation": "Évaluation des performances",
       "headquartersInfo": "Informations sur le Siège",
       "address": "Adresse",
-      "addressText": "Yaoundé, B.P. 491 – Rue Ceper, Elig-Essono",
       "logo": "Logo",
       "logoDescription": "La carte du Cameroun avec une croix à l'intérieur, sur des fonds verts, violets et blancs",
       "motto": "Devise",
@@ -339,6 +339,27 @@
       "believers": "Croyants",
       "educationalInstitutions": "Institutions Éducatives",
       "healthCenters": "Centres de Santé"
+    },
+    "generalSecretariat": {
+      "title": "Secrétariat Général",
+      "pageTitle": "Le Secrétariat Général du CEPCA",
+      "description": "Le Secrétariat Général est l'élément de coordination et de liaison entre les divers Secrétariats, Services et Bureaux nationaux.",
+      "preview": "Les départements et services du Conseil lui sont rattachés, de la Santé et de l'Éducation à la Jeunesse et à la Communication.",
+      "summary": "Coordination et liaison",
+      "attachedTitle": "Départements et Services rattachés",
+      "attachedLede": "Les départements et services rattachés au Secrétariat Général. Chacun coordonne son domaine d'activité à travers les Églises membres.",
+      "attachedTo": "Rattachés au Secrétariat Général",
+      "secretaryTitle": "Le Secrétaire Général",
+      "secretaryRole": "Le Secrétaire Général dirige le Secrétariat Général, qui coordonne les départements et services qui lui sont rattachés, et siège au Comité Exécutif, le Bureau du CEPCA.",
+      "seeBoard": "Voir le Bureau du CEPCA",
+      "photoAlt": "Le Secrétaire Général du CEPCA"
+    },
+    "board": {
+      "pageTitle": "Le Bureau du CEPCA",
+      "lede": "Le Bureau du CEPCA est son Comité Exécutif. Il exécute les politiques du Conseil et se réunit deux fois par an, sur convocation du Président du CEPCA.",
+      "president": "Président du CEPCA",
+      "firstVicePresident": "Premier Vice-Président",
+      "secondVicePresident": "Deuxième Vice-Président"
     }
   },
   "sermons": {
