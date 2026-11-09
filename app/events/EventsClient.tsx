@@ -20,6 +20,8 @@ export interface PublicEvent {
   date: string;
   time: string | null;
   imageUrl: string | null;
+  /** The event's photo gallery. Only the detail page sends it. */
+  images?: string[];
 }
 
 /**
@@ -43,11 +45,11 @@ export default function EventsClient({ events }: { events: PublicEvent[] }) {
   return (
     <>
       <PageHero
-        title={language === 'fr' ? 'Événements à venir' : 'Upcoming Events'}
+        title={language === 'fr' ? 'Événements' : 'Events'}
         lede={
           language === 'fr'
-            ? 'Rejoignez-nous pour ces rassemblements et événements communautaires'
-            : 'Join us for these meaningful gatherings and community events'
+            ? 'Les rassemblements du conseil, à venir et passés'
+            : "The council's gatherings, upcoming and past"
         }
       />
 

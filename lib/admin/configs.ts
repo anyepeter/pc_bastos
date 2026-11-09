@@ -59,6 +59,13 @@ export const eventConfig: ResourceConfig = {
       description: 'Optional. Displayed next to the date.',
     },
     { kind: 'plain', type: 'image', name: 'imageUrl', label: 'Featured image' },
+    {
+      kind: 'plain',
+      type: 'gallery',
+      name: 'images',
+      label: 'Photo gallery',
+      description: 'Photos from the event, shown under the description. The featured image is not repeated there.',
+    },
   ],
 };
 

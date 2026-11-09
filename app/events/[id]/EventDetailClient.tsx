@@ -12,6 +12,7 @@ import MetaRail from '@/components/MetaRail';
 import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
+import MediaGallery from '@/components/MediaGallery';
 import type { PublicEvent } from '../EventsClient';
 
 /**
@@ -57,6 +58,9 @@ export default function EventDetailClient({ event }: { event: PublicEvent }) {
   const description = read(event.description);
   const location = read(event.location);
   const category = read(event.category);
+
+  // The featured image already leads the page, so the gallery skips it.
+  const gallery = (event.images ?? []).filter((src) => src !== event.imageUrl);
 
   const meta = [
     {
@@ -108,6 +112,28 @@ export default function EventDetailClient({ event }: { event: PublicEvent }) {
         <Reveal className={`mt-11 max-w-[68ch] ${BODY}`}>
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{description}</ReactMarkdown>
         </Reveal>
+
+        {gallery.length > 0 && (
+          <div className="mt-16">
+            <Reveal>
+              <h2 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-tight tracking-tight text-ink-900">
+                {t('departments.activity.photos')}
+              </h2>
+            </Reveal>
+            <Reveal delay={80} className="mt-8 max-w-5xl">
+              <MediaGallery
+                images={gallery}
+                alt={title}
+                labels={{
+                  enlarge: t('home.gallery.view'),
+                  close: t('home.gallery.close'),
+                  previous: t('home.gallery.previous'),
+                  next: t('home.gallery.next'),
+                }}
+              />
+            </Reveal>
+          </div>
+        )}
       </PageSection>
     </>
   );

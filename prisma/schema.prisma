@@ -50,6 +50,8 @@ model Event {
   date     DateTime
   time     String?
   imageUrl String?
+  /// Every photo from the event, shown as a gallery under the description.
+  images   String[]
 
   published Boolean  @default(false)
   createdAt DateTime @default(now())

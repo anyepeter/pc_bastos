@@ -34,6 +34,7 @@ export default async function EventDetailPage({
     date: new Date(row.date).toISOString(),
     time: row.time,
     imageUrl: row.imageUrl,
+    images: row.images || [],
   };
 
   return (
