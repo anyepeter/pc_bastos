@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Bilingual (EN/FR) website for CEPCA/CPCC, a Cameroonian council of Protestant churches. Next.js 14 App Router, TypeScript, Tailwind + shadcn/ui, Prisma/PostgreSQL (Neon), self-hosted email + password auth, Cloudinary images, Redux Toolkit + i18next for language state.
+Bilingual (EN/FR) website for CEPCA/CPCC, a Cameroonian council of Protestant churches. Next.js 14 App Router, TypeScript, Tailwind + shadcn/ui, Prisma/PostgreSQL (Neon), self-hosted email + password auth, images in Cloudflare R2, Redux Toolkit + i18next for language state.
 
 ## Commands
 
@@ -24,7 +24,7 @@ There is no test framework. Verification = `npx tsc --noEmit` + `npm run build`.
 
 `npx prisma generate` must run before typechecking a fresh checkout (`postinstall` handles it after `npm install`). ESLint is skipped during builds, so lint errors will not fail CI — run `npm run lint` explicitly.
 
-**Keep the standard `prisma-client-js` generator with no custom `output`, and import from `@prisma/client`.** A custom output folder (`lib/generated/prisma`, used until 2026-09-11) builds fine on Vercel but leaves the query engine out of the serverless functions: every request-time query then fails ("could not locate the Query Engine for runtime rhel-openssl-3.0.x"), the live login breaks, and ISR pages re-render empty while build-time pages still look fine. `binaryTargets` includes `rhel-openssl-3.0.x`, Vercel's runtime. The production project is `pc-bastos` in the `anyepeters-projects` Vercel team; it needs `DATABASE_URL`, `SESSION_SECRET`, `BREVO_API_KEY` and `CLOUDINARY_URL`.
+**Keep the standard `prisma-client-js` generator with no custom `output`, and import from `@prisma/client`.** A custom output folder (`lib/generated/prisma`, used until 2026-09-11) builds fine on Vercel but leaves the query engine out of the serverless functions: every request-time query then fails ("could not locate the Query Engine for runtime rhel-openssl-3.0.x"), the live login breaks, and ISR pages re-render empty while build-time pages still look fine. `binaryTargets` includes `rhel-openssl-3.0.x`, Vercel's runtime. The production project is `pc-bastos` in the `anyepeters-projects` Vercel team; it needs `DATABASE_URL`, `SESSION_SECRET`, `BREVO_API_KEY`, `R2_ENDPOINT`, `R2_BUCKET`, `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY`.
 
 **After `prisma db push` / `generate`, restart `next dev`.** A running dev server keeps the old Prisma client: new models are `undefined` on it, so new pages error and `getSiteSettings()` quietly serves its defaults. Never run `npm run build` in the same tree as a running `next dev` — they share `.next`; build a copy instead.
 
@@ -45,7 +45,7 @@ Everything except the blog is driven by field configs rather than hand-written f
 - [lib/admin/configs.ts](lib/admin/configs.ts) — field definitions per content type. This is the file you usually want.
 - [lib/admin/resource-config.ts](lib/admin/resource-config.ts) — the `ResourceConfig` / `ResourceField` types and value narrowing helpers.
 - [lib/admin/resource-service.ts](lib/admin/resource-service.ts) — isomorphic conversion + validation (`toFormValues`, `toPayload`, `findMissingField`), used by both the editor and the server.
-- [lib/admin/resource-actions.ts](lib/admin/resource-actions.ts) — shared CRUD bound to a Prisma delegate, including slug de-duplication and Cloudinary cleanup of orphaned images. A config's `alsoRevalidate` lists other public pages to refresh on save.
+- [lib/admin/resource-actions.ts](lib/admin/resource-actions.ts) — shared CRUD bound to a Prisma delegate, including slug de-duplication and R2 cleanup of orphaned images. A config's `alsoRevalidate` lists other public pages to refresh on save.
 - Configs are passed from server pages into the client editor, so they must stay plain data — **no functions**. Extra checks are declared instead: a plain field with `format: 'link'` only accepts a site path or an `https://` address ([lib/safe-link.ts](lib/safe-link.ts)), and a `select` only accepts its own options; both run in `findFormatError`, in the editor and on the server.
 - [components/admin/ResourceForm.tsx](components/admin/ResourceForm.tsx) / [ResourceTable.tsx](components/admin/ResourceTable.tsx) — the shared editor and list.
 - `app/actions/<type>.ts` — thin `'use server'` wrappers binding a delegate + config to the shared CRUD. Server actions are passed straight into the client components as props.
@@ -57,7 +57,7 @@ Public pages are server components that fetch published rows, serialise dates to
 There are **no API routes** (`app/api/` does not exist). All server data flows through Server Actions in [app/actions/](app/actions/):
 - [blog.ts](app/actions/blog.ts) — admin CRUD; enforces the publish rule below and calls `revalidatePath` on `/admin/blog` and `/blogs`.
 - [blog-public.ts](app/actions/blog-public.ts) — published-only reads; casts the Prisma `Json` fields to `Translation`.
-- [upload.ts](app/actions/upload.ts) — Cloudinary upload (5MB cap, folder `church/blog`) and delete. Updating or deleting a post deletes its old Cloudinary image.
+- [upload.ts](app/actions/upload.ts) — image upload to the R2 bucket (S3 API via [lib/r2.ts](lib/r2.ts)) under `church/<folder>/`, with a fresh key per upload (objects are cached as immutable, so never overwrite a key), and delete. The editor first shrinks photos in the browser ([lib/prepare-upload.ts](lib/prepare-upload.ts): 1600px, JPEG unless transparent); the action takes at most 4 MB and checks the file's magic bytes. `next.config.js` raises the server-action body limit from the 1 MB default to 4.5 MB, Vercel's ceiling. Replacing or deleting an image removes it from R2; `deleteImage` ignores every other host.
 - [translate.ts](app/actions/translate.ts) — machine translation for the admin editor. Calls Google's public translate endpoint over `fetch`, splitting on paragraph breaks so markdown survives. Do **not** use the `free-translate` package for this — it drives Puppeteer, which cannot run in a serverless action.
 - [contact.ts](app/actions/contact.ts) — the public contact form, and the project's only outgoing email. Delivers each message to the email in site settings through Brevo's transactional API over `fetch`, with the visitor as reply-to. Needs **`BREVO_API_KEY`** in every environment. The sender is fixed to `info@cepcacameroun.com` because Brevo refuses unverified senders (that one is verified, on an authenticated domain); the recipient can be any inbox. A honeypot field and an in-memory per-IP limit (5 per 10 minutes) protect the daily quota.
 - [settings.ts](app/actions/settings.ts) — `getSiteSettings()` (public, cached under the `site-settings` tag, never throws) and `updateSiteSettings()` (super admin).
@@ -68,8 +68,14 @@ There are **no API routes** (`app/api/` does not exist). All server data flows t
 
 - `getSiteSettings()` swallows database errors and returns the defaults, because every page renders through it — a missing table must not take the site down.
 - Once saved, a blank optional field is **hidden**, not defaulted: no social link means no icon, no WhatsApp number means no floating button, no giving accounts means `/give` offers the office phone and email instead.
-- The logo is limited to Cloudinary uploads or `/images/…`: `next/image` renders it in the header and footer and only allows `res.cloudinary.com`, so any other host would crash every page.
+- The logo is limited to uploads (`isUploadedImage` in [lib/media.ts](lib/media.ts)) or `/images/…`: `next/image` renders it in the header and footer and only allows the hosts in `next.config.js`, so any other host would crash every page.
 - Bank details are all-or-nothing (bank, account name, account number) — half an account sends a gift nowhere.
+
+### Image storage (Cloudflare R2)
+
+Uploads live in the R2 bucket `cepcacameroun`, served from the public `r2.dev` address in `MEDIA_BASE_URL`. Rows store full URLs. Until 2026-11-09 they lived on Cloudinary. That account (`daat4brij`) is **shared with other projects** (its `poppies/`, `testimonials/` and sample folders are not ours), so nothing here deletes from it any more. The council's 57 images were copied to the same paths in R2 and the database rewritten. Cloudinary URLs are still accepted for display, so rolling back is database-only. The backup, manifest and scripts are outside the repo, in `../cepca-backups/2026-11-09-r2-migration/`.
+
+`r2.dev` addresses are rate-limited by Cloudflare and meant for development. Moving to a custom domain means changing `MEDIA_BASE_URL` and `next.config.js`, then rewriting the stored URLs.
 
 ### The bilingual publishing rule
 
@@ -101,7 +107,7 @@ SSR hydration pattern instead: the server page fetches via a Server Action and p
 
 - Public pages wrap content in [components/PageLayout.tsx](components/PageLayout.tsx) (Navigation + Footer + WhatsAppButton). [app/page.tsx](app/page.tsx) composes those pieces manually instead.
 - Server page → `Client` component split is the norm for interactive pages (`MembersClient`, `BlogDetailClient`, `WorkshopClient`, `CharityDetailClient`).
-- `/board` opens with the organogram, drawn from `BoardMember` rows edited at `/admin/board`. `office` picks the row (president → vice_president → member → general_secretary), `sortOrder` the place in it, and the departments always hang below the General Secretary. The page shows the chart and nothing else. The published General Secretary also heads `/about/general-secretariat`. Board photos go to Cloudinary `church/board`, and [lib/board.ts](lib/board.ts) crops them on the face through URL transforms (`boardAvatar`, `boardPortrait`, built on [lib/cloudinary-image.ts](lib/cloudinary-image.ts)).
+- `/board` opens with the organogram, drawn from `BoardMember` rows edited at `/admin/board`. `office` picks the row (president → vice_president → member → general_secretary), `sortOrder` the place in it, and the departments always hang below the General Secretary. The page shows the chart and nothing else. The published General Secretary also heads `/about/general-secretariat`. Board photos go to R2 `church/board`. R2 has no transformations, so photos of people are cropped by CSS (`object-cover object-top`); upload head-and-shoulders shots. The migrated board and church-leader photos are face crops made by Cloudinary before the move (`*-face.jpg`). `boardAvatar`/`boardPortrait` in [lib/board.ts](lib/board.ts) only transform legacy Cloudinary URLs.
 - A member church's `leaderPhoto` (optional, editable by the council and the church's own login) puts a face-cropped portrait beside the head's name on `/members/[slug]`; without one the name stays in the details list.
 - Blog detail routes use `[id]` as the URL segment but the value is the **slug** — `generateStaticParams` maps `post.slug` into `id`.
 
@@ -141,7 +147,7 @@ Seed or reset a super admin with `npm run create-admin` (`ADMIN_EMAIL` + `ADMIN_
 - Server Actions return `{ success, data?, error? }` rather than throwing; callers check `result.success`.
 - Path alias `@/*` maps to the repo root. shadcn/ui components in `components/ui/` are generated — prefer composing over editing them.
 - Icons: `lucide-react`. Carousels: `swiper` and `embla-carousel-react`. Markdown: `react-markdown` + `remark-gfm`. Toasts: `sonner` (admin) / `hooks/use-toast.ts` (shadcn).
-- Remote images are restricted to `res.cloudinary.com` in [next.config.js](next.config.js); add hosts there before using `next/image` with a new domain.
+- Remote images are restricted in [next.config.js](next.config.js) to the R2 public address (`MEDIA_BASE_URL` in [lib/media.ts](lib/media.ts); keep the two in step) and `res.cloudinary.com`; add hosts there before using `next/image` with a new domain.
 
 ## Known dead/stale code
 
