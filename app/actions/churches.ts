@@ -149,14 +149,14 @@ export async function updateChurch(
     const payload = toPayload(config, values);
     const orphaned = findOrphanedImages(config, existing, values);
 
-    // Only the council renames a church (the slug is its public URL) or takes
-    // it off the members page.
+    // The slug is the church's public address (/members/eec), set when the
+    // church is created and never rebuilt from its name on a later save, which
+    // would turn /members/eec into a long address and break every link to it.
+    // Only the council may take a church off the members page.
+    delete payload.slug;
     if (session.role === 'super_admin') {
-      const base = generateSlug(readTranslation(values.denomination).en);
-      if (base) payload.slug = await uniqueSlug(base, churchId);
       payload.published = publish;
     } else {
-      delete payload.slug;
       delete payload.published;
     }
 

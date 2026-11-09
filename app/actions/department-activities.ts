@@ -202,9 +202,10 @@ export async function updateDepartmentActivity(
 
     // Only the fields in the config are read, so the department it belongs to
     // cannot be changed from the browser.
+    // The slug was set when the activity was created; a later title edit keeps
+    // it, so links to the activity keep working.
     const payload = toPayload(config, values);
-    const base = generateSlug(readTranslation(values.title).en);
-    payload.slug = base ? await uniqueSlug(base, existing.id) : existing.slug;
+    delete payload.slug;
     payload.published = publish;
 
     const orphaned = findOrphanedImages(config, existing, values);

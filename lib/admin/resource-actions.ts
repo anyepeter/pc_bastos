@@ -234,13 +234,10 @@ export async function updateRow(
     const existing = await delegate.findUnique({ where: { id } });
     if (!existing) return { success: false, error: `${config.singular} not found` };
 
+    // The slug is the item's public address, set once when it is created.
+    // Editing the title later keeps it, so links already shared (on Facebook,
+    // in emails) keep working.
     const payload = toPayload(config, values);
-    const base = buildSlug(config, values);
-
-    if (config.slugFrom && base) {
-      payload.slug = await uniqueSlug(delegate, base, id);
-    }
-
     payload.published = publish;
 
     // Drop images that are no longer referenced.
