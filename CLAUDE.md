@@ -153,7 +153,6 @@ Seed or reset a super admin with `npm run create-admin` (`ADMIN_EMAIL` + `ADMIN_
 
 - [hooks/useBlogPosts.ts](hooks/useBlogPosts.ts) fetches `/api/blog/posts`, which does not exist. Unused — use the Redux thunks or Server Actions.
 - `free-translate` in package.json is unused and unusable on a serverless host (Puppeteer). [app/actions/translate.ts](app/actions/translate.ts) replaces it.
-- [components/NavigationWithI18n.tsx](components/NavigationWithI18n.tsx) is an unreferenced example; [components/Navigation.tsx](components/Navigation.tsx) is the one in use.
 - [I18N_SETUP_GUIDE.md](I18N_SETUP_GUIDE.md) is a useful reference for the intended patterns, but its claim about browser-language detection describes behavior that is not implemented — the saved choice is restored from `localStorage` in [I18nProvider](components/I18nProvider.tsx), and there is no browser sniffing.
 
 ## Design guidance (from .bolt/prompt)
