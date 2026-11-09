@@ -5,13 +5,14 @@ import Image from 'next/image';
 import { ArrowLeft, ArrowRight, Loader2, Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { uploadImage } from '@/app/actions/upload';
+import { prepareImageForUpload } from '@/lib/prepare-upload';
 import { toast } from 'sonner';
 
 interface MultiImageUploadProps {
   value: string[];
   onChange: (urls: string[]) => void;
   disabled?: boolean;
-  /** Cloudinary subfolder under `church/`, e.g. 'workshops'. */
+  /** Folder under `church/` in the R2 bucket, e.g. 'workshops'. */
   folder?: string;
 }
 
@@ -38,10 +39,10 @@ export function MultiImageUpload({
     try {
       const uploaded: string[] = [];
 
-      // Sequential: Cloudinary is happier and the order stays predictable.
+      // Sequential, so the gallery keeps the order the files were picked in.
       for (const file of files) {
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', await prepareImageForUpload(file));
         formData.append('folder', folder);
 
         const result = await uploadImage(formData);

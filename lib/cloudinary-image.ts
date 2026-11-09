@@ -1,7 +1,12 @@
 /**
  * Cropped variants of Cloudinary uploads, made by inserting a transformation
  * into the URL. Images hosted anywhere else are returned unchanged and cropped
- * by CSS instead. Safe to import from client and server alike.
+ * by CSS instead (`object-cover object-top`). Safe to import from client and
+ * server alike.
+ *
+ * Uploads moved to R2 in November 2026, and R2 has no transformations, so this
+ * now only matters if the old Cloudinary URLs are ever restored. The face
+ * crops that existed then were baked into the migrated files.
  */
 export function cloudinaryVariant(url: string, transform: string): string {
   const marker = '/image/upload/';

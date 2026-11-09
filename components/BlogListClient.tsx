@@ -12,6 +12,7 @@ import { formatLongDate } from '@/lib/format';
 import PageHero from '@/components/PageHero';
 import PageSection from '@/components/PageSection';
 import Reveal from '@/components/Reveal';
+import { isUploadedImage } from '@/lib/media';
 
 interface BlogListClientProps {
   /** Server-fetched posts, used until the shared store is hydrated. */
@@ -20,19 +21,13 @@ interface BlogListClientProps {
 
 /**
  * Cover images are uploaded through `app/actions/upload.ts`, which stores them
- * on Cloudinary — the only host allowed in `next.config.js`. A legacy row may
+ * in the R2 bucket that `next.config.js` allows. A legacy row may
  * still hold a URL from somewhere else (the template shipped stock-photo links);
  * `next/image` would throw on those, and no stock photograph belongs here
  * anyway, so anything off-host degrades to the typographic plate instead.
  */
 function coverImage(url: string | null | undefined): string | null {
-  if (!url) return null;
-
-  try {
-    return new URL(url).hostname === 'res.cloudinary.com' ? url : null;
-  } catch {
-    return null;
-  }
+  return isUploadedImage(url) ? url : null;
 }
 
 /**

@@ -3,8 +3,24 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    // Image uploads go through a server action, which takes 1 MB by default.
+    // Vercel caps a request at 4.5 MB; the editor shrinks photos before
+    // sending, and the action itself refuses files over 4 MB.
+    serverActions: { bodySizeLimit: '4.5mb' },
+  },
   images: {
     remotePatterns: [
+      // The R2 bucket that holds every upload. Same address as
+      // MEDIA_BASE_URL in lib/media.ts.
+      {
+        protocol: 'https',
+        hostname: 'pub-f74c0db0e11440b6a7693d42e90d9444.r2.dev',
+        port: '',
+        pathname: '/**',
+      },
+      // Uploads lived on Cloudinary until November 2026. Kept so restoring
+      // the old URLs stays a database-only rollback.
       {
         protocol: 'https',
         hostname: 'res.cloudinary.com',

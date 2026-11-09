@@ -47,9 +47,9 @@ export function toPublicBoardMember(row: Record<string, any>): PublicBoardMember
   };
 }
 
-/** Square crop centred on the face, for the organogram and cards. */
+/** Square face crop for the organogram (Cloudinary URLs only; R2 photos are cropped by CSS). */
 export const boardAvatar = faceAvatar;
 
-/** 4:5 portrait kept on the face, for the General Secretariat page. */
+/** 4:5 face crop for the General Secretariat page (Cloudinary URLs only; R2 photos are cropped by CSS). */
 export const boardPortrait = (url: string) =>
   cloudinaryVariant(url, 'c_thumb,g_face,z_0.5,w_800,h_1000,q_auto,f_auto');

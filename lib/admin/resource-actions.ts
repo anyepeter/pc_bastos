@@ -57,7 +57,7 @@ const galleryFieldNames = (config: ResourceConfig) =>
     .filter((field) => !isTranslatable(field) && field.type === 'gallery')
     .map((field) => field.name);
 
-/** Every Cloudinary URL a row currently references. */
+/** Every image URL a row currently references. */
 export function collectImages(config: ResourceConfig, row: Record<string, unknown>): string[] {
   const urls: string[] = [];
 
@@ -74,11 +74,12 @@ export function collectImages(config: ResourceConfig, row: Record<string, unknow
   return urls;
 }
 
-/** Only remove files we host; pasted third-party URLs are left alone. */
-const isCloudinaryUrl = (url: string) => url.includes('res.cloudinary.com');
-
+/**
+ * Only files in our own bucket are removed: `deleteImage` ignores pasted
+ * third-party URLs and the legacy Cloudinary account.
+ */
 export async function removeImages(urls: string[]) {
-  for (const url of urls.filter(isCloudinaryUrl)) {
+  for (const url of urls) {
     await deleteImage(url);
   }
 }

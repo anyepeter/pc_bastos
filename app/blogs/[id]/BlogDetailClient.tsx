@@ -14,6 +14,7 @@ import { formatLongDate } from '@/lib/format';
 import PageHero from '@/components/PageHero';
 import PageSection from '@/components/PageSection';
 import Reveal from '@/components/Reveal';
+import { isUploadedImage } from '@/lib/media';
 
 interface BlogDetailClientProps {
   /** Server-fetched post. Rendered directly so the page never flashes empty. */
@@ -21,20 +22,14 @@ interface BlogDetailClientProps {
 }
 
 /**
- * Covers are uploaded through `app/actions/upload.ts` and live on Cloudinary,
- * the only host `next.config.js` allows. Anything else — a legacy row still
+ * Covers are uploaded through `app/actions/upload.ts` and live in the R2
+ * bucket, which `next.config.js` allows. Anything else — a legacy row still
  * holding one of the template's stock URLs — is dropped rather than rendered:
  * `next/image` would throw on it, and borrowed photography is exactly what the
  * redesign removes.
  */
 function coverImage(url: string | null | undefined): string | null {
-  if (!url) return null;
-
-  try {
-    return new URL(url).hostname === 'res.cloudinary.com' ? url : null;
-  } catch {
-    return null;
-  }
+  return isUploadedImage(url) ? url : null;
 }
 
 const isoDate = (value: string | Date): string => {

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Upload, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { uploadImage } from '@/app/actions/upload';
+import { prepareImageForUpload } from '@/lib/prepare-upload';
 import { toast } from 'sonner';
 
 interface ImageUploadProps {
@@ -12,7 +13,7 @@ interface ImageUploadProps {
   onChange: (url: string) => void;
   onRemove: () => void;
   disabled?: boolean;
-  /** Cloudinary subfolder under `church/`, e.g. 'events'. Defaults to 'blog'. */
+  /** Folder under `church/` in the R2 bucket, e.g. 'events'. Defaults to 'blog'. */
   folder?: string;
 }
 
@@ -34,7 +35,7 @@ export function ImageUpload({
 
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', await prepareImageForUpload(file));
       formData.append('folder', folder);
 
       const result = await uploadImage(formData);

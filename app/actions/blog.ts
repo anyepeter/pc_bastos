@@ -179,7 +179,7 @@ export async function updateBlogPost(id: string, data: BlogPostInput): Promise<A
       }
     }
 
-    // If image was changed, delete old image from Cloudinary
+    // If the image was changed, delete the old one from the bucket
     if (existingPost.imageUrl && data.imageUrl && existingPost.imageUrl !== data.imageUrl) {
       await deleteImage(existingPost.imageUrl);
     }
@@ -222,7 +222,7 @@ export async function deleteBlogPost(id: string): Promise<ActionResult> {
       return { success: false, error: 'Blog post not found' };
     }
 
-    // Delete image from Cloudinary if it exists
+    // Delete the image from the bucket if it exists
     if (post.imageUrl) {
       await deleteImage(post.imageUrl);
     }

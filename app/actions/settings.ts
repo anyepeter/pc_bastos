@@ -4,6 +4,7 @@ import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { guarded, requireSuperAdmin, type ActionOutcome } from '@/lib/auth/roles';
 import { deleteImage } from '@/app/actions/upload';
+import { isUploadedImage } from '@/lib/media';
 import { normalizeTranslation, readTranslation } from '@/lib/translations';
 import {
   DEFAULT_SITE_SETTINGS,
@@ -122,13 +123,9 @@ function clean(input: SiteSettingsValues): { values?: SiteSettingsValues; error?
   if (!values.phone) return { error: 'Enter the office phone number.' };
   if (!values.address.en) return { error: 'Enter the address in English.' };
 
-  // next/image renders the logo on every page and only allows Cloudinary
-  // (next.config.js); any other host would crash the header and footer.
-  if (
-    values.logo &&
-    !values.logo.startsWith('/images/') &&
-    !values.logo.startsWith('https://res.cloudinary.com/')
-  ) {
+  // next/image renders the logo on every page and only allows the upload
+  // hosts in next.config.js; any other host would crash the header and footer.
+  if (values.logo && !values.logo.startsWith('/images/') && !isUploadedImage(values.logo)) {
     return { error: 'The logo must be an uploaded image.' };
   }
 
@@ -186,8 +183,9 @@ export async function updateSiteSettings(
       update: data,
     });
 
-    // A replaced upload would otherwise sit in Cloudinary forever.
-    if (previous?.logo && previous.logo !== values.logo && previous.logo.includes('res.cloudinary.com')) {
+    // A replaced upload would otherwise sit in the bucket forever. deleteImage
+    // only touches our own R2 files.
+    if (previous?.logo && previous.logo !== values.logo) {
       await deleteImage(previous.logo);
     }
 
