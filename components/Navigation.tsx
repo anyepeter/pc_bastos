@@ -9,6 +9,14 @@ import { useTranslation } from 'react-i18next';
 import LanguageSelector from './LanguageSelector';
 import { useSiteSettings } from './SiteSettingsProvider';
 import { logoSrc } from '@/lib/site-settings';
+import { stripLanguage } from '@/lib/locale-path';
+
+/**
+ * On a phone, the About list only opens after a tap, so these two pages get
+ * rows of their own in the menu, straight after About. The desktop dropdown
+ * still lists them under About.
+ */
+const PROMOTED_ON_MOBILE = ['/about/general-secretariat', '/about/structure'];
 
 interface MenuItem {
   name: string;
@@ -20,7 +28,9 @@ interface MenuItem {
 
 const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
   const { t } = useTranslation();
-  const pathname = usePathname();
+  // Compared against the English-form hrefs below, so `/fr/…` is stripped —
+  // otherwise nothing is ever marked current on a French page.
+  const pathname = stripLanguage(usePathname() || '/');
   const settings = useSiteSettings();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdowns, setOpenDropdowns] = useState<string[]>([]);
@@ -143,6 +153,24 @@ const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
     );
     return hrefs.some((h) => pathname === h || pathname.startsWith(`${h}/`));
   };
+
+  // The phone menu: the promoted pages leave the About list and follow it as
+  // rows of their own. With the Secretariat no longer above it, Departments
+  // loses its indent.
+  const mobileMenuItems: MenuItem[] = menuItems.flatMap((item) => {
+    if (item.href !== '/about' || !item.submenu) return [item];
+    const promoted = item.submenu.filter((s) => PROMOTED_ON_MOBILE.includes(s.href));
+    const rest = item.submenu
+      .filter((s) => !PROMOTED_ON_MOBILE.includes(s.href))
+      .map((s) => ({ ...s, nested: false }));
+    return [{ ...item, submenu: rest }, ...promoted.map((s) => ({ name: s.name, href: s.href }))];
+  });
+
+  /** In the phone menu, About is not current while a promoted page is open. */
+  const isMobileCurrent = (item: MenuItem) =>
+    item.href === '/about'
+      ? isCurrent(item) && !PROMOTED_ON_MOBILE.some((p) => pathname === p || pathname.startsWith(`${p}/`))
+      : isCurrent(item);
 
   const raised = isScrolled || isMenuOpen;
   /**
@@ -332,8 +360,8 @@ const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
             {/* The trigger runs up to 1280px, so on a tablet the list has to
                 stop short of the full width or the rows read as stray rules. */}
             <ul className="mx-auto w-full max-w-2xl space-y-1">
-              {menuItems.map((item) => {
-                const current = isCurrent(item);
+              {mobileMenuItems.map((item) => {
+                const current = isMobileCurrent(item);
                 const expanded = openDropdowns.includes(item.name);
 
                 return (

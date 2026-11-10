@@ -28,22 +28,29 @@ interface NodeProps {
  * only shows in the gaps between boxes and reads as the connecting line.
  */
 function OrgNode({ role, name, detail, photo, href }: NodeProps) {
+  // The portrait sits in a thin ring, like a medallion. It is large enough to
+  // recognise the person (the uploads are 480×600 head-and-shoulders shots),
+  // and it eases in a little on hover when the box is a link.
   const body = (
     <>
-      {photo ? (
-        <Image
-          src={boardAvatar(photo)}
-          alt=""
-          aria-hidden="true"
-          width={128}
-          height={128}
-          className="mx-auto h-16 w-16 rounded-full border border-ink-200 object-cover object-top"
-        />
-      ) : (
-        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-ink-200 bg-ink-50">
-          <UserRound aria-hidden="true" className="h-6 w-6 text-leaf-600" />
-        </span>
-      )}
+      <span className="mx-auto block rounded-full border border-ink-200 bg-white p-1.5 shadow-[0_18px_36px_-20px_rgba(45,27,90,0.5)]">
+        {photo ? (
+          <span className="block h-32 w-32 overflow-hidden rounded-full bg-ink-100 sm:h-36 sm:w-36">
+            <Image
+              src={boardAvatar(photo)}
+              alt=""
+              aria-hidden="true"
+              width={144}
+              height={144}
+              className="h-full w-full object-cover object-top transition-transform duration-700 ease-spring group-hover:scale-[1.06]"
+            />
+          </span>
+        ) : (
+          <span className="flex h-32 w-32 items-center justify-center rounded-full bg-ink-50 sm:h-36 sm:w-36">
+            <UserRound aria-hidden="true" className="h-10 w-10 text-leaf-600" />
+          </span>
+        )}
+      </span>
       {role && (
         <span className="mt-4 block font-ui text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-plum-700">
           {role}
