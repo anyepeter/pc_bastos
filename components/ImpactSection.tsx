@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/LocalizedLink';
 import { Users, School, Heart, Radio, Building2, Landmark, Church, GraduationCap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Reveal from '@/components/Reveal';

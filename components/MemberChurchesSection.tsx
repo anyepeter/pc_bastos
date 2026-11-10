@@ -1,12 +1,12 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/LocalizedLink';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText } from '@/lib/translations';
 import Reveal from '@/components/Reveal';
-import type { PublicChurch } from '@/app/members/MembersClient';
+import type { PublicChurch } from '@/app/[lang]/members/MembersClient';
 
 interface MemberChurchesSectionProps {
   /** Published member churches, fetched by the page. Hides itself when empty. */

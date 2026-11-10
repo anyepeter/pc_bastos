@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { revalidatePublicPath } from '@/lib/revalidate';
 import { prisma } from '@/lib/prisma';
 import { generateTemporaryPassword, hashPassword } from '@/lib/auth/password';
 import { destroyAllSessionsForUser, normalizeEmail } from '@/lib/auth/session';
@@ -35,11 +36,11 @@ function revalidateChurch(slug?: string | null) {
   revalidatePath('/admin');
   revalidatePath('/admin/churches');
   revalidatePath('/admin/my-church');
-  revalidatePath('/members');
-  if (slug) revalidatePath(`/members/${slug}`);
+  revalidatePublicPath('/members');
+  if (slug) revalidatePublicPath(`/members/${slug}`);
   // The home page lists the member churches too, and is otherwise cached for
   // an hour.
-  revalidatePath('/');
+  revalidatePublicPath('/');
 }
 
 async function uniqueSlug(base: string, excludeId?: string): Promise<string> {

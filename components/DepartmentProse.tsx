@@ -2,6 +2,7 @@
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import MarkdownLink from '@/components/MarkdownLink';
 
 /* Markdown, styled on-palette. Deliberately not the global `.prose` class:
    that sheet is written in Tailwind default greys and a blue link colour, and
@@ -34,7 +35,7 @@ export default function DepartmentProse({
 }) {
   return (
     <div className={`${PROSE} ${className}`}>
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{children}</ReactMarkdown>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: MarkdownLink }}>{children}</ReactMarkdown>
     </div>
   );
 }

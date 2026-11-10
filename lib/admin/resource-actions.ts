@@ -1,4 +1,5 @@
 import { revalidatePath } from 'next/cache';
+import { revalidatePublicPath } from '@/lib/revalidate';
 import { deleteImage } from '@/app/actions/upload';
 import { AccessError, requireSuperAdmin } from '@/lib/auth/roles';
 import {
@@ -99,14 +100,15 @@ export function findOrphanedImages(
 
 function revalidate(config: ResourceConfig, slug?: string | null) {
   revalidatePath(config.adminPath);
-  revalidatePath(config.publicPath);
-  if (slug) revalidatePath(`${config.publicPath}/${slug}`);
+  // Public pages are cached once per language — see lib/revalidate.ts.
+  revalidatePublicPath(config.publicPath);
+  if (slug) revalidatePublicPath(`${config.publicPath}/${slug}`);
 
-  for (const path of config.alsoRevalidate ?? []) revalidatePath(path);
+  for (const path of config.alsoRevalidate ?? []) revalidatePublicPath(path);
 
   // The home page pulls the hero events and the charity band from these same
   // tables, so it has to be refreshed whenever any of them changes.
-  revalidatePath('/');
+  revalidatePublicPath('/');
 }
 
 /** Append -2, -3 … until the slug is free. */

@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { revalidatePublicPath } from '@/lib/revalidate';
 import { prisma } from '@/lib/prisma';
 import { ACTIVITY_KINDS, departmentActivityConfig } from '@/lib/admin/configs';
 import { FormValues, asString } from '@/lib/admin/resource-config';
@@ -74,9 +75,9 @@ function revalidateActivity(
 ) {
   revalidatePath(`/admin/departments/${department.id}/activities`);
   revalidatePath('/admin/my-department/activities');
-  revalidatePath(`/departments/${department.slug}`);
+  revalidatePublicPath(`/departments/${department.slug}`);
   for (const slug of activitySlugs) {
-    if (slug) revalidatePath(`/departments/${department.slug}/activities/${slug}`);
+    if (slug) revalidatePublicPath(`/departments/${department.slug}/activities/${slug}`);
   }
 }
 

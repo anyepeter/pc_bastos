@@ -2,10 +2,21 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { revalidatePublicPath } from '@/lib/revalidate';
 import { redirect } from 'next/navigation';
 import { deleteImage } from './upload';
 import { Translation, normalizeTranslation, readTranslation } from '@/lib/translations';
 import { AccessError, requireSuperAdmin } from '@/lib/auth/roles';
+
+/**
+ * The blog list, every post page (a post's slug can change here) and the home
+ * page, in both languages.
+ */
+function revalidateBlogPages() {
+  revalidatePublicPath('/blogs');
+  revalidatePublicPath('/blogs/[id]', 'page');
+  revalidatePublicPath('/');
+}
 
 export interface BlogPostInput {
   title: Translation;
@@ -137,7 +148,7 @@ export async function createBlogPost(data: BlogPostInput): Promise<ActionResult>
     });
 
     revalidatePath('/admin/blog');
-    revalidatePath('/blogs');
+    revalidateBlogPages();
 
     return { success: true, data: post };
   } catch (error) {
@@ -197,7 +208,7 @@ export async function updateBlogPost(id: string, data: BlogPostInput): Promise<A
 
     revalidatePath('/admin/blog');
     revalidatePath(`/admin/blog/${id}/edit`);
-    revalidatePath('/blogs');
+    revalidateBlogPages();
 
     return { success: true, data: post };
   } catch (error) {
@@ -232,7 +243,7 @@ export async function deleteBlogPost(id: string): Promise<ActionResult> {
     });
 
     revalidatePath('/admin/blog');
-    revalidatePath('/blogs');
+    revalidateBlogPages();
 
     return { success: true };
   } catch (error) {
@@ -279,7 +290,7 @@ export async function togglePublishStatus(id: string): Promise<ActionResult> {
     });
 
     revalidatePath('/admin/blog');
-    revalidatePath('/blogs');
+    revalidateBlogPages();
 
     return { success: true, data: updatedPost };
   } catch (error) {

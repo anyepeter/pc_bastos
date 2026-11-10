@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/LocalizedLink';
 import Image from 'next/image';
 import { Phone, Mail, MapPin, Facebook, Instagram, Youtube, ArrowUp, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';

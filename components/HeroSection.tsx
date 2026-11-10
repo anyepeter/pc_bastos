@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/LocalizedLink';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Church } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import BrushEdge from '@/components/BrushEdge';

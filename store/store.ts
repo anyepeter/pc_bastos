@@ -1,11 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import blogReducer from './blogSlice';
+import blogReducer, { initialBlogState } from './blogSlice';
+import type { Language } from '@/lib/translations';
 
-export const makeStore = () => {
+/** `language` is the page's, read from its address (see app/[lang]/layout.tsx). */
+export const makeStore = (language: Language = 'en') => {
   return configureStore({
     reducer: {
       blog: blogReducer,
     },
+    preloadedState: { blog: { ...initialBlogState, language } },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         serializableCheck: {

@@ -10,7 +10,7 @@ import { logoSrc } from '@/lib/site-settings';
 import LoginForm from './LoginForm';
 
 export const metadata: Metadata = {
-  title: 'Sign in',
+  title: 'Sign in · CEPCA dashboard',
   description: 'Sign in to the CEPCA dashboard.',
   robots: { index: false, follow: false },
 };
@@ -100,7 +100,7 @@ export default async function SignInPage({
               className="focus-ring mb-10 inline-flex items-center gap-2 rounded-lg font-ui text-[13px] font-medium text-ink-500 transition-colors hover:text-plum-700 lg:hidden"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden />
-              Back to cepca.org
+              Back to cepcacameroun.com
             </Link>
 
             <div className="mb-9">
@@ -124,7 +124,7 @@ export default async function SignInPage({
               className="focus-ring mt-8 hidden items-center gap-2 rounded-lg font-ui text-[13px] font-medium text-ink-400 transition-colors hover:text-plum-700 lg:inline-flex"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden />
-              Back to cepca.org
+              Back to cepcacameroun.com
             </Link>
           </div>
         </div>

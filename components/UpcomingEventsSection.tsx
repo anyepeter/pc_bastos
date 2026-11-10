@@ -1,13 +1,13 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/LocalizedLink';
 import { ArrowRight, ArrowUpRight, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText } from '@/lib/translations';
 import { formatMonthDay, formatTime, isUpcoming } from '@/lib/format';
 import Reveal from '@/components/Reveal';
-import type { PublicEvent } from '@/app/events/EventsClient';
+import type { PublicEvent } from '@/app/[lang]/events/EventsClient';
 
 interface UpcomingEventsSectionProps {
   /**

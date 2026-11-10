@@ -61,7 +61,8 @@ export const DEFAULT_SITE_SETTINGS: SiteSettingsValues = {
     fr: 'Lundi - Vendredi: 9h00 - 17h00\nUrgence: Disponible 24h/24 et 7j/7',
   },
   mapsUrl: 'https://maps.app.goo.gl/ehjxm8QprKj2Jpv16',
-  facebookUrl: '',
+  // The council's official page (the source of the site's event reports).
+  facebookUrl: 'https://www.facebook.com/cepcacamerounofficial',
   instagramUrl: '',
   xUrl: '',
   youtubeUrl: '',

@@ -1,17 +1,26 @@
 'use client';
 
-import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { setLanguage } from '@/store/blogSlice';
+import NextLink from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useAppSelector } from '@/store/hooks';
 import { Language } from '@/lib/translations';
+import { localizePath, stripLanguage } from '@/lib/locale-path';
+import { writeLanguageCookie } from '@/lib/language-cookie';
 
 const LANGUAGES: { code: Language; label: string; aria: string }[] = [
   { code: 'en', label: 'EN', aria: 'Switch to English' },
   { code: 'fr', label: 'FR', aria: 'Passer au français' },
 ];
 
+/**
+ * Each option is a real link to the same page in the other language, so
+ * readers and crawlers alike can follow it. Choosing one also stores the
+ * choice in a cookie (see middleware.ts).
+ */
 export default function LanguageSelector({ onDark = false }: { onDark?: boolean }) {
-  const dispatch = useAppDispatch();
   const language = useAppSelector((state) => state.blog.language);
+  // Without the prefix, so server and browser agree whichever form they see.
+  const path = stripLanguage(usePathname() || '/');
 
   return (
     <div
@@ -24,12 +33,16 @@ export default function LanguageSelector({ onDark = false }: { onDark?: boolean 
       {LANGUAGES.map(({ code, label, aria }) => {
         const active = language === code;
         return (
-          <button
+          <NextLink
             key={code}
-            type="button"
-            onClick={() => dispatch(setLanguage(code))}
+            href={localizePath(path, code)}
+            hrefLang={code}
+            lang={code}
+            prefetch={false}
+            scroll={false}
+            onClick={() => writeLanguageCookie(code)}
             aria-label={aria}
-            aria-pressed={active}
+            aria-current={active ? 'true' : undefined}
             className={`focus-ring relative rounded-full px-3 py-1.5 font-mono text-[0.68rem] tracking-[0.1em] transition-colors duration-300 ${
               active
                 ? 'text-white'
@@ -38,7 +51,7 @@ export default function LanguageSelector({ onDark = false }: { onDark?: boolean 
                   : 'text-ink-500 hover:text-ink-900'
             }`}
           >
-            {/* The pill slides between the two options rather than snapping. */}
+            {/* The pill marks the current language. */}
             {active && (
               <span
                 aria-hidden="true"
@@ -46,7 +59,7 @@ export default function LanguageSelector({ onDark = false }: { onDark?: boolean 
               />
             )}
             <span className="relative">{label}</span>
-          </button>
+          </NextLink>
         );
       })}
     </div>

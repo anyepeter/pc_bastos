@@ -30,15 +30,39 @@ const nextConfig = {
     ],
   },
   async redirects() {
-    // The giving page lives at /give (the nav CTA). Several older components
-    // still link to /donate and /donate/recurring, so those are folded in
-    // rather than left as 404s.
     return [
+      // One host for search engines: www serves the same site, so it is
+      // folded into the bare domain (the canonical in lib/site.ts).
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.cepcacameroun.com' }],
+        destination: 'https://cepcacameroun.com/:path*',
+        permanent: true,
+      },
+      // The giving page lives at /give (the nav CTA). Several older components
+      // still link to /donate and /donate/recurring, so those are folded in
+      // rather than left as 404s — in both languages.
       { source: '/donate', destination: '/give', permanent: false },
       { source: '/donate/:path*', destination: '/give', permanent: false },
+      { source: '/fr/donate', destination: '/fr/give', permanent: false },
+      { source: '/fr/donate/:path*', destination: '/fr/give', permanent: false },
       // The old "Leadership" menu entry. Links to it may still be out there.
       { source: '/about/leadership', destination: '/about/general-secretariat', permanent: false },
       { source: '/about/departments', destination: '/about/general-secretariat', permanent: false },
+      { source: '/fr/about/leadership', destination: '/fr/about/general-secretariat', permanent: false },
+      { source: '/fr/about/departments', destination: '/fr/about/general-secretariat', permanent: false },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        // Vercel's own deployment addresses (*.vercel.app) serve the same
+        // pages; keep them out of search results. cepcacameroun.com is not
+        // matched by this pattern.
+        source: '/:path*',
+        has: [{ type: 'host', value: '.*\\.vercel\\.app' }],
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex' }],
+      },
     ];
   },
 };

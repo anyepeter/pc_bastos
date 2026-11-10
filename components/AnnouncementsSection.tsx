@@ -1,13 +1,13 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/LocalizedLink';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText } from '@/lib/translations';
 import { formatLongDate } from '@/lib/format';
 import Reveal from '@/components/Reveal';
-import type { PublicAnnouncement } from '@/app/announcements/AnnouncementsClient';
+import type { PublicAnnouncement } from '@/app/[lang]/announcements/AnnouncementsClient';
 
 interface AnnouncementsSectionProps {
   /** Published announcements, fetched by the page. Hides itself when empty. */

@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { revalidatePublicPath } from '@/lib/revalidate';
 import { prisma } from '@/lib/prisma';
 import {
   generateTemporaryPassword,
@@ -61,14 +62,14 @@ function revalidateDepartment(slug?: string | null) {
   revalidatePath('/admin');
   revalidatePath('/admin/departments');
   revalidatePath('/admin/my-department');
-  revalidatePath('/departments');
-  if (slug) revalidatePath(`/departments/${slug}`, 'layout');
+  revalidatePublicPath('/departments');
+  if (slug) revalidatePublicPath(`/departments/${slug}`, 'layout');
   // Both list the departments: the Secretariat page and the organogram.
-  revalidatePath('/about/general-secretariat');
-  revalidatePath('/board');
+  revalidatePublicPath('/about/general-secretariat');
+  revalidatePublicPath('/board');
   // The home page lists the departments too, and is otherwise cached for an
   // hour.
-  revalidatePath('/');
+  revalidatePublicPath('/');
 }
 
 async function uniqueSlug(base: string, excludeId?: string): Promise<string> {
@@ -384,7 +385,7 @@ export async function importCouncilDepartments(): Promise<
 
     if (departments > 0) {
       revalidateDepartment();
-      revalidatePath('/departments/[slug]', 'layout');
+      revalidatePublicPath('/departments/[slug]', 'layout');
     }
 
     return {

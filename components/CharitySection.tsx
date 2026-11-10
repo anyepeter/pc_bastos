@@ -1,13 +1,13 @@
 'use client';
 
 import { ArrowRight, ArrowUpRight, MapPin, Users } from 'lucide-react';
-import Link from 'next/link';
+import Link from '@/components/LocalizedLink';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText } from '@/lib/translations';
 import Reveal from '@/components/Reveal';
 import BrushEdge from '@/components/BrushEdge';
-import type { PublicCharityProgram } from '@/app/charity/CharityClient';
+import type { PublicCharityProgram } from '@/app/[lang]/charity/CharityClient';
 
 interface CharitySectionProps {
   /** Published programs, fetched by the page. The section hides itself when empty. */

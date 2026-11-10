@@ -1,7 +1,7 @@
 'use client';
 
 import { useId, useRef, useState, type KeyboardEvent } from 'react';
-import Link from 'next/link';
+import Link from '@/components/LocalizedLink';
 import { ArrowRight, ArrowUpRight, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Reveal from '@/components/Reveal';

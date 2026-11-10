@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Bilingual (EN/FR) website for CEPCA/CPCC, a Cameroonian council of Protestant churches. Next.js 14 App Router, TypeScript, Tailwind + shadcn/ui, Prisma/PostgreSQL (Neon), self-hosted email + password auth, images in Cloudflare R2, Redux Toolkit + i18next for language state.
+Bilingual (EN/FR) website for CEPCA/CPCC, a Cameroonian council of Protestant churches. Next.js 14 App Router, TypeScript, Tailwind + shadcn/ui, Prisma/PostgreSQL (Neon), self-hosted email + password auth, images in Cloudflare R2, i18next + Redux Toolkit for UI text. Every public page exists in English (`/events`) and French (`/fr/events`) — see [Languages, addresses and SEO](#languages-addresses-and-seo).
 
 ## Commands
 
@@ -55,7 +55,7 @@ The blog predates this layer and keeps its own [BlogPostForm](components/admin/B
 Public pages are server components that fetch published rows, serialise dates to ISO strings, and hand plain JSON to a client component which resolves text with `getTranslatedText(value, language)`. Date/time formatting lives in [lib/format.ts](lib/format.ts) and is locale-aware.
 
 There are **no API routes** (`app/api/` does not exist). All server data flows through Server Actions in [app/actions/](app/actions/):
-- [blog.ts](app/actions/blog.ts) — admin CRUD; enforces the publish rule below and calls `revalidatePath` on `/admin/blog` and `/blogs`.
+- [blog.ts](app/actions/blog.ts) — admin CRUD; enforces the publish rule below and refreshes `/admin/blog`, `/blogs` and every post page.
 - [blog-public.ts](app/actions/blog-public.ts) — published-only reads; casts the Prisma `Json` fields to `Translation`.
 - [upload.ts](app/actions/upload.ts) — image upload to the R2 bucket (S3 API via [lib/r2.ts](lib/r2.ts)) under `church/<folder>/`, with a fresh key per upload (objects are cached as immutable, so never overwrite a key), and delete. The editor first shrinks photos in the browser ([lib/prepare-upload.ts](lib/prepare-upload.ts): 1600px, JPEG unless transparent); the action takes at most 4 MB and checks the file's magic bytes. `next.config.js` raises the server-action body limit from the 1 MB default to 4.5 MB, Vercel's ceiling. Replacing or deleting an image removes it from R2; `deleteImage` ignores every other host.
 - [translate.ts](app/actions/translate.ts) — machine translation for the admin editor. Calls Google's public translate endpoint over `fetch`, splitting on paragraph breaks so markdown survives. Do **not** use the `free-translate` package for this — it drives Puppeteer, which cannot run in a serverless action.
@@ -64,7 +64,7 @@ There are **no API routes** (`app/api/` does not exist). All server data flows t
 
 ### Site settings
 
-[lib/site-settings.ts](lib/site-settings.ts) holds the `SiteSettingsValues` type, `DEFAULT_SITE_SETTINGS` (what renders until `/admin/settings` is first saved) and the link helpers (`telHref`, `whatsappHref`, `mapEmbedSrc`, `logoSrc`, `socialLinks`, `givingDetailsMissing`). The root layout calls `getSiteSettings()` once and wraps the app in [SiteSettingsProvider](components/SiteSettingsProvider.tsx); client components read it with `useSiteSettings()`, server components call `getSiteSettings()` directly. Saving revalidates the tag and the whole layout.
+[lib/site-settings.ts](lib/site-settings.ts) holds the `SiteSettingsValues` type, `DEFAULT_SITE_SETTINGS` (what renders until `/admin/settings` is first saved) and the link helpers (`telHref`, `whatsappHref`, `mapEmbedSrc`, `logoSrc`, `socialLinks`, `givingDetailsMissing`). [RootShell](components/RootShell.tsx) calls `getSiteSettings()` once and wraps the app in [SiteSettingsProvider](components/SiteSettingsProvider.tsx); client components read it with `useSiteSettings()`, server components call `getSiteSettings()` directly. Saving revalidates the tag and the whole layout.
 
 - `getSiteSettings()` swallows database errors and returns the defaults, because every page renders through it — a missing table must not take the site down.
 - Once saved, a blank optional field is **hidden**, not defaulted: no social link means no icon, no WhatsApp number means no floating button, no giving accounts means `/give` offers the office phone and email instead.
@@ -93,19 +93,29 @@ Helpers `readTranslation` / `normalizeTranslation` / `hasTranslation` live in [l
 - **Static UI text** → i18next. Keys live in `public/locales/{en,fr}/translation.json`, imported directly by [lib/i18n.ts](lib/i18n.ts) (bundled, not fetched). Consumed with `useTranslation()` — client components only. Add a key to *both* JSON files.
 - **Dynamic DB text** → the `Translation` type (`{ en, fr }`) and `getTranslatedText(value, language)` from [lib/translations.ts](lib/translations.ts).
 
-**Redux is the single source of truth for the current language.** It lives at `state.blog.language`. `setLanguage` in [store/blogSlice.ts](store/blogSlice.ts) is what calls `i18n.changeLanguage()`; browser language detection is deliberately disabled. Never call `i18n.changeLanguage()` directly — dispatch `setLanguage` instead. [components/I18nProvider.tsx](components/I18nProvider.tsx) keeps i18next in sync with Redux.
+**The address is the source of truth for the language** (`/fr/…` is French, everything else English). The `[lang]` route param flows into [RootShell](components/RootShell.tsx), which creates the Redux store with that language (`state.blog.language`, read by client components) and hands react-i18next a per-language instance from `getI18n(language)`. Never call `i18n.changeLanguage()`: the server renders both languages side by side, so a shared instance would leak one request's language into another's HTML. Switching language means **navigating** to the other address — [LanguageSelector](components/LanguageSelector.tsx) renders real links and stores the choice in the `lang` cookie. There is no browser-language sniffing.
 
 ### Redux store
 
-Single `blog` slice ([store/blogSlice.ts](store/blogSlice.ts)) that holds both blog data and the language. It caches posts for 5 minutes (`cacheExpiry`) and short-circuits `fetchBlogPosts` when the cache is warm.
+Single `blog` slice ([store/blogSlice.ts](store/blogSlice.ts)) that holds both blog data and the page's language. It caches posts for 5 minutes (`cacheExpiry`) and short-circuits `fetchBlogPosts` when the cache is warm.
 
-**There is exactly one store, mounted in [app/layout.tsx](app/layout.tsx). Never nest a second `StoreProvider`.** The store holds the selected language, so a nested provider puts the navigation's `LanguageSelector` and the page content on different stores and language switching silently stops working — this was a real bug on the blog pages.
+**There is exactly one store per page, mounted by [RootShell](components/RootShell.tsx) and keyed by language. Never nest a second `StoreProvider`.** A nested provider puts the navigation and the page content on different stores — this was a real bug on the blog pages.
 
 SSR hydration pattern instead: the server page fetches via a Server Action and passes the result to the client component as a prop (`<BlogListClient initialPosts={...} />`, `<BlogDetailClient post={...} />`). The client renders that prop immediately and dispatches it into the shared store on mount.
 
+### Languages, addresses and SEO
+
+- **Routes.** Public pages live in `app/[lang]/` (root layout `app/[lang]/layout.tsx`, `lang` = `en` | `fr`, both prerendered). [middleware.ts](middleware.ts) rewrites a bare address to `/en/…` internally, redirects a typed `/en/…` to the bare address (308), and sends a reader whose `lang` cookie says French from a bare address to `/fr/…` (307, GET only). Crawlers carry no cookie, so each language has one stable URL. `app/layout.tsx` only passes children through; the dashboard (`app/admin/layout.tsx`) and its login (`app/sign-in/layout.tsx`) are separate English root layouts. Unknown public addresses hit `app/[lang]/[...missing]` and get a real 404 in the right language.
+- **Links.** Public components import `Link` from [components/LocalizedLink.tsx](components/LocalizedLink.tsx), not `next/link`, and write hrefs in their English form (`/events/x`) — on a French page it becomes `/fr/events/x`. Markdown from the database uses [MarkdownLink](components/MarkdownLink.tsx) (`components={{ a: MarkdownLink }}`) for the same reason. Address helpers are in [lib/locale-path.ts](lib/locale-path.ts).
+- **Refreshing pages.** Cached pages are keyed `/en/…` and `/fr/…`, so `revalidatePath('/events')` alone refreshes nothing. Use `revalidatePublicPath('/events')` from [lib/revalidate.ts](lib/revalidate.ts) for any public page; `/admin` paths still use `revalidatePath`.
+- **Metadata.** [lib/seo.ts](lib/seo.ts) holds every fixed page's title and description in both languages (`PAGE_COPY`, typed so a missing French entry fails the typecheck) and `pageMetadata()`, which adds the canonical URL, hreflang alternates (`en`, `fr`, `x-default`), Open Graph and Twitter tags. Each `page.tsx` exports `generateMetadata`; detail pages build theirs from the row (title, plain-text description, photo) and share one query with the page through React `cache()`. A list page with nothing published is `noindex` and left out of the sitemap. Default share cards are `public/images/og/cepca-{en,fr}.jpg`; favicons are in `public/favicon.ico` and `public/images/icons/`.
+- **Structured data.** [lib/structured-data.ts](lib/structured-data.ts) builds schema.org JSON-LD (Organization with members and departments on the home page, WebSite, BreadcrumbList, Event, NewsArticle/BlogPosting, Person for the board, member churches and departments as Organizations), rendered with [JsonLd](components/JsonLd.tsx). It states only what the database or site settings hold — no founding date for the council while 1957 vs 1969 is unresolved.
+- **Crawler files.** `app/sitemap.ts` (both languages, with alternates), `app/robots.ts` (everything except `/admin` and `/sign-in`, AI crawlers included), `app/llms.txt/route.ts` (a Markdown guide for AI assistants, built from the same data) and `app/manifest.ts`. All read through [lib/site-index.ts](lib/site-index.ts) and refresh hourly.
+- **Hosts.** The canonical host is `https://cepcacameroun.com` (`SITE_URL` in [lib/site.ts](lib/site.ts)). `next.config.js` 308s `www.` to it and sends `X-Robots-Tag: noindex` on `*.vercel.app`.
+
 ### Routing / layout conventions
 
-- Public pages wrap content in [components/PageLayout.tsx](components/PageLayout.tsx) (Navigation + Footer + WhatsAppButton). [app/page.tsx](app/page.tsx) composes those pieces manually instead.
+- Public pages wrap content in [components/PageLayout.tsx](components/PageLayout.tsx) (Navigation + Footer + WhatsAppButton). [app/[lang]/page.tsx](app/[lang]/page.tsx) composes those pieces manually instead.
 - Server page → `Client` component split is the norm for interactive pages (`MembersClient`, `BlogDetailClient`, `WorkshopClient`, `CharityDetailClient`).
 - `/board` opens with the organogram, drawn from `BoardMember` rows edited at `/admin/board`. `office` picks the row (president → vice_president → member → general_secretary), `sortOrder` the place in it, and the departments always hang below the General Secretary. The page shows the chart and nothing else. The published General Secretary also heads `/about/general-secretariat`. Board photos go to R2 `church/board`. R2 has no transformations, so photos of people are cropped by CSS (`object-cover object-top`); upload head-and-shoulders shots. The migrated board and church-leader photos are face crops made by Cloudinary before the move (`*-face.jpg`). `boardAvatar`/`boardPortrait` in [lib/board.ts](lib/board.ts) only transform legacy Cloudinary URLs.
 - A member church's `leaderPhoto` (optional, editable by the council and the church's own login) puts a face-cropped portrait beside the head's name on `/members/[slug]`; without one the name stays in the details list.
@@ -115,7 +125,7 @@ SSR hydration pattern instead: the server page fetches via a Server Action and p
 
 Self-hosted email + password. Accounts are `User` rows; passwords are bcrypt hashes (cost 12, [lib/auth/password.ts](lib/auth/password.ts)). A login creates a `Session` row and sets a signed, `httpOnly`, `sameSite=lax` cookie holding only that row's id — signed with `jose` using **`SESSION_SECRET`**, which must be set in every environment. [lib/auth/session.ts](lib/auth/session.ts) exposes `getSession()` / `createSession()` / `destroySession()`; the login and logout actions live in [app/actions/auth.ts](app/actions/auth.ts) and the login page at [app/sign-in/page.tsx](app/sign-in/page.tsx).
 
-[middleware.ts](middleware.ts) protects `/admin(.*)`. It only verifies the cookie's signature — the Edge runtime cannot reach the database — so it is a redirect convenience, not the authorisation check.
+[middleware.ts](middleware.ts) protects `/admin(.*)` (besides routing languages). It only verifies the cookie's signature — the Edge runtime cannot reach the database — so it is a redirect convenience, not the authorisation check.
 
 Three roles, defined in [lib/auth/roles.ts](lib/auth/roles.ts) and stored on the `User` row (each role's landing page and label are in [lib/auth/role-meta.ts](lib/auth/role-meta.ts)):
 
@@ -153,7 +163,7 @@ Seed or reset a super admin with `npm run create-admin` (`ADMIN_EMAIL` + `ADMIN_
 
 - [hooks/useBlogPosts.ts](hooks/useBlogPosts.ts) fetches `/api/blog/posts`, which does not exist. Unused — use the Redux thunks or Server Actions.
 - `free-translate` in package.json is unused and unusable on a serverless host (Puppeteer). [app/actions/translate.ts](app/actions/translate.ts) replaces it.
-- [I18N_SETUP_GUIDE.md](I18N_SETUP_GUIDE.md) is a useful reference for the intended patterns, but its claim about browser-language detection describes behavior that is not implemented — the saved choice is restored from `localStorage` in [I18nProvider](components/I18nProvider.tsx), and there is no browser sniffing.
+- [I18N_SETUP_GUIDE.md](I18N_SETUP_GUIDE.md) predates the language addresses: its Redux `setLanguage` / `localStorage` / browser-detection parts no longer describe the site. The language comes from the URL (see [Languages, addresses and SEO](#languages-addresses-and-seo)); [I18nProvider](components/I18nProvider.tsx) only moves an old `localStorage` choice into the cookie once.
 
 ## Design guidance (from .bolt/prompt)
 

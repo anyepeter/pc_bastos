@@ -11,7 +11,12 @@
     "sendMessage": "Envoyer le Message",
     "sending": "Envoi en cours...",
     "upcoming": "À Venir",
-    "complete": "Terminé"
+    "complete": "Terminé",
+    "notFound": {
+      "title": "Page introuvable",
+      "text": "La page que vous cherchiez a été déplacée ou n'existe plus.",
+      "home": "Retour à l'accueil"
+    }
   },
   "navbar": {
     "home": "Accueil",

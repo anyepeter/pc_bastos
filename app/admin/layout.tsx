@@ -2,6 +2,14 @@ import { redirect } from 'next/navigation';
 import { getSessionRole } from '@/lib/auth/roles';
 import { getSession } from '@/lib/auth/session';
 import AdminShell from './AdminShell';
+import RootShell from '@/components/RootShell';
+import type { Metadata } from 'next';
+
+/** The dashboard is private: never indexed, whatever robots.txt says. */
+export const metadata: Metadata = {
+  title: { default: 'Dashboard · CEPCA', template: '%s · CEPCA dashboard' },
+  robots: { index: false, follow: false },
+};
 
 /**
  * Server-side gate for the whole dashboard. The role is resolved here once and
@@ -36,14 +44,17 @@ export default async function AdminLayout({
   // Same request-cached lookup as above; only the extra display fields.
   const account = await getSession();
 
+  // A root layout of its own (see app/layout.tsx): the dashboard is English.
   return (
-    <AdminShell
-      role={session.role}
-      email={session.email}
-      name={account?.name ?? null}
-      mustChangePassword={account?.mustChangePassword ?? false}
-    >
-      {children}
-    </AdminShell>
+    <RootShell language="en">
+      <AdminShell
+        role={session.role}
+        email={session.email}
+        name={account?.name ?? null}
+        mustChangePassword={account?.mustChangePassword ?? false}
+      >
+        {children}
+      </AdminShell>
+    </RootShell>
   );
 }

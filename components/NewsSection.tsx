@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/LocalizedLink';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store/hooks';
@@ -8,7 +8,7 @@ import { getTranslatedText, readTranslation } from '@/lib/translations';
 import { formatLongDate } from '@/lib/format';
 import Reveal from '@/components/Reveal';
 import NewsCard from '@/components/NewsCard';
-import type { PublicNewsArticle } from '@/app/news/NewsClient';
+import type { PublicNewsArticle } from '@/app/[lang]/news/NewsClient';
 
 interface NewsSectionProps {
   /** Published articles, fetched by the page. Hides itself when empty. */

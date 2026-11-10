@@ -12,7 +12,6 @@ const config: Config = {
       fontFamily: {
         'inter': ['var(--font-inter)', 'sans-serif'],
         'playfair': ['var(--font-playfair)', 'serif'],
-        'poppins': ['var(--font-poppins)', 'sans-serif'],
         sans: ['var(--font-inter)'],
         serif: ['var(--font-playfair)'],
         // Display face for the landing page and shared chrome.

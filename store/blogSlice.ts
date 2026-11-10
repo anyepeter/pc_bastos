@@ -1,9 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { getPublishedBlogPosts, getPublishedBlogPostBySlug, PublicBlogPost } from '@/app/actions/blog-public';
 import { Language } from '@/lib/translations';
-import i18n from '@/lib/i18n';
 
-interface BlogState {
+export interface BlogState {
   posts: PublicBlogPost[];
   currentPost: PublicBlogPost | null;
   loading: boolean;
@@ -13,14 +12,14 @@ interface BlogState {
   language: Language; // Current language selection
 }
 
-const initialState: BlogState = {
+export const initialBlogState: BlogState = {
   posts: [],
   currentPost: null,
   loading: false,
   error: null,
   lastFetched: null,
   cacheExpiry: 5 * 60 * 1000, // 5 minutes
-  language: 'en', // Default to English
+  language: 'en', // Replaced by the address's language in makeStore()
 };
 
 /**
@@ -94,7 +93,7 @@ export const fetchBlogPostBySlug = createAsyncThunk(
 
 const blogSlice = createSlice({
   name: 'blog',
-  initialState,
+  initialState: initialBlogState,
   reducers: {
     // Clear error
     clearError: (state) => {
@@ -119,14 +118,11 @@ const blogSlice = createSlice({
     invalidateCache: (state) => {
       state.lastFetched = null;
     },
-    // Set language
+    // The language follows the address (/fr/… is French). The store is created
+    // with it in StoreProvider; this exists for completeness, not for switching —
+    // LanguageSelector switches by navigating to the other language's address.
     setLanguage: (state, action: PayloadAction<Language>) => {
       state.language = action.payload;
-      // Sync with i18next
-      if (typeof window !== 'undefined') {
-        i18n.changeLanguage(action.payload);
-        localStorage.setItem('language', action.payload);
-      }
     },
   },
   extraReducers: (builder) => {
