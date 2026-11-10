@@ -45,7 +45,7 @@
     "quickLinks": "Liens rapides",
     "getInTouch": "Nous contacter",
     "followUs": "Suivez-nous",
-    "copyright": "© 2025 CEPCA. Tous droits réservés.",
+    "copyright": "© {{year}} CEPCA. Tous droits réservés.",
     "members": "Églises membres",
     "contact": "Contact",
     "about": "À propos",
@@ -179,7 +179,8 @@
     "map": {
       "title": "Nous trouver",
       "description": "Le secrétariat du Conseil, à Yaoundé. Venez nous rencontrer aux heures d'ouverture.",
-      "viewOnGoogleMaps": "Voir sur Google Maps"
+      "viewOnGoogleMaps": "Voir sur Google Maps",
+      "hours": "Heures d’ouverture"
     }
   },
   "about": {
@@ -372,7 +373,8 @@
       "greetingAlt": "Des membres du clergé de deux Églises membres se saluent lors de la Semaine du protestantisme du Littoral",
       "choirAlt": "Une chorale de femmes en tenue assortie lors de la clôture nationale de la Semaine du protestantisme"
     },
-    "nextChapter": "Chapitre suivant"
+    "nextChapter": "Chapitre suivant",
+    "nextChapterCta": "Poursuivre la lecture"
   },
   "sermons": {
     "pageTitle": "Prédications",

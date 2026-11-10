@@ -67,16 +67,22 @@ export default function MembersClient({ churches }: { churches: PublicChurch[] }
       <PageSection tone="tint" className="lg:py-24">
         <SectionHeading title={t('members.unitedInFaith')} standfirst={t('members.servingTogether')} />
 
-        <dl className="mt-12 grid grid-cols-1 gap-y-10 border-t border-ink-200 pt-12 sm:grid-cols-3">
+        {/* Three across at every width: stacked, the figures took a whole
+            phone screen to say three numbers. */}
+        <dl className="mt-10 grid grid-cols-3 border-t border-ink-200 pt-8 sm:mt-12 sm:pt-12">
           {figures.map((figure, i) => (
-            <Reveal key={figure.label} delay={Math.min(i, 8) * 90} className={i > 0 ? 'sm:border-l sm:border-ink-200 sm:pl-10' : ''}>
+            <Reveal
+              key={figure.label}
+              delay={Math.min(i, 8) * 90}
+              className={i > 0 ? 'border-l border-ink-200 pl-3 sm:pl-10' : 'pr-3 sm:pr-0'}
+            >
               <dt className="sr-only">{figure.label}</dt>
               <dd>
-                <span className="block font-display text-[clamp(2.8rem,5.4vw,4.6rem)] font-semibold leading-none tracking-tight text-ink-900">
+                <span className="block font-display text-[clamp(1.85rem,6.4vw,4.6rem)] font-semibold leading-none tracking-tight text-ink-900">
                   <CountUp value={figure.value} suffix={figure.suffix} durationMs={1600} />
                 </span>
-                <span aria-hidden="true" className="grow-x mt-5 block h-px w-14 origin-left bg-leaf-500" />
-                <span aria-hidden="true" className="mt-4 block font-mono text-[0.64rem] uppercase tracking-[0.2em] text-plum-700">
+                <span aria-hidden="true" className="grow-x mt-4 block h-px w-8 origin-left bg-leaf-500 sm:mt-5 sm:w-14" />
+                <span aria-hidden="true" className="mt-3 block font-mono text-[0.56rem] uppercase leading-snug tracking-[0.14em] text-plum-700 sm:mt-4 sm:text-[0.64rem] sm:tracking-[0.2em]">
                   {figure.label}
                 </span>
               </dd>
@@ -118,7 +124,7 @@ export default function MembersClient({ churches }: { churches: PublicChurch[] }
                     />
                     <span
                       aria-hidden="true"
-                      className="pointer-events-none absolute -bottom-4 -right-1 select-none font-display text-[5.5rem] font-semibold uppercase leading-none tracking-tight text-outline text-plum-200 transition-transform duration-700 ease-spring group-hover:-translate-x-3"
+                      className="pointer-events-none absolute bottom-1 right-4 select-none font-display text-[4.25rem] font-semibold uppercase leading-[0.8] tracking-tight text-outline text-plum-200 transition-transform duration-700 ease-spring group-hover:-translate-x-3 sm:text-[4.75rem] lg:text-[5rem]"
                     >
                       {member.slug}
                     </span>

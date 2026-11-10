@@ -217,7 +217,7 @@ const Footer = () => {
         {/* Bottom bar */}
         <div className="mt-16 flex flex-col items-center justify-between gap-5 border-t border-white/10 pt-8 sm:flex-row">
           <p className="text-center font-mono text-[0.68rem] tracking-wide text-plum-300 sm:text-left">
-            {t('footer.copyright')}
+            {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
 
           <button

@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import {
   AlertCircle,
+  ArrowUpRight,
   CheckCircle2,
+  Clock,
   Loader2,
   Mail,
   MapPin,
@@ -199,7 +201,9 @@ export default function ContactPage() {
             <Reveal>
               <div className="flex items-center gap-3">
                 <span aria-hidden="true" className="grow-x h-px w-10 origin-left bg-plum-500" />
-                <p className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-plum-700">{t('home.eyebrow')}</p>
+                <p className="font-mono text-[0.6rem] uppercase leading-relaxed tracking-[0.2em] text-plum-700 text-balance sm:text-[0.68rem] sm:tracking-[0.28em]">
+                  {t('home.eyebrow')}
+                </p>
               </div>
             </Reveal>
             <SplitReveal
@@ -215,18 +219,24 @@ export default function ContactPage() {
               <p className="mt-7 max-w-[48ch] text-lg leading-relaxed text-ink-600 text-pretty">{t('contact.pageSubtitle')}</p>
             </Reveal>
             <Reveal delay={440}>
-              <ul className="mt-9 flex flex-wrap gap-3">
+              {/* On a phone the three ways in are equal rows, each the full
+                  width; from sm up they sit side by side as pills. */}
+              <ul className="mt-9 grid gap-3 sm:flex sm:flex-wrap">
                 {quick.map(({ id, Icon, href, label, external }) => (
                   <li key={id}>
                     <a
                       href={href}
                       {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                      className="focus-ring group inline-flex items-center gap-3 rounded-full border border-ink-200 bg-white py-2 pl-2 pr-5 font-ui text-sm font-semibold text-ink-800 shadow-[0_10px_24px_-18px_rgb(45_27_90/0.5)] transition-all duration-300 ease-spring hover:-translate-y-0.5 hover:border-leaf-300 hover:shadow-[0_18px_30px_-18px_rgb(39_113_78/0.6)] active:translate-y-px"
+                      className="focus-ring group flex w-full items-center gap-3 rounded-full border border-ink-200 bg-white py-2 pl-2 pr-4 font-ui text-sm font-semibold text-ink-800 shadow-[0_10px_24px_-18px_rgb(45_27_90/0.5)] transition-all duration-300 ease-spring hover:-translate-y-0.5 hover:border-leaf-300 hover:shadow-[0_18px_30px_-18px_rgb(39_113_78/0.6)] active:translate-y-px sm:inline-flex sm:w-auto sm:pr-5"
                     >
-                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-leaf-600 text-white transition-transform duration-500 ease-spring group-hover:rotate-[-12deg]">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-leaf-600 text-white transition-transform duration-500 ease-spring group-hover:rotate-[-12deg]">
                         <Icon aria-hidden="true" className="h-4 w-4" />
                       </span>
-                      <span className="max-w-[16rem] truncate">{label}</span>
+                      <span className="min-w-0 truncate sm:max-w-[16rem]">{label}</span>
+                      <ArrowUpRight
+                        aria-hidden="true"
+                        className="ml-auto h-4 w-4 shrink-0 text-ink-400 transition-transform duration-300 ease-spring group-hover:-translate-y-0.5 group-hover:translate-x-0.5 sm:hidden"
+                      />
                     </a>
                   </li>
                 ))}
@@ -575,6 +585,27 @@ export default function ContactPage() {
                   {t('contact.map.title')}
                 </h2>
                 <p className="mt-3 text-sm leading-relaxed text-ink-600 text-pretty">{t('contact.map.description')}</p>
+                {/* The card said "come and see us" without saying where or when. */}
+                <dl className="mt-5 space-y-3 border-t border-ink-200 pt-5">
+                  {inLanguage(settings.address, language) && (
+                    <div className="flex items-start gap-3">
+                      <dt className="sr-only">{t('contact.visitUs.title')}</dt>
+                      <MapPin aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-leaf-600" />
+                      <dd className="whitespace-pre-line text-sm font-medium leading-relaxed text-ink-800">
+                        {inLanguage(settings.address, language)}
+                      </dd>
+                    </div>
+                  )}
+                  {inLanguage(settings.officeHours, language) && (
+                    <div className="flex items-start gap-3">
+                      <dt className="sr-only">{t('contact.map.hours')}</dt>
+                      <Clock aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-leaf-600" />
+                      <dd className="whitespace-pre-line text-sm leading-relaxed text-ink-700">
+                        {inLanguage(settings.officeHours, language)}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
                 {settings.mapsUrl && (
                   <div className="mt-6 flex flex-col gap-3 whitespace-nowrap sm:flex-row">
                     <a

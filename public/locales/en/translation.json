@@ -45,7 +45,7 @@
     "quickLinks": "Quick Links",
     "getInTouch": "Get In Touch",
     "followUs": "Follow Us",
-    "copyright": "© 2025 CEPCA. All rights reserved.",
+    "copyright": "© {{year}} CEPCA. All rights reserved.",
     "members": "Members",
     "contact": "Contact",
     "about": "About",
@@ -179,7 +179,8 @@
     "map": {
       "title": "Find Us",
       "description": "The council's secretariat in Yaoundé. Come and see us during office hours.",
-      "viewOnGoogleMaps": "View on Google Maps"
+      "viewOnGoogleMaps": "View on Google Maps",
+      "hours": "Office hours"
     }
   },
   "about": {
@@ -372,7 +373,8 @@
       "greetingAlt": "Clergy of two member churches greeting each other at the Littoral Week of Protestantism",
       "choirAlt": "A women's choir in matching dress at the national closing of the Week of Protestantism"
     },
-    "nextChapter": "Next chapter"
+    "nextChapter": "Next chapter",
+    "nextChapterCta": "Continue reading"
   },
   "sermons": {
     "pageTitle": "Sermons",

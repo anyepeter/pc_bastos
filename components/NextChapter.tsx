@@ -44,15 +44,20 @@ export default function NextChapter({ href, title, description, image, label }: 
               {description && (
                 <span className="max-w-[52ch] text-base leading-relaxed text-ink-600 text-pretty">{description}</span>
               )}
-              <span
-                aria-hidden="true"
-                className="mt-2 flex h-14 w-14 items-center justify-center rounded-full bg-leaf-600 text-white transition-transform duration-500 ease-spring group-hover:translate-x-2"
-              >
-                <ArrowRight className="h-5 w-5" />
+              {/* The arrow says where it goes, so it does not stand alone on a line. */}
+              <span className="mt-2 inline-flex items-center gap-4 font-ui text-sm font-semibold text-leaf-700">
+                <span
+                  aria-hidden="true"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-leaf-600 text-white shadow-[0_14px_30px_-14px_rgb(39_113_78/0.8)] transition-transform duration-500 ease-spring group-hover:translate-x-2 sm:h-14 sm:w-14"
+                >
+                  <ArrowRight className="h-5 w-5" />
+                </span>
+                {t('about.nextChapterCta')}
               </span>
             </div>
 
-            <div className="relative min-h-[14rem] overflow-hidden lg:col-span-5 lg:min-h-[22rem]">
+            {/* On a phone the photograph leads the card; beside it from lg. */}
+            <div className="relative order-first aspect-[16/9] overflow-hidden sm:aspect-[21/9] lg:order-none lg:col-span-5 lg:aspect-auto lg:min-h-[22rem]">
               <Image
                 src={image}
                 alt=""

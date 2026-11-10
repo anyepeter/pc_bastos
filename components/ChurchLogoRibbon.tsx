@@ -31,7 +31,8 @@ export default function ChurchLogoRibbon({ churches, tone = 'dark' }: { churches
                 <span className="font-mono text-[0.6rem] font-semibold uppercase text-plum-800">{church.slug}</span>
               )}
             </span>
-            <span className={`max-w-[16rem] truncate font-ui text-sm ${dark ? 'text-plum-100' : 'text-ink-700'}`}>{church.name}</span>
+            {/* The whole name: the ribbon moves, so a long name has the room. */}
+            <span className={`whitespace-nowrap font-ui text-sm ${dark ? 'text-plum-100' : 'text-ink-700'}`}>{church.name}</span>
           </li>
         ))}
       </ul>
