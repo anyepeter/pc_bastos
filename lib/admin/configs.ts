@@ -382,7 +382,7 @@ export const memberChurchConfig: ResourceConfig = {
       name: 'denomination',
       label: 'Church name',
       required: true,
-      placeholder: 'Eglise Anglicane (EA)',
+      placeholder: 'Église Anglicane (EA)',
     },
     {
       kind: 'translatable',

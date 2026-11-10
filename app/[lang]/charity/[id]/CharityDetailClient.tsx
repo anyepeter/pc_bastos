@@ -6,7 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import MarkdownLink from '@/components/MarkdownLink';
 import { useTranslation } from 'react-i18next';
-import MediaGallery from '@/components/MediaGallery';
+import PhotoCarousel from '@/components/PhotoCarousel';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText, readTranslation } from '@/lib/translations';
 import { formatLongDate } from '@/lib/format';
@@ -159,19 +159,9 @@ export default function CharityDetailClient({
         <PageSection tone="tint">
           <SectionHeading title={copy.gallery} />
 
-          {/* The same gallery the member pages use — there is one design for
-              this on the site, not two. */}
+          {/* The same carousel as every other set of photographs on the site. */}
           <Reveal delay={80} className="mx-auto mt-11 max-w-4xl">
-            <MediaGallery
-              images={gallery}
-              alt={title}
-              labels={{
-                enlarge: t('home.gallery.view'),
-                close: t('home.gallery.close'),
-                previous: t('home.gallery.previous'),
-                next: t('home.gallery.next'),
-              }}
-            />
+            <PhotoCarousel images={gallery} alt={title} />
           </Reveal>
         </PageSection>
       )}

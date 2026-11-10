@@ -19,7 +19,7 @@ import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
 import MetaRail from '@/components/MetaRail';
-import MediaGallery from '@/components/MediaGallery';
+import PhotoCarousel from '@/components/PhotoCarousel';
 import DepartmentProse from '@/components/DepartmentProse';
 import DepartmentActivityCard from '@/components/DepartmentActivityCard';
 import {
@@ -466,16 +466,7 @@ export default function DepartmentDetailClient({
         <PageSection key="gallery" tone={tone} id="gallery">
           <SectionHeading title={t('departments.gallery')} layout="stack" />
           <Reveal className="mt-11 max-w-5xl">
-            <MediaGallery
-              images={department.images}
-              alt={name}
-              labels={{
-                enlarge: t('home.gallery.view'),
-                close: t('home.gallery.close'),
-                previous: t('home.gallery.previous'),
-                next: t('home.gallery.next'),
-              }}
-            />
+            <PhotoCarousel images={department.images} alt={name} />
           </Reveal>
           {closingRow(closing)}
         </PageSection>

@@ -1,12 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
-import { ArrowUpRight, Calendar, Globe, Mail, MapPin, Phone, User } from 'lucide-react';
+import { ArrowUpRight, Calendar, Expand, Globe, Mail, MapPin, Phone, User } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import MarkdownLink from '@/components/MarkdownLink';
-import MediaGallery from '@/components/MediaGallery';
+import PhotoCarousel, { PhotoViewer } from '@/components/PhotoCarousel';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText } from '@/lib/translations';
 import PageHero from '@/components/PageHero';
@@ -54,13 +55,28 @@ const PROSE =
   '[&_blockquote]:mt-6 [&_blockquote]:border-l-2 [&_blockquote]:border-plum-300 [&_blockquote]:pl-5 [&_blockquote]:text-ink-700 ' +
   '[&_hr]:mt-8 [&_hr]:border-ink-200';
 
+/**
+ * The head's line is written « name, title » (« Rév. DEBSIA DABAH Alvius,
+ * président national »). The title becomes the label above the name — so a
+ * president reads PRESIDENT, a moderator MODERATOR — and a line with no title
+ * (a caretaker committee) keeps the generic label.
+ */
+function splitLeader(line: string): { name: string; title: string } {
+  const cut = line.lastIndexOf(', ');
+  if (cut === -1) return { name: line, title: '' };
+  return { name: line.slice(0, cut).trim(), title: line.slice(cut + 2).trim() };
+}
+
 export default function MemberDetailClient({ member }: MemberDetailClientProps) {
   const { t } = useTranslation();
   const language = useAppSelector((state) => state.blog.language);
   const councilLogo = logoSrc(useSiteSettings());
+  const [portraitOpen, setPortraitOpen] = useState(false);
 
   const denomination = getTranslatedText(member.denomination as any, language);
   const leader = getTranslatedText(member.leader as any, language);
+  const head = splitLeader(leader);
+  const headLabel = head.title || t('members.leadership');
   const location = getTranslatedText(member.location as any, language);
   const history = getTranslatedText(member.history as any, language);
 
@@ -74,8 +90,8 @@ export default function MemberDetailClient({ member }: MemberDetailClientProps) 
     {
       key: 'leadership',
       icon: User,
-      label: t('members.leadership'),
-      value: member.leaderPhoto ? '' : leader,
+      label: headLabel,
+      value: member.leaderPhoto ? '' : head.name,
       href: null,
     },
     {
@@ -142,21 +158,41 @@ export default function MemberDetailClient({ member }: MemberDetailClientProps) 
 
               {member.leaderPhoto && leader && (
                 <div className="mt-7 flex items-center gap-4 border-t border-ink-200 pt-6">
-                  <Image
-                    src={faceAvatar(member.leaderPhoto)}
-                    alt={leader}
-                    width={128}
-                    height={128}
-                    className="h-16 w-16 shrink-0 rounded-full border border-ink-200 object-cover object-top"
-                  />
+                  {/* The portrait opens whole, uncropped, in the gallery's viewer. */}
+                  <button
+                    type="button"
+                    onClick={() => setPortraitOpen(true)}
+                    aria-label={t('members.viewPortrait', { name: head.name })}
+                    className="focus-ring group/portrait relative h-20 w-20 shrink-0 cursor-zoom-in rounded-full"
+                  >
+                    <Image
+                      src={faceAvatar(member.leaderPhoto)}
+                      alt=""
+                      width={160}
+                      height={160}
+                      className="h-20 w-20 rounded-full border border-ink-200 object-cover object-top transition-transform duration-500 ease-spring group-hover/portrait:scale-[1.04]"
+                    />
+                    <span
+                      aria-hidden="true"
+                      className="absolute -bottom-0.5 -right-0.5 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-leaf-600 text-white transition-transform duration-300 ease-spring group-hover/portrait:scale-110"
+                    >
+                      <Expand className="h-3 w-3" />
+                    </span>
+                  </button>
                   <div className="min-w-0">
-                    <p className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-ink-400">
-                      {t('members.leadership')}
-                    </p>
+                    <p className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-plum-700">{headLabel}</p>
                     <p className="mt-1 font-display text-base font-semibold leading-snug tracking-tight text-ink-900 text-pretty">
-                      {leader}
+                      {head.name}
                     </p>
                   </div>
+                  {portraitOpen && (
+                    <PhotoViewer
+                      images={[member.leaderPhoto]}
+                      alt={`${head.name}${head.title ? `, ${head.title}` : ''}`}
+                      start={0}
+                      onClose={() => setPortraitOpen(false)}
+                    />
+                  )}
                 </div>
               )}
 
@@ -198,16 +234,7 @@ export default function MemberDetailClient({ member }: MemberDetailClientProps) 
           <div className="lg:col-span-8">
             {member.images.length > 0 && (
               <Reveal className="mb-10 lg:mb-12">
-                <MediaGallery
-                  images={member.images}
-                  alt={denomination}
-                  labels={{
-                    enlarge: t('home.gallery.view'),
-                    close: t('home.gallery.close'),
-                    previous: t('home.gallery.previous'),
-                    next: t('home.gallery.next'),
-                  }}
-                />
+                <PhotoCarousel images={member.images} alt={denomination} />
               </Reveal>
             )}
 

@@ -484,7 +484,8 @@
     },
     "website": "Website",
     "visitWebsite": "Visit website",
-    "logoAlt": "{{name}} logo"
+    "logoAlt": "{{name}} logo",
+    "viewPortrait": "View the full photograph of {{name}}"
   },
   "home": {
     "eyebrow": "Council of Protestant Churches of Cameroon",
@@ -529,7 +530,11 @@
       "view": "View",
       "close": "Close",
       "previous": "Previous photograph",
-      "next": "Next photograph"
+      "next": "Next photograph",
+      "label": "Photographs: {{name}}",
+      "slide": "Photograph {{n}} of {{total}}",
+      "goTo": "Show photograph {{n}}",
+      "enlarge": "View full screen"
     },
     "announcements": {
       "title": "Latest",

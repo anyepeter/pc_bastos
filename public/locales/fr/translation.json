@@ -484,7 +484,8 @@
     },
     "website": "Site web",
     "visitWebsite": "Visiter le site",
-    "logoAlt": "Logo : {{name}}"
+    "logoAlt": "Logo : {{name}}",
+    "viewPortrait": "Voir la photo complète de {{name}}"
   },
   "home": {
     "eyebrow": "Conseil des Églises Protestantes du Cameroun",
@@ -529,7 +530,11 @@
       "view": "Voir",
       "close": "Fermer",
       "previous": "Photo précédente",
-      "next": "Photo suivante"
+      "next": "Photo suivante",
+      "label": "Photos : {{name}}",
+      "slide": "Photo {{n}} sur {{total}}",
+      "goTo": "Afficher la photo {{n}}",
+      "enlarge": "Voir en plein écran"
     },
     "announcements": {
       "title": "Dernières",

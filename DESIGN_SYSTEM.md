@@ -152,6 +152,19 @@ history → mission → secretariat → structure → board), `.text-outline`
 transparent `color` would also hide the currentColor stroke), `.drop-cap`,
 `.grow-x`.
 
+**Photographs in sets → `PhotoCarousel`** (`components/PhotoCarousel.tsx`),
+the only gallery on the site: church, event, charity, workshop, department and
+activity pages. Swiper's **coverflow** (chosen by the client, 2026-11-10): the
+current photo large in the centre, neighbours turned back in depth, edges
+fading out (mask in `globals.css`). Autoplays every 4.8 s only while on screen
+and not under reduced motion (which also flattens the 3D); loops from five
+photos, rewinds below. Green pill dots + the two arrow circles underneath. A
+tap on the centre photo opens `PhotoViewer` — full screen on a neutral
+near-black ground, uncropped, filmstrip, Esc/arrows/Tab trapped — which the
+church pages also use for the head's portrait. One photo: framed, no carousel.
+Uploads and `/images` go through `next/image`; any other host falls back to
+`<img>` so an unknown host cannot crash a page.
+
 **Sticky works inside bands.** `PageSection` clips with `overflow-x: clip`,
 not `overflow: hidden`; the latter captures `position: sticky`. Don't put a
 `Reveal` (a transform) on the sticky element itself.

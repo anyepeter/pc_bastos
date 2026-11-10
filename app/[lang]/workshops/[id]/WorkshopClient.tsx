@@ -9,6 +9,7 @@ import PageHero from '@/components/PageHero';
 import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
+import PhotoCarousel from '@/components/PhotoCarousel';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText } from '@/lib/translations';
 import { formatLongDate } from '@/lib/format';
@@ -64,8 +65,7 @@ export default function WorkshopClient({
   // rather than i18next keys. Kept verbatim — redesign only.
   const fr = language === 'fr';
 
-  const [lead, ...rest] = workshop.images;
-  const hasImages = Boolean(lead);
+  const hasImages = workshop.images.length > 0;
 
   // Date, place, length and size — the four facts a reader scans for. Set in
   // mono so they read as data rather than prose.
@@ -90,31 +90,7 @@ export default function WorkshopClient({
         <div className={hasImages ? 'grid gap-8 lg:grid-cols-12 lg:gap-10' : ''}>
           {hasImages && (
             <Reveal className="lg:col-span-7">
-              <figure className="overflow-hidden rounded-2xl border border-ink-200">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={lead}
-                  alt={title}
-                  className="aspect-[16/10] w-full object-cover"
-                />
-              </figure>
-
-              {rest.length > 0 && (
-                <ul className="mt-4 grid grid-cols-3 gap-4">
-                  {rest.map((image, i) => (
-                    <li key={`${image}-${i}`} className="overflow-hidden rounded-xl border border-ink-200">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={image}
-                        alt=""
-                        aria-hidden="true"
-                        loading="lazy"
-                        className="aspect-[4/3] w-full object-cover"
-                      />
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <PhotoCarousel images={workshop.images} alt={title} />
             </Reveal>
           )}
 

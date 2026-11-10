@@ -27,7 +27,7 @@ interface MenuItem {
 }
 
 const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   // Compared against the English-form hrefs below, so `/fr/…` is stripped —
   // otherwise nothing is ever marked current on a French page.
   const pathname = stripLanguage(usePathname() || '/');
@@ -106,18 +106,22 @@ const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
       name: t('navbar.members'),
       wide: true,
       submenu: [
-        { name: 'Eglise Anglicane (EA)', href: '/members/ea' },
+        // Each church's name as it writes it (the same as its MemberChurch row).
+        { name: 'Église Anglicane (EA)', href: '/members/ea' },
         { name: 'Cameroon Baptist Convention (CBC)', href: '/members/cbc' },
-        { name: 'Eglise Evangélique du Cameroun (EEC)', href: '/members/eec' },
-        { name: 'Eglise Evangélique Luthérienne du Cameroun (EELC)', href: '/members/eelc' },
-        { name: 'Eglise Fraternelle Luthérienne du Cameroun (EFLC)', href: '/members/eflc' },
-        { name: 'Eglise Presbytérienne Camerounaise (E P C)', href: '/members/epc' },
-        { name: 'Eglise Protestante Africaine (EPA)', href: '/members/epa' },
+        { name: 'Église Évangélique du Cameroun (EEC)', href: '/members/eec' },
+        { name: 'Église Évangélique Luthérienne du Cameroun (EELC)', href: '/members/eelc' },
+        { name: 'Église Fraternelle Luthérienne du Cameroun (EFLC)', href: '/members/eflc' },
+        { name: 'Église Presbytérienne Camerounaise (EPC)', href: '/members/epc' },
+        { name: 'Église Protestante Africaine (EPA)', href: '/members/epa' },
         { name: 'Native Baptist Church (NBC)', href: '/members/nbc' },
         { name: 'Presbyterian Church in Cameroon (PCC)', href: '/members/pcc' },
-        { name: 'Union des Eglises Baptistes du Cameroun (UEBC)', href: '/members/uebc' },
-        { name: 'Union des Eglises Evangéliques du Cameroun (UEEC)', href: '/members/ueec' },
-        { name: 'FULL GOSPEL Mission (Mission du plein Evangile)(MPE)', href: '/members/mpe' },
+        { name: 'Union des Églises Baptistes du Cameroun (UEBC)', href: '/members/uebc' },
+        { name: 'Union des Églises Évangéliques au Cameroun (UEEC)', href: '/members/ueec' },
+        {
+          name: i18n.language === 'fr' ? 'Mission du Plein Évangile (MPE)' : 'Full Gospel Mission (MPE)',
+          href: '/members/mpe',
+        },
       ],
     },
     { name: t('navbar.board'), href: '/board' },

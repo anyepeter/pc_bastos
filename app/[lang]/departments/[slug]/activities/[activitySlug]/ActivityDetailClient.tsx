@@ -11,7 +11,7 @@ import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
 import MetaRail from '@/components/MetaRail';
-import MediaGallery from '@/components/MediaGallery';
+import PhotoCarousel from '@/components/PhotoCarousel';
 import DepartmentProse from '@/components/DepartmentProse';
 import DepartmentActivityCard from '@/components/DepartmentActivityCard';
 import type { PublicActivity } from '@/lib/departments';
@@ -127,16 +127,7 @@ export default function ActivityDetailClient({
               </h2>
             </Reveal>
             <Reveal delay={80} className="mt-8 max-w-5xl">
-              <MediaGallery
-                images={gallery}
-                alt={title}
-                labels={{
-                  enlarge: t('home.gallery.view'),
-                  close: t('home.gallery.close'),
-                  previous: t('home.gallery.previous'),
-                  next: t('home.gallery.next'),
-                }}
-              />
+              <PhotoCarousel images={gallery} alt={title} />
             </Reveal>
           </div>
         )}

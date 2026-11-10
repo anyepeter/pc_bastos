@@ -162,7 +162,7 @@ Seed or reset a super admin with `npm run create-admin` (`ADMIN_EMAIL` + `ADMIN_
 - `'use client'` is required for anything using `useTranslation()`, Redux hooks, or React state. Server components pass translated text down as props.
 - Server Actions return `{ success, data?, error? }` rather than throwing; callers check `result.success`.
 - Path alias `@/*` maps to the repo root. shadcn/ui components in `components/ui/` are generated — prefer composing over editing them.
-- Icons: `lucide-react`. Carousels: `swiper` and `embla-carousel-react`. Markdown: `react-markdown` + `remark-gfm`. Toasts: `sonner` (admin) / `hooks/use-toast.ts` (shadcn).
+- Icons: `lucide-react`. Photographs: every set of photos (church, event, charity, workshop, department and activity pages) goes through [PhotoCarousel](components/PhotoCarousel.tsx) — Swiper's coverflow effect (the client's choice) plus `PhotoViewer`, a full-screen viewer also used for church heads' portraits; don't add a second gallery. Markdown: `react-markdown` + `remark-gfm`. Toasts: `sonner` (admin) / `hooks/use-toast.ts` (shadcn).
 - Remote images are restricted in [next.config.js](next.config.js) to the R2 public address (`MEDIA_BASE_URL` in [lib/media.ts](lib/media.ts); keep the two in step) and `res.cloudinary.com`; add hosts there before using `next/image` with a new domain.
 
 ## Known dead/stale code
