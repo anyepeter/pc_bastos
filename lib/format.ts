@@ -7,11 +7,14 @@ export function formatLongDate(value: string | Date, language: Language): string
   const date = value instanceof Date ? value : new Date(value);
   if (Number.isNaN(date.getTime())) return '';
 
-  return date.toLocaleDateString(localeFor(language), {
+  const text = date.toLocaleDateString(localeFor(language), {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
+
+  // French writes the first of the month as an ordinal: « 1er novembre 2026 ».
+  return language === 'fr' && date.getDate() === 1 ? text.replace(/^1(?=\s)/, '1er') : text;
 }
 
 export function formatMonthDay(
@@ -32,7 +35,8 @@ export function formatMonthDay(
 
 /**
  * The admin stores times from an `<input type="time">` ("14:30").
- * Public pages show them in 12-hour form in English, 24-hour in French.
+ * Public pages show them in 12-hour form in English, and in French the French
+ * way — « 14 h 30 », « 9 h » — with no-break spaces so the time never splits.
  */
 export function formatTime(value: string | null | undefined, language: Language): string {
   if (!value) return '';
@@ -44,7 +48,10 @@ export function formatTime(value: string | null | undefined, language: Language)
   if (Number.isNaN(hours) || Number.isNaN(minutes)) return value;
 
   if (language === 'fr') {
-    return `${String(hours).padStart(2, '0')}h${String(minutes).padStart(2, '0')}`;
+    const space = '\u00A0';
+    return minutes === 0
+      ? `${hours}${space}h`
+      : `${hours}${space}h${space}${String(minutes).padStart(2, '0')}`;
   }
 
   const suffix = hours >= 12 ? 'PM' : 'AM';

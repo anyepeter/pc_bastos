@@ -68,7 +68,7 @@ const WelcomeSection = () => {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/images/b7479a26-dac2-4cd1-9ede-2dd4e6ca0332.jpeg"
-                      alt="A pastor in a black gown and purple stole in a church sanctuary"
+                      alt={t('home.photos.pastorAlt')}
                       className="aspect-[3/4] w-full object-cover object-[42%_center] transition-transform duration-1000 ease-spring hover:scale-[1.04]"
                       loading="lazy"
                     />
@@ -99,7 +99,7 @@ const WelcomeSection = () => {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/images/logo5.jpg"
-                    alt="The council's headquarters wall, a cross-shaped window above a banner naming its member churches"
+                    alt={t('home.photos.wallAlt')}
                     className="aspect-[3/4] w-full object-cover object-center"
                     loading="lazy"
                   />

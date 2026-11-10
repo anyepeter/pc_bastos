@@ -48,7 +48,7 @@ export default function EventsClient({ events }: { events: PublicEvent[] }) {
         title={language === 'fr' ? 'Événements' : 'Events'}
         lede={
           language === 'fr'
-            ? 'Les rassemblements du conseil, à venir et passés'
+            ? 'Les rassemblements du Conseil, à venir et passés'
             : "The council's gatherings, upcoming and past"
         }
       />

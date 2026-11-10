@@ -36,13 +36,19 @@ function timeAgo(dateString: string, language: Language): string {
   if (language === 'fr') {
     if (days === 1) return 'il y a 1 jour';
     if (days < 7) return `il y a ${days} jours`;
-    if (days < 30) return `il y a ${Math.floor(days / 7)} semaines`;
+    if (days < 30) {
+      const weeks = Math.floor(days / 7);
+      return `il y a ${weeks} semaine${weeks > 1 ? 's' : ''}`;
+    }
     return `il y a ${Math.floor(days / 30)} mois`;
   }
 
   if (days === 1) return '1 day ago';
   if (days < 7) return `${days} days ago`;
-  if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
+  if (days < 30) {
+    const weeks = Math.floor(days / 7);
+    return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+  }
   return `${Math.floor(days / 30)} months ago`;
 }
 
@@ -123,7 +129,7 @@ export default function AnnouncementsClient({
         title={language === 'fr' ? 'Annonces' : 'Announcements'}
         lede={
           language === 'fr'
-            ? 'Informations et nouvelles importantes du Conseil des Églises Protestantes'
+            ? 'Informations et communiqués importants du Conseil des Églises Protestantes du Cameroun'
             : 'Important updates and news from the Council of Protestant Churches'
         }
       />

@@ -104,7 +104,15 @@ export default function MemberDetailClient({ member }: MemberDetailClientProps) 
 
   return (
     <>
-      <PageHero title={denomination} />
+      <PageHero
+        title={denomination}
+        mark={
+          <span className="relative flex h-28 w-28 items-center justify-center rounded-full bg-white p-4 shadow-[0_0_0_10px_rgb(91_50_166/0.05),0_0_0_22px_rgb(91_50_166/0.03),0_20px_40px_-20px_rgb(45_27_90/0.5)] ring-1 ring-ink-200">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={member.logo || councilLogo} alt={t('members.logoAlt', { name: denomination })} className="h-full w-full object-contain" />
+          </span>
+        }
+      />
 
       {/* A profile, not a centred stack. The identity card holds the mark, the
           facts and every way to reach the church in one place on the left; the
@@ -113,28 +121,18 @@ export default function MemberDetailClient({ member }: MemberDetailClientProps) 
           which is what made the page feel like loose parts. */}
       <PageSection tone="white">
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-          {/* Not sticky, and not wrapped in <Reveal>. `PageSection` carries
-              `overflow-hidden` to clip its glow, which makes it the scroll box
-              for any `position: sticky` descendant — the card pinned itself
-              112px below the section's top straight away instead of tracking
-              the scroll, leaving it misaligned with the gallery beside it. */}
+          {/* The identity card follows the reader down the page on wide
+              screens. Possible since PageSection clips with overflow-x: clip,
+              which — unlike overflow: hidden — does not capture sticky. Not
+              wrapped in <Reveal>: a transform would break the sticky. */}
           <aside className="lg:col-span-4">
-            <div className="card rounded-2xl p-6 lg:p-7">
-              <span className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl border border-ink-200 bg-white p-3">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={member.logo || councilLogo}
-                  alt={`${denomination} logo`}
-                  className="h-full w-full object-contain"
-                />
-              </span>
-
+            <div className="card rounded-2xl p-6 lg:sticky lg:top-28 lg:p-7 [&>div:first-child]:mt-0 [&>div:first-child]:border-t-0 [&>div:first-child]:pt-0 [&>dl:first-child]:mt-0 [&>dl:first-child]:border-t-0 [&>dl:first-child]:pt-0">
               {member.website && (
                 <a
                   href={member.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="focus-ring group mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-leaf-600 px-5 py-3 font-ui text-sm font-semibold text-white transition-all duration-300 ease-spring hover:bg-leaf-700 active:translate-y-px"
+                  className="focus-ring group flex w-full items-center justify-center gap-2 rounded-full bg-leaf-600 px-5 py-3 font-ui text-sm font-semibold text-white transition-all duration-300 ease-spring hover:bg-leaf-700 active:translate-y-px"
                 >
                   <Globe aria-hidden="true" className="h-4 w-4" />
                   {t('members.visitWebsite')}

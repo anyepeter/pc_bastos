@@ -128,7 +128,7 @@ const Footer = () => {
           </div>
 
           {/* Quick links */}
-          <nav aria-label="Footer" className="lg:col-span-4">
+          <nav aria-label={t('a11y.footerNav')} className="lg:col-span-4">
             <h2 className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-leaf-300">
               {t('footer.quickLinks')}
             </h2>

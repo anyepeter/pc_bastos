@@ -96,7 +96,7 @@ export default function SermonsClient({ sermons }: { sermons: PublicSermon[] }) 
   };
 
   const listenLabel = language === 'fr' ? 'Écouter' : 'Listen';
-  const loadingLabel = language === 'fr' ? 'Chargement...' : 'Loading...';
+  const loadingLabel = language === 'fr' ? 'Chargement…' : 'Loading...';
   const downloadLabel = language === 'fr' ? 'Télécharger' : 'Download';
   const playVideoLabel = language === 'fr' ? 'Lire la vidéo' : 'Play video';
   const closeLabel = language === 'fr' ? 'Fermer' : 'Close';
@@ -107,7 +107,7 @@ export default function SermonsClient({ sermons }: { sermons: PublicSermon[] }) 
         title={language === 'fr' ? 'Prédications' : 'Sermons'}
         lede={
           language === 'fr'
-            ? 'Des messages inspirants de nos responsables spirituels dans les Églises membres'
+            ? 'Des messages inspirants des responsables spirituels de nos Églises membres'
             : 'Inspiring messages from our spiritual leaders across member churches'
         }
       />

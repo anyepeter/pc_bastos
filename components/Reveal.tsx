@@ -9,6 +9,12 @@ interface RevealProps {
   className?: string;
   /** Rendered element — keeps the markup semantic (li, section, figure...). */
   as?: ElementType;
+  /**
+   * How it arrives. `rise` (default) lifts and fades; `wipe` uncovers the box
+   * from the bottom edge up and settles an oversized image inside it; `fade`
+   * only fades; `left`/`right` slide in sideways; `scale` grows from 96%.
+   */
+  variant?: 'rise' | 'wipe' | 'fade' | 'left' | 'right' | 'scale';
 }
 
 /**
@@ -23,6 +29,7 @@ export default function Reveal({
   delay = 0,
   className = '',
   as: Tag = 'div',
+  variant = 'rise',
 }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
   const [revealed, setRevealed] = useState(false);
@@ -58,6 +65,7 @@ export default function Reveal({
     <Tag
       ref={ref}
       data-revealed={revealed}
+      data-variant={variant === 'rise' ? undefined : variant}
       style={{ '--reveal-delay': `${delay}ms` } as React.CSSProperties}
       className={`reveal ${className}`}
     >

@@ -6,7 +6,7 @@
  *   Executive Committee, the council-wide figures.
  * - The Health Department's profile and its roll-up sheet — vision,
  *   objectives, activities, services, figures, contact.
- * - "Le Département du Témoignage Chrétien" — the DTC, DJ and DFAS
+ * - "Le Département du Témoignage chrétien" — the DTC, DJ and DFAS
  *   attributions, the DFAS constitution and the April–June 2026 action plans.
  * - The DIC's note on its premises (its salaries, rents and running costs are
  *   internal and deliberately left out).
@@ -80,7 +80,7 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
     published: true,
     name: {
       en: 'Administrative and Financial Service (SAF)',
-      fr: 'Service Administratif et Financier (SAF)',
+      fr: 'Service administratif et financier (SAF)',
     },
     summary: {
       en: 'Centralizes all income and expenditures of CEPCA; prepares annual financial statements and inventory reports.',
@@ -98,7 +98,7 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
     },
     structures: {
       en: "The Head of the SAF sits on the **Executive Committee**, CEPCA's executive body. The committee meets twice a year, is convened by the President of CEPCA, and brings together the heads of the member churches, the General Secretary, the Executive Secretaries of the departments and the Head of the SAF.",
-      fr: "Le Chef du SAF siège au **Comité Exécutif**, organe exécutif du CEPCA. Le comité se réunit deux fois par an sur convocation du Président du CEPCA et regroupe les Chefs d'Églises, le Secrétaire Général, les Secrétaires Exécutifs des Départements et le Chef du SAF.",
+      fr: "Le chef du SAF siège au **Comité exécutif**, organe exécutif du CEPCA. Le comité se réunit deux fois par an sur convocation du président du CEPCA et regroupe les chefs d'Église, le secrétaire général, les secrétaires exécutifs des départements et le chef du SAF.",
     },
     location: { en: 'CEPCA headquarters, Yaoundé', fr: 'Siège du CEPCA, Yaoundé' },
     headTitle: { en: 'Head of the SAF', fr: 'Chef du SAF' },
@@ -117,11 +117,11 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
     },
     summary: {
       en: 'Coordinates public health activities of member churches; represents church medical works before the Government, particularly the Ministry of Public Health.',
-      fr: 'Coordonne les activités de santé publique des Églises membres ; représente leurs œuvres médicales auprès du Gouvernement, en particulier du Ministère de la Santé Publique.',
+      fr: 'Coordonne les activités de santé publique des Églises membres ; représente leurs œuvres médicales auprès du Gouvernement, en particulier du ministère de la Santé publique.',
     },
     vision: {
       en: "Guided by faith and driven by God's boundless love, the Council of Protestant Churches of Cameroon (CPCC) is dedicated to providing transformative, holistic and high-quality healthcare. Rooted in biblical principles and Christian values, our mission is to restore the physical, emotional and spiritual vitality of individuals and communities throughout Cameroon, realising our goal: “Together, One Church.”",
-      fr: "Guidé par la foi et animé par l'amour infini de Dieu, le Conseil des Églises Protestantes du Cameroun (CEPCA) s'engage à offrir des services de santé transformateurs, holistiques et de grande qualité. Enracinée dans les principes bibliques et les valeurs chrétiennes, notre mission est de restaurer la vitalité physique, émotionnelle et spirituelle des personnes et des communautés à travers tout le Cameroun, pour réaliser notre devise : « Être Église ensemble ».",
+      fr: "Guidé par la foi et animé par l'amour infini de Dieu, le Conseil des Églises Protestantes du Cameroun (CEPCA) s'engage à offrir des services de santé transformateurs, holistiques et de grande qualité. Enracinée dans les principes bibliques et les valeurs chrétiennes, notre mission est de restaurer la vitalité physique, émotionnelle et spirituelle des personnes et des communautés dans tout le Cameroun, pour réaliser notre devise : « Être Église ensemble ».",
     },
     mission: {
       en: md(
@@ -131,8 +131,8 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
       ),
       fr: md(
         '- Coordonner les activités de santé publique des Églises membres du CEPCA.',
-        '- Représenter les œuvres médicales des Églises membres auprès du Gouvernement, en particulier du Ministère de la Santé Publique.',
-        "- Offrir aux patients un accueil et des soins de qualité dans nos structures, en donnant la priorité à la lutte contre le VIH/SIDA, le paludisme et la tuberculose, ainsi qu'à la santé communautaire."
+        '- Représenter les œuvres médicales des Églises membres auprès du Gouvernement, en particulier du ministère de la Santé publique.',
+        "- Offrir aux patients un accueil et des soins de qualité dans nos structures, en donnant la priorité à la lutte contre le VIH/sida, le paludisme et la tuberculose, ainsi qu'à la santé communautaire."
       ),
     },
     objectives: {
@@ -160,14 +160,14 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
         '- Diversify funding through partnerships with international NGOs, foundations and existing partners.'
       ),
       fr: md(
-        "Nos objectifs stratégiques visent un accès inclusif à des soins de qualité, la santé et le bien-être intégral, des ressources humaines et des infrastructures de santé renforcées, et une croissance durable.",
+        "Nos objectifs stratégiques visent un accès inclusif à des soins de qualité, la santé et le bien-être intégraux, des ressources humaines et des infrastructures de santé renforcées, et une croissance durable.",
         '',
         '### 1. Garantir un accès inclusif à des soins de qualité, empreints de compassion',
         "- Accélérer l'accès à des services de qualité en santé de la reproduction, de la mère, du nouveau-né, de l'enfant et de l'adolescent (SRMNIA), en mettant l'accent sur la réduction de la mortalité maternelle et néonatale.",
         "- Améliorer l'accès aux soins essentiels pour les populations vulnérables, notamment les personnes déplacées internes et les personnes handicapées.",
         "- Donner aux Églises membres les moyens de créer et d'offrir des services de santé de base, en étendant notre réseau de soins.",
         '',
-        '### 2. Promouvoir la santé et le bien-être intégral',
+        '### 2. Promouvoir la santé et le bien-être intégraux',
         "- Lancer un programme complet d'éducation à la santé — prévention, nutrition et hygiène — animé par des bénévoles formés dans au moins 50 % des paroisses membres.",
         '- Intégrer les services de santé mentale aux soins primaires dans toutes les principales formations sanitaires du CEPCA.',
         '- Organiser chaque trimestre des campagnes de vaccination et de dépistage des maladies courantes, avec les Églises locales et les responsables communautaires.',
@@ -221,7 +221,7 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
     },
     structures: {
       en: 'The department is run by its **Technical Committee**, headed by the **Executive Secretary** and supported by an office clerk. Its network brings together the health services of nine of the twelve member churches, each with its own health-service coordinator.',
-      fr: 'Le département est animé par son **Comité technique**, dirigé par le **Secrétaire exécutif** et appuyé par un commis de bureau. Son réseau réunit les services de santé de neuf des douze Églises membres, chacun avec son propre coordonnateur.',
+      fr: 'Le département est animé par son **Comité technique**, dirigé par le **secrétaire exécutif** et appuyé par un commis de bureau. Son réseau réunit les services de santé de neuf des douze Églises membres, chacun avec son propre coordonnateur.',
     },
     keyFigures: {
       en: md(
@@ -273,7 +273,7 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
     name: { en: 'Department of Education (OEPP)', fr: "Département de l'Éducation (OEPP)" },
     summary: {
       en: 'Coordinates the educational work of member churches; develops mid- and long-term policies for Protestant private education.',
-      fr: "Coordonne l'activité des œuvres scolaires des Églises membres ; élabore une politique scolaire à moyen et à long terme pour l'Enseignement Privé Protestant.",
+      fr: "Coordonne l'activité des œuvres scolaires des Églises membres ; élabore une politique scolaire à moyen et à long terme pour l'enseignement privé protestant.",
     },
     vision: {
       en: 'Education has long been the calling of the Christian missions, and we carry that vocation forward: to form competent citizens, women and men, who uphold Christian ethics wherever they are.',
@@ -286,7 +286,7 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
       ),
       fr: md(
         "- Coordonner l'activité des différentes œuvres scolaires des Églises membres du CEPCA.",
-        "- Élaborer une politique scolaire à moyen et à long terme sur la spécificité et la stratégie de l'Enseignement Privé Protestant."
+        "- Élaborer une politique scolaire à moyen et à long terme sur la spécificité et la stratégie de l'enseignement privé protestant."
       ),
     },
     keyFigures: {
@@ -310,7 +310,7 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
     published: true,
     name: {
       en: 'Department of Women and Social Affairs (DFAS)',
-      fr: 'Département des Femmes et des Affaires Sociales (DFAS)',
+      fr: 'Département des Femmes et des Affaires sociales (DFAS)',
     },
     summary: {
       en: 'Highlights the role of women in Church and society; prepares women for effective participation within their churches and the Cameroonian community.',
@@ -373,10 +373,10 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
     acronym: 'DTC',
     sortOrder: 5,
     published: true,
-    name: { en: 'Department of Christian Witness (DTC)', fr: 'Département du Témoignage Chrétien (DTC)' },
+    name: { en: 'Department of Christian Witness (DTC)', fr: 'Département du Témoignage chrétien (DTC)' },
     summary: {
       en: 'Coordinates the evangelism planning of the member churches, organises theological reflection, and supports the bodies it oversees — the National Evangelism Centre, the Protestant Chaplaincy, Christian Youth and the Ecumenical Social Works.',
-      fr: "Coordonne la planification de l'évangélisation des Églises membres, organise la réflexion théologique et soutient les structures qu'il supervise — le Centre National d'Évangélisation, l'Aumônerie Protestante, la Jeunesse Chrétienne et les Œuvres Sociales Œcuméniques.",
+      fr: "Coordonne la planification de l'évangélisation des Églises membres, organise la réflexion théologique et soutient les structures qu'il supervise — le Centre national d'évangélisation, l'Aumônerie protestante, la Jeunesse chrétienne et les Œuvres sociales œcuméniques.",
     },
     mission: {
       en: md(
@@ -386,7 +386,7 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
         '- Know the financial needs of each component, and seek the means to help them.'
       ),
       fr: md(
-        "- Coordonner le planning des différents efforts d'évangélisation des Églises membres du CEPCA.",
+        "- Coordonner la planification des différents efforts d'évangélisation des Églises membres du CEPCA.",
         "- Organiser des réunions de réflexion théologique et des études assimilées pour analyser la situation spirituelle et chercher les méthodes appropriées d'évangélisation au Cameroun, et plus précisément pour les Églises membres.",
         "- Assister les différentes composantes du département dans leurs domaines particuliers d'évangélisation.",
         '- Connaître les besoins financiers de chaque composante et chercher les moyens de les aider.'
@@ -404,10 +404,10 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
       fr: md(
         'Le département supervise les activités des structures suivantes :',
         '',
-        "- **Le Centre National d'Évangélisation (CNE)**",
-        "- **L'Aumônerie Protestante**",
-        '- **La Jeunesse Chrétienne**',
-        '- **Les Œuvres Sociales Œcuméniques**'
+        "- **Le Centre national d'évangélisation (CNE)**",
+        "- **L'Aumônerie protestante**",
+        '- **La Jeunesse chrétienne**',
+        '- **Les Œuvres sociales œcuméniques**'
       ),
     },
     headTitle: EXECUTIVE_SECRETARY,
@@ -433,8 +433,8 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
         '- Develop tools for citizenship and integrity education for young people, and identify their shared problems and interests.'
       ),
       fr: md(
-        "- Canaliser les efforts des jeunes chrétiens pour un renouveau spirituel et un attachement à la Parole de Dieu, en vue d'une participation active au développement de l'Église et de la Nation.",
-        "- Aider les jeunes des Églises membres du CEPCA à réaliser leurs préoccupations par l'attachement à la Parole de Dieu vécue dans leur vie quotidienne.",
+        "- Canaliser les efforts des jeunes chrétiens pour un renouveau spirituel et un attachement à la Parole de Dieu, en vue d'une participation active au développement de l'Église et de la nation.",
+        "- Aider les jeunes des Églises membres du CEPCA à répondre à leurs préoccupations par l'attachement à la Parole de Dieu, vécue au quotidien.",
         '- Créer, développer et entretenir des relations de collaboration, de solidarité, de partage et de fraternité entre les mouvements de jeunesse chrétiens des Églises membres du CEPCA et ceux reconnus par le département, afin de rendre effectif et efficace le message évangélique parmi les jeunes du Cameroun.',
         "- Former des jeunes pour une participation efficace et effective à la vie de l'Église et de la société.",
         "- Développer des outils d'éducation à la citoyenneté et à l'intégrité destinés aux jeunes, et identifier les problèmes et intérêts communs."
@@ -519,7 +519,7 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
     published: true,
     name: {
       en: 'Bureau for Research and Development Studies (BURED)',
-      fr: "Bureau de Recherches et d'Études pour le Développement (BURED)",
+      fr: "Bureau de recherches et d'études pour le développement (BURED)",
     },
     summary: {
       en: "Promotes CEPCA's and its member churches' participation in national development and socio-economic issues.",
@@ -527,11 +527,11 @@ export const DEPARTMENT_SEEDS: DepartmentSeed[] = [
     },
     vision: {
       en: 'CEPCA is an important actor and a strategic partner in development — for a holistic Gospel, one that brings together the purely religious and the works of Christian witness.',
-      fr: "Le CEPCA est un acteur important et un partenaire stratégique pour les questions de développement d'un Évangile holistique, c'est-à-dire combinant à la fois les aspects purement religieux et ceux d'œuvres de témoignage chrétien.",
+      fr: "Le CEPCA est un acteur important et un partenaire stratégique pour les questions de développement, au service d'un Évangile intégral, c'est-à-dire qui allie les aspects purement religieux et les œuvres de témoignage chrétien.",
     },
     mission: {
       en: 'The main objective of BURED is to promote and drive the participation of CEPCA and its member churches in development, and in the major social and economic questions facing Cameroonian society.',
-      fr: "L'objectif principal du BURED est de promouvoir et d'animer la participation du CEPCA et des Églises membres du CEPCA au développement et dans le cadre des grandes questions sociales et économiques de la société camerounaise.",
+      fr: "L'objectif principal du BURED est de promouvoir et d'animer la participation du CEPCA et des Églises membres du CEPCA au développement ainsi qu'aux grandes questions sociales et économiques de la société camerounaise.",
     },
     headName: 'John Essobe',
     headTitle: { en: 'Coordinator', fr: 'Coordonnateur' },
@@ -549,7 +549,7 @@ const Q2_2026 = { date: '2026-04-01', endDate: '2026-06-30' };
 
 const DTC_DJ_PLAN = {
   en: 'Part of the quarterly action plan for April–June 2026 drawn up by the Youth and Christian Witness departments.',
-  fr: "Activité inscrite au plan d'action trimestriel d'avril à juin 2026 du département de la Jeunesse et du Témoignage Chrétien.",
+  fr: "Activité inscrite au plan d'action trimestriel d'avril à juin 2026 établi par les départements de la Jeunesse et du Témoignage chrétien.",
 };
 
 export const DEPARTMENT_ACTIVITY_SEEDS: DepartmentActivitySeed[] = [
@@ -561,11 +561,11 @@ export const DEPARTMENT_ACTIVITY_SEEDS: DepartmentActivitySeed[] = [
     published: false,
     title: {
       en: 'Supervision of the evangelism campaign in East Cameroon',
-      fr: "Supervision de la campagne d'évangélisation à l'Est Cameroun",
+      fr: "Supervision de la campagne d'évangélisation dans l'Est du Cameroun",
     },
     summary: {
       en: 'Planned for April–June 2026: supervising the evangelism campaign in East Cameroon, in partnership with the UEEC (CEPCA East).',
-      fr: "Prévu d'avril à juin 2026 : supervision de la campagne d'évangélisation à l'Est Cameroun, en collaboration avec l'UEEC (CEPCA Est).",
+      fr: "Prévu d'avril à juin 2026 : supervision de la campagne d'évangélisation dans l'Est du Cameroun, en collaboration avec l'UEEC (CEPCA Est).",
     },
     body: DTC_DJ_PLAN,
     location: { en: 'East Region, Cameroon', fr: "Région de l'Est, Cameroun" },
@@ -610,11 +610,11 @@ export const DEPARTMENT_ACTIVITY_SEEDS: DepartmentActivitySeed[] = [
     published: false,
     title: {
       en: 'Presenting the “Be Yourself” pamphlet to young people',
-      fr: 'Présentation à la jeunesse du pamphlet « Be Yourself »',
+      fr: 'Présentation à la jeunesse de la brochure « Be Yourself »',
     },
     summary: {
       en: 'Planned for April–June 2026: presenting the pamphlet “Be Yourself” to young people.',
-      fr: "Prévu d'avril à juin 2026 : présentation à la jeunesse du pamphlet « Be Yourself ».",
+      fr: "Prévu d'avril à juin 2026 : présentation à la jeunesse de la brochure « Be Yourself ».",
     },
     body: DTC_DJ_PLAN,
   },
@@ -654,7 +654,7 @@ export const DEPARTMENT_ACTIVITY_SEEDS: DepartmentActivitySeed[] = [
     },
     location: {
       en: 'Diamaré department, Far North Region',
-      fr: "Département du Diamaré, Région de l'Extrême-Nord",
+      fr: "Département du Diamaré, région de l'Extrême-Nord",
     },
     body: {
       en: md(
@@ -696,7 +696,7 @@ export const DEPARTMENT_ACTIVITY_SEEDS: DepartmentActivitySeed[] = [
       fr: md(
         '## Le problème',
         '',
-        "Dans le département du Diamaré, dans la Région de l'Extrême-Nord, les écoles manquent de l'assainissement le plus élémentaire. Faute de toilettes privées, les filles sont contraintes de se soulager en plein air. Avec peu d'éducation à la santé menstruelle et peu d'accompagnement de la part des adultes qui les entourent, elles vivent la puberté dans la peur et la honte — avec pour conséquences des infections évitables, la stigmatisation et de nombreux abandons scolaires.",
+        "Dans le département du Diamaré, dans la région de l'Extrême-Nord, les écoles manquent de l'assainissement le plus élémentaire. Faute de toilettes privées, les filles sont contraintes de se soulager en plein air. Avec peu d'éducation à la santé menstruelle et peu d'accompagnement de la part des adultes qui les entourent, elles vivent la puberté dans la peur et la honte — avec pour conséquences des infections évitables, la stigmatisation et de nombreux abandons scolaires.",
         '',
         '## Ce que le projet changerait',
         '',
@@ -710,7 +710,7 @@ export const DEPARTMENT_ACTIVITY_SEEDS: DepartmentActivitySeed[] = [
         '',
         "1. Construire des blocs de latrines et d'urinoirs pour les filles dans cinq écoles pilotes.",
         "2. Animer des séances de sensibilisation à l'hygiène centrées sur la santé menstruelle et sexuelle.",
-        "3. Former les directeurs d'école, les enseignants et le personnel, avec des agents de la Délégation de l'Éducation de Base et du District de Santé du Diamaré.",
+        "3. Former les directeurs d'école, les enseignants et le personnel, avec des agents de la délégation départementale de l'Éducation de base et du district de santé du Diamaré.",
         "4. Distribuer des serviettes hygiéniques et des kits d'hygiène aux filles pubères.",
         "5. Créer des clubs d'hygiène et d'assainissement pour gérer et entretenir les installations.",
         '',
@@ -723,11 +723,11 @@ export const DEPARTMENT_ACTIVITY_SEEDS: DepartmentActivitySeed[] = [
         '',
         '## Partenaires',
         '',
-        "La proposition est adressée au Ministère de la Santé Publique (MINSANTE) et associe le Ministère de l'Éducation de Base (MINEDUB) par sa délégation départementale, le District de Santé du Diamaré, les communes et les élites locales. L'objectif est un modèle que le Ministère de la Santé Publique pourrait étendre à d'autres départements, comme le Logone-et-Chari.",
+        "La proposition est adressée au ministère de la Santé publique (MINSANTE) et associe le ministère de l'Éducation de base (MINEDUB) par sa délégation départementale, le district de santé du Diamaré, les communes et les élites locales. L'objectif est un modèle que le ministère de la Santé publique pourrait étendre à d'autres départements, comme le Logone-et-Chari.",
         '',
         '## État du projet',
         '',
-        "Il s'agit d'une proposition de projet. Le Département de la Santé apportera ses fonds propres et recherche le reste du budget auprès de partenaires, notamment les Ministères de la Santé Publique et de l'Éducation de Base, avec des contributions attendues des élites locales et des communes."
+        "Il s'agit d'une proposition de projet. Le Département de la Santé apportera ses fonds propres et recherche le reste du budget auprès de partenaires, notamment les ministères de la Santé publique et de l'Éducation de base, avec des contributions attendues des élites locales et des communes."
       ),
     },
   },

@@ -1,486 +1,494 @@
 {
   "common": {
     "cepca": "CEPCA",
-    "donate": "Faire un Don",
-    "learnMore": "En Savoir Plus",
-    "viewAll": "Voir Tout",
-    "getDirections": "Obtenir l'Itinéraire",
-    "readMore": "Lire Plus",
+    "donate": "Faire un don",
+    "learnMore": "En savoir plus",
+    "viewAll": "Voir tout",
+    "getDirections": "Itinéraire",
+    "readMore": "Lire la suite",
     "listen": "Écouter",
-    "viewDetails": "Voir les Détails",
-    "sendMessage": "Envoyer le Message",
-    "sending": "Envoi en cours...",
-    "upcoming": "À Venir",
+    "viewDetails": "Voir les détails",
+    "sendMessage": "Envoyer le message",
+    "sending": "Envoi en cours…",
+    "upcoming": "À venir",
     "complete": "Terminé",
     "notFound": {
       "title": "Page introuvable",
-      "text": "La page que vous cherchiez a été déplacée ou n'existe plus.",
+      "text": "La page que vous cherchez a été déplacée ou n'existe plus.",
       "home": "Retour à l'accueil"
     }
   },
   "navbar": {
     "home": "Accueil",
-    "aboutUs": "À Propos",
-    "ourMissionVision": "Notre Mission & Vision",
-    "generalSecretariat": "Secrétariat Général",
-    "departmentsAndServices": "Départements et Services rattachés",
-    "ourHistory": "Notre Histoire",
-    "cepcaStructures": "Structures CEPCA",
-    "members": "Membres",
-    "sermons": "Sermons",
+    "aboutUs": "À propos",
+    "ourMissionVision": "Mission et vision",
+    "generalSecretariat": "Secrétariat général",
+    "departmentsAndServices": "Départements et services rattachés",
+    "ourHistory": "Notre histoire",
+    "cepcaStructures": "Structure du CEPCA",
+    "members": "Églises membres",
+    "sermons": "Prédications",
     "activities": "Activités",
-    "charity": "Charité",
-    "workshopsTrainings": "Ateliers/Formations",
+    "charity": "Action caritative",
+    "workshopsTrainings": "Ateliers et formations",
     "news": "Actualités",
     "futureEvents": "Événements",
     "announcements": "Annonces",
-    "blogs": "Blogs",
+    "blogs": "Blog",
     "contactUs": "Contact",
     "board": "Bureau du CEPCA"
   },
   "footer": {
     "tagline": "Conseil des Églises Protestantes",
-    "description": "Construire des communautés de foi à travers le Cameroun par l'unité, le service et la croissance spirituelle.",
-    "servingSince": "Au service avec amour depuis 1957",
-    "quickLinks": "Liens Rapides",
-    "getInTouch": "Contact",
-    "followUs": "Suivez-Nous",
+    "description": "Bâtir des communautés de foi dans tout le Cameroun par l'unité, le service et la croissance spirituelle.",
+    "servingSince": "Au service, avec amour, depuis 1957",
+    "quickLinks": "Liens rapides",
+    "getInTouch": "Nous contacter",
+    "followUs": "Suivez-nous",
     "copyright": "© 2025 CEPCA. Tous droits réservés.",
-    "members": "Membres",
+    "members": "Églises membres",
     "contact": "Contact",
-    "about": "À Propos",
+    "about": "À propos",
     "backToTop": "Retour en haut"
   },
   "hero": {
     "title": "ÊTRE ÉGLISE",
-    "description": "Douze Églises protestantes. Une seule voix. Le CEPCA rassemble 13 millions de fidèles au Cameroun autour de la santé, de l'éducation et du service des communautés.",
-    "contactUs": "Nous Contacter",
-    "donateNow": "Faire un Don",
+    "description": "Douze Églises protestantes. Une seule voix. Le CEPCA rassemble 13 millions de fidèles au Cameroun autour de la santé, de l'éducation et du service aux communautés.",
+    "contactUs": "Nous contacter",
+    "donateNow": "Faire un don",
     "titleHighlight": "ENSEMBLE"
   },
   "welcome": {
     "tagline": "Bienvenue au CEPCA",
     "title": "Être Église",
-    "titleHighlight": "Ensemble",
-    "description": "Le Conseil des Églises Protestantes du Cameroun (CEPCA) est une organisation œcuménique représentant 12 églises membres, 13 millions de croyants et 15 500 congrégations. Nous sommes unis dans notre mission de guérison, d'éducation et de développement communautaire holistique à travers le Cameroun.",
+    "titleHighlight": "ensemble",
+    "description": "Le Conseil des Églises Protestantes du Cameroun (CEPCA) est une organisation œcuménique qui représente 12 Églises membres, 13 millions de fidèles et 15 500 paroisses. Nous sommes unis dans une même mission de guérison, d'éducation et de développement communautaire intégral dans tout le Cameroun.",
     "healthcare": {
-      "title": "Soins de Santé",
-      "description": "350 hôpitaux et centres de santé fournissant des soins de qualité à travers le Cameroun."
+      "title": "Santé",
+      "description": "350 hôpitaux et centres de santé qui dispensent des soins de qualité dans tout le Cameroun."
     },
     "education": {
       "title": "Éducation",
-      "description": "1 580 écoles et 15 universités éduquant plus de 500 000 étudiants annuellement."
+      "description": "1 580 écoles et 15 universités qui forment chaque année plus de 500 000 élèves et étudiants."
     },
     "spiritualLeadership": {
-      "title": "Direction Spirituelle",
-      "description": "Au service de 13 millions de croyants à travers 15 500 congrégations dans tout le pays."
+      "title": "Accompagnement spirituel",
+      "description": "Au service de 13 millions de fidèles dans 15 500 paroisses, dans tout le pays."
     },
-    "learnMore": "En Savoir Plus Sur Nous",
-    "supportOurWork": "Soutenir Notre Travail",
+    "learnMore": "En savoir plus sur nous",
+    "supportOurWork": "Soutenir notre action",
     "stats": {
-      "memberChurches": "Églises Membres",
-      "believers": "Croyants"
+      "memberChurches": "Églises membres",
+      "believers": "Fidèles"
     }
   },
   "missionVision": {
-    "title": "Mission & Vision",
-    "subtitle": "\"Être Église Ensemble\" - Unis dans l'objectif, divers dans l'expression",
+    "title": "Mission et vision",
+    "subtitle": "« Être Église ensemble » : unis par un même but, divers dans nos expressions",
     "vision": {
-      "title": "Notre Vision",
-      "description1": "Bien que nous puissions différer les uns des autres, il reste vrai que par l'œuvre du Saint-Esprit et le respect des principes démocratiques, nous pouvons tous parler un langage commun—le langage de l'amour.",
-      "description2": "Le CEPCA renforce notre sentiment commun d'appartenance en tant qu'Églises unies pour défendre une cause commune. Ce n'est plus une simple juxtaposition de dénominations, mais une véritable institution œcuménique engagée à faire avancer les intérêts protestants—une vision d'intégration.",
-      "quote": "\"Que pouvons-nous accomplir ensemble?\""
+      "title": "Notre vision",
+      "description1": "Même si nous sommes différents les uns des autres, il n'en demeure pas moins que, par l'œuvre du Saint-Esprit et dans le respect des principes démocratiques, nous pouvons tous parler un langage commun : celui de l'amour.",
+      "description2": "Le CEPCA renforce notre sentiment d'appartenance commune, en tant qu'Églises unies pour la défense d'une même cause. Il ne s'agit plus d'une simple juxtaposition de dénominations, mais d'une véritable institution œcuménique engagée dans la promotion des intérêts protestants : une vision d'intégration.",
+      "quote": "« Que pouvons-nous accomplir ensemble ? »"
     },
     "mission": {
-      "title": "Notre Mission",
-      "description": "Notre mission renouvelée se concentre sur la guérison, la libération et le développement holistique de la personne humaine.",
+      "title": "Notre mission",
+      "description": "Notre mission renouvelée est centrée sur la guérison, la libération et le développement intégral de la personne humaine.",
       "health": {
         "title": "Santé",
-        "description": "Fournir des soins de qualité et un service compatissant, lutter contre le VIH/SIDA, le paludisme, la tuberculose et améliorer la santé communautaire."
+        "description": "Offrir des soins de qualité et un service empreint de compassion, lutter contre le VIH/sida, le paludisme et la tuberculose, et améliorer la santé communautaire."
       },
       "education": {
         "title": "Éducation",
-        "description": "Poursuivre l'héritage des missions chrétiennes, former des citoyens compétents qui respectent l'éthique chrétienne partout où ils servent."
+        "description": "Poursuivre l'héritage des missions chrétiennes en formant des citoyens compétents, attachés à l'éthique chrétienne partout où ils servent."
       },
       "pastoral": {
-        "title": "Ministère Pastoral",
-        "description": "Rester une voix prophétique, se tenir aux côtés de ceux qui sont en détresse et parler à travers divers médias et contextes de culte."
+        "title": "Ministère pastoral",
+        "description": "Demeurer une voix prophétique aux côtés des personnes en détresse, en s'exprimant par divers médias et dans différents cadres de culte."
       }
     },
     "corePrinciples": {
-      "title": "Nos Principes Fondamentaux",
-      "principle1": "Confesse Jésus-Christ comme le seul Seigneur et Sauveur",
-      "principle2": "Reconnaît les Saintes Écritures comme la seule norme de foi",
-      "principle3": "Confesse le Credo des Apôtres",
-      "principle4": "Travaille en étroite collaboration avec les églises membres pour atteindre les objectifs"
+      "title": "Nos principes fondamentaux",
+      "principle1": "Confesse Jésus-Christ comme seul Seigneur et Sauveur",
+      "principle2": "Reconnaît les Saintes Écritures comme seule norme de la foi",
+      "principle3": "Confesse le Symbole des apôtres",
+      "principle4": "Travaille en étroite collaboration avec les Églises membres pour atteindre ses objectifs"
     }
   },
   "objectives": {
-    "title": "Nos Objectifs",
-    "subtitle": "Travailler ensemble pour renforcer et unir les églises protestantes à travers le Cameroun",
+    "title": "Nos objectifs",
+    "subtitle": "Travailler ensemble pour renforcer et unir les Églises protestantes dans tout le Cameroun",
     "objective1": "Témoigner de l'unité profonde du protestantisme au Cameroun",
-    "objective2": "Développer et coordonner les efforts conjoints d'évangélisation et de service chrétien",
-    "objective3": "Promouvoir la vie chrétienne à travers des projets sociaux et économiques communs",
-    "objective4": "Coordonner les événements protestants conjoints à travers le Cameroun",
-    "objective5": "Représenter le protestantisme camerounais auprès des autorités publiques",
-    "objective6": "Exprimer la 'Voix des Protestants' sur les questions d'intérêt public et éthique",
-    "ctaDescription": "En savoir plus sur l'histoire, la structure et les églises membres du CEPCA",
-    "learnMore": "En Savoir Plus Sur Nous"
+    "objective2": "Développer et coordonner les efforts communs d'évangélisation et de service chrétien",
+    "objective3": "Promouvoir la vie chrétienne par des projets sociaux et économiques communs",
+    "objective4": "Coordonner les manifestations protestantes communes dans tout le Cameroun",
+    "objective5": "Représenter le protestantisme camerounais auprès des pouvoirs publics",
+    "objective6": "Porter la « voix des protestants » sur les questions d'intérêt public et d'ordre éthique",
+    "ctaDescription": "En savoir plus sur l'histoire, la structure et les Églises membres du CEPCA",
+    "learnMore": "En savoir plus sur nous"
   },
   "charity": {
     "title": "Nos",
-    "titleHighlight": "Programmes de Charité",
-    "subtitle": "Transformer des vies par une sensibilisation compatissante et un développement communautaire durable",
-    "fundsUsed": "Fonds Utilisés",
+    "titleHighlight": "programmes caritatifs",
+    "subtitle": "Transformer des vies par une action solidaire et un développement communautaire durable",
+    "fundsUsed": "Fonds utilisés",
     "of": "sur",
-    "viewDetails": "Voir les Détails",
-    "viewAllPrograms": "Voir Tous les Programmes"
+    "viewDetails": "Voir les détails",
+    "viewAllPrograms": "Voir tous les programmes"
   },
   "contact": {
-    "pageTitle": "Entrer en",
-    "pageTitleHighlight": "Contact",
-    "pageSubtitle": "Nous aimerions avoir de vos nouvelles ! Que vous planifiez votre première visite, ayez besoin de prière ou souhaitiez en savoir plus sur notre famille d'église.",
-    "weAreHere": "Nous Sommes Là Pour Vous",
-    "description": "Notre équipe est prête à répondre à vos questions, à prier avec vous ou à vous aider à franchir votre prochaine étape dans la foi. N'hésitez pas à nous contacter !",
+    "pageTitle": "Prendre",
+    "pageTitleHighlight": "contact",
+    "pageSubtitle": "Écrivez au Secrétariat général, appelez-nous aux heures d'ouverture ou rendez-nous visite à Yaoundé. Églises membres, partenaires, journalistes ou simples particuliers : chacun peut nous contacter.",
+    "weAreHere": "Comment nous joindre",
+    "description": "Le secrétariat répond à vos questions sur le Conseil, ses Églises membres et ses départements, et transmet votre message à la bonne personne.",
     "visitUs": {
-      "title": "Visitez-Nous",
-      "getDirections": "Obtenir l'Itinéraire →"
+      "title": "Nous rendre visite",
+      "getDirections": "Itinéraire →"
     },
     "callUs": {
-      "title": "Appelez-Nous"
+      "title": "Nous appeler"
     },
     "emailUs": {
-      "title": "Envoyez-nous un Email",
-      "response": "Nous répondons généralement dans les 24 heures"
+      "title": "Nous écrire",
+      "response": "Nous vous répondons dès que possible, en général sous quelques jours ouvrés."
     },
     "whatsapp": {
-      "title": "Contactez-nous sur WhatsApp",
-      "quickResponses": "Réponses rapides via WhatsApp"
+      "title": "Nous joindre sur WhatsApp",
+      "quickResponses": "Des réponses rapides sur WhatsApp"
     },
     "form": {
-      "title": "Envoyez-nous un Message",
-      "subtitle": "Nous aimerions avoir de vos nouvelles. Remplissez le formulaire ci-dessous et nous vous contacterons !",
-      "fullName": "Nom Complet",
-      "emailAddress": "Adresse Email",
-      "phoneNumber": "Numéro de Téléphone",
-      "subject": "Sujet",
+      "title": "Envoyez-nous un message",
+      "subtitle": "Nous serons heureux de vous lire. Remplissez le formulaire ci-dessous et nous vous répondrons rapidement.",
+      "fullName": "Nom complet",
+      "emailAddress": "Adresse e-mail",
+      "phoneNumber": "Numéro de téléphone",
+      "subject": "Objet",
       "message": "Message",
       "namePlaceholder": "Votre nom complet",
-      "emailPlaceholder": "votre.email@exemple.com",
+      "emailPlaceholder": "votre.adresse@exemple.com",
       "phonePlaceholder": "671 23 45 67",
-      "subjectPlaceholder": "De quoi aimeriez-vous discuter ?",
-      "messagePlaceholder": "Dites-nous comment nous pouvons vous aider...",
+      "subjectPlaceholder": "À quel sujet souhaitez-vous nous écrire ?",
+      "messagePlaceholder": "Dites-nous comment nous pouvons vous aider…",
       "required": "*",
       "send": "Envoyer le message",
-      "sending": "Envoi en cours...",
-      "success": "Merci pour votre message ! Nous vous répondrons très bientôt.",
-      "sendError": "Votre message n'a pas pu être envoyé. Réessayez dans quelques minutes ou écrivez-nous directement à"
-    },
-    "prayer": {
-      "title": "Besoin de Prière ?",
-      "description": "Notre équipe de prière s'engage à élever vos besoins devant Dieu. Aucune demande n'est trop grande ou trop petite - nous sommes là pour prier avec vous.",
-      "submitRequest": "Soumettre une Demande de Prière"
+      "sending": "Envoi en cours…",
+      "success": "Merci pour votre message ! Nous vous répondrons très prochainement.",
+      "sendError": "Votre message n'a pas pu être envoyé. Veuillez réessayer dans quelques minutes ou nous écrire directement à"
     },
     "map": {
-      "title": "Trouvez-Nous",
-      "description": "Le secrétariat du Conseil à Yaoundé. Venez nous rencontrer aux heures d'ouverture.",
+      "title": "Nous trouver",
+      "description": "Le secrétariat du Conseil, à Yaoundé. Venez nous rencontrer aux heures d'ouverture.",
       "viewOnGoogleMaps": "Voir sur Google Maps"
     }
   },
   "about": {
-    "pageTitle": "À Propos du CEPCA",
-    "pageSubtitle": "Le Conseil des Églises Protestantes du Cameroun - Unir les Églises dans la foi, le service et le développement communautaire",
-    "learnMore": "En Savoir Plus",
+    "pageTitle": "À propos du CEPCA",
+    "pageSubtitle": "Le Conseil des Églises Protestantes du Cameroun – unir les Églises dans la foi, le service et le développement communautaire",
+    "learnMore": "En savoir plus",
     "history": {
-      "title": "Notre Histoire",
-      "description": "La vague de mouvements d'indépendance qui a perturbé la Fédération Évangélique de l'Afrique Équatoriale Française a conduit à la création de la FEMEC en 1969, qui a ensuite évolué en CEPCA.",
-      "preview": "Le CEPCA est né du besoin de coordonner les Églises Protestantes au Cameroun après l'indépendance. Le premier Secrétaire Général, le Rév. Eugène MALLO, a coordonné les activités à travers le Comité de l'Éducation et de la Santé.",
-      "pageTitle": "Notre Histoire",
-      "pageSubtitle": "Le parcours de l'unité protestante au Cameroun",
-      "theBeginning": "Les Débuts",
-      "beginningText1": "La vague de mouvements d'indépendance qui a perturbé et remis en question la continuité de la Fédération Évangélique de l'Afrique Équatoriale Française—qui était responsable de la coordination des activités éducatives, sanitaires et rurales ainsi que de la radiodiffusion—ainsi que la décision des Églises et Missions Évangéliques travaillant en Afrique Équatoriale Française de se retirer de la Fédération, ont conduit à la création de la FEMEC (Fédération des Églises et Missions Évangéliques du Cameroun) en 1969.",
-      "beginningText2": "Son premier Secrétaire Général, le Rév. Eugène MALLO (Directeur de la Société Biblique), a coordonné les activités à travers le Comité de l'Éducation et de la Santé et le Studio de Radio.",
-      "thePreamble": "Le Préambule",
-      "preambleText1": "Les Églises Protestantes du Cameroun se reconnaissent comme parties intégrantes de l'Église Universelle, le Corps du Christ. Elles sont déterminées à réaliser le souhait cher de notre Seigneur Jésus-Christ, tel qu'exprimé dans Jean 17:21 : \"Je prie qu'ils soient tous un.\"",
-      "preambleText2": "À cette fin, les Églises ont décidé d'établir une Organisation Œcuménique responsable de promouvoir et défendre le Christianisme, et de guider et coordonner leurs actions communes.",
-      "evolutionToCepca": "Évolution vers le CEPCA",
-      "evolutionText1": "Le CEPCA a une vocation à la fois spirituelle et sociale. Il est apolitique. Depuis 2009, il est ouvert à l'admission d'autres Églises Protestantes, élargissant sa portée et son influence à travers le Cameroun.",
-      "evolutionText2": "Aujourd'hui, le CEPCA témoigne de la puissance de l'unité dans la diversité, rassemblant douze églises membres sous la bannière de l'amour chrétien et du service à la communauté.",
-      "keyMilestones": "Jalons Importants",
-      "milestone1969": "Création de la FEMEC (Fédération des Églises et Missions Évangéliques du Cameroun)",
-      "milestone1970s": "Au cours des années 1970 : établissement des Comités de l'Éducation et de la Santé",
-      "milestone2009": "Ouverture à l'admission d'autres Églises Protestantes",
-      "milestoneToday": "Aujourd'hui, 12 Églises membres servent plus de 13 millions de croyants"
+      "title": "Notre histoire",
+      "description": "La vague des indépendances, qui a ébranlé la Fédération évangélique de l'Afrique-Équatoriale française, a conduit en 1969 à la création de la FEMEC, devenue plus tard le CEPCA.",
+      "preview": "Le CEPCA est né de la nécessité de coordonner les Églises protestantes du Cameroun après l'indépendance. Son premier secrétaire général, le révérend Eugène MALLO, coordonnait les activités par l'intermédiaire du Comité de l'éducation et de la santé.",
+      "pageTitle": "Notre histoire",
+      "pageSubtitle": "L'histoire de l'unité protestante au Cameroun",
+      "theBeginning": "Les débuts",
+      "beginningText1": "La vague des indépendances, qui a ébranlé la Fédération évangélique de l'Afrique-Équatoriale française et remis en question sa pérennité – elle coordonnait alors les activités scolaires, sanitaires et rurales ainsi que la radiodiffusion –, et la décision des Églises et missions évangéliques œuvrant en Afrique-Équatoriale française de se retirer de la Fédération ont conduit, en 1969, à la création de la FEMEC (Fédération des Églises et missions évangéliques du Cameroun).",
+      "beginningText2": "Son premier secrétaire général, le révérend Eugène MALLO (directeur de la Société biblique), coordonnait les activités par l'intermédiaire du Comité de l'éducation et de la santé et du studio de radio.",
+      "thePreamble": "Le préambule",
+      "preambleText1": "Les Églises protestantes du Cameroun se reconnaissent comme parties intégrantes de l'Église universelle, le Corps du Christ. Elles sont résolues à accomplir le vœu le plus cher de notre Seigneur Jésus-Christ, exprimé en Jean 17.21 : « afin que tous soient un ».",
+      "preambleText2": "À cette fin, les Églises ont décidé de créer une organisation œcuménique chargée de promouvoir et de défendre le christianisme, ainsi que d'orienter et de coordonner leurs actions communes.",
+      "evolutionToCepca": "De la FEMEC au CEPCA",
+      "evolutionText1": "Le CEPCA a une vocation à la fois spirituelle et sociale. Il est apolitique. Depuis 2009, il est ouvert à l'adhésion d'autres Églises protestantes, ce qui a élargi sa portée et son influence dans tout le Cameroun.",
+      "evolutionText2": "Aujourd'hui, le CEPCA témoigne de la force de l'unité dans la diversité : il rassemble douze Églises membres sous la bannière de l'amour chrétien et du service à la communauté.",
+      "keyMilestones": "Dates clés",
+      "milestone1969": "Création de la FEMEC (Fédération des Églises et missions évangéliques du Cameroun)",
+      "milestone1970s": "Années 1970 : mise en place des comités de l'éducation et de la santé",
+      "milestone2009": "Ouverture à l'adhésion d'autres Églises protestantes",
+      "milestoneToday": "Aujourd'hui, 12 Églises membres servent plus de 13 millions de fidèles"
     },
     "missionVision": {
-      "title": "Mission & Vision",
-      "description": "Notre mission se concentre sur la guérison, la libération et le développement holistique. Notre vision est l'intégration par le langage de l'amour, unissant les Églises pour défendre une cause commune.",
-      "preview": "Le CEPCA renforce notre sentiment commun d'appartenance en tant qu'Églises unies. À travers le Saint-Esprit et les principes démocratiques, nous parlons le langage commun de l'amour.",
-      "pageTitle": "Mission & Vision",
-      "pageSubtitle": "Notre appel à guérir, libérer et développer à travers l'unité chrétienne",
-      "ourVision": "Notre Vision",
-      "visionText1": "Bien que nous puissions différer les uns des autres, il reste vrai que par l'œuvre du Saint-Esprit et le respect des principes démocratiques, nous pouvons tous parler un langage commun—le langage de l'amour.",
-      "visionText2": "Le CEPCA renforce notre sentiment commun d'appartenance en tant qu'Églises unies pour défendre une cause commune. Avec le Conseil, ce n'est plus une simple juxtaposition de dénominations, mais une véritable institution œcuménique engagée à faire avancer les intérêts protestants—une vision d'intégration.",
-      "visionQuote": "\"Que pouvons-nous accomplir ensemble?\"",
-      "ourMission": "Notre Mission",
-      "missionText": "Cette mission renouvelée appelle à une réorientation de notre agenda. Elle se concentre sur la guérison, la libération et le développement holistique de la personne humaine.",
+      "title": "Mission et vision",
+      "description": "Notre mission est centrée sur la guérison, la libération et le développement intégral. Notre vision : l'intégration par le langage de l'amour, des Églises unies pour défendre une cause commune.",
+      "preview": "Le CEPCA renforce notre sentiment d'appartenance en tant qu'Églises unies. Par le Saint-Esprit et dans le respect des principes démocratiques, nous parlons le langage commun de l'amour.",
+      "pageTitle": "Mission et vision",
+      "pageSubtitle": "Notre vocation : guérir, libérer et développer, dans l'unité chrétienne",
+      "ourVision": "Notre vision",
+      "visionText1": "Même si nous sommes différents les uns des autres, il n'en demeure pas moins que, par l'œuvre du Saint-Esprit et dans le respect des principes démocratiques, nous pouvons tous parler un langage commun : celui de l'amour.",
+      "visionText2": "Le CEPCA renforce notre sentiment d'appartenance commune, en tant qu'Églises unies pour la défense d'une même cause. Avec le Conseil, il ne s'agit plus d'une simple juxtaposition de dénominations, mais d'une véritable institution œcuménique engagée dans la promotion des intérêts protestants : une vision d'intégration.",
+      "visionQuote": "« Que pouvons-nous accomplir ensemble ? »",
+      "ourMission": "Notre mission",
+      "missionText": "Cette mission renouvelée appelle une réorientation de notre programme d'action. Elle est centrée sur la guérison, la libération et le développement intégral de la personne humaine.",
       "healthTitle": "Santé",
-      "healthText": "Nos institutions doivent fournir des soins de qualité et un service compatissant. Les domaines prioritaires incluent la lutte contre le VIH/SIDA, le paludisme, la tuberculose et l'amélioration de la santé communautaire.",
+      "healthText": "Nos institutions doivent offrir des soins de qualité et un service empreint de compassion. Les priorités sont la lutte contre le VIH/sida, le paludisme et la tuberculose, ainsi que l'amélioration de la santé communautaire.",
       "educationTitle": "Éducation",
-      "educationText": "Poursuivant l'héritage des missions chrétiennes, nous restons engagés à former des citoyens compétents qui respectent l'éthique chrétienne partout où ils servent.",
-      "pastoralTitle": "Ministère Pastoral",
-      "pastoralText": "Ceux-ci garantissent que nous restons une voix prophétique au sein de nos communautés, nous tenant aux côtés de ceux en détresse et parlant à travers divers médias et contextes de culte.",
-      "corePrinciples": "Principes Fondamentaux",
-      "principle1": "Confesse Jésus-Christ comme le seul Seigneur et Sauveur",
-      "principle2": "Reconnaît les Saintes Écritures comme la seule norme de foi, de doctrine et de discipline",
-      "principle3": "Confesse le Credo des Apôtres",
-      "principle4": "Travaille en étroite collaboration avec les églises membres pour atteindre les objectifs",
-      "ourMotto": "Notre Devise",
-      "motto": "\"Être Église Ensemble\""
+      "educationText": "Dans la continuité de l'héritage des missions chrétiennes, nous restons déterminés à former des citoyens compétents, attachés à l'éthique chrétienne partout où ils servent.",
+      "pastoralTitle": "Ministère pastoral",
+      "pastoralText": "Ce ministère nous permet de demeurer une voix prophétique au sein de nos communautés, aux côtés des personnes en détresse, en nous exprimant par divers médias et dans différents cadres de culte.",
+      "corePrinciples": "Principes fondamentaux",
+      "principle1": "Confesse Jésus-Christ comme seul Seigneur et Sauveur",
+      "principle2": "Reconnaît les Saintes Écritures comme seule norme de la foi, de la doctrine et de la discipline",
+      "principle3": "Confesse le Symbole des apôtres",
+      "principle4": "Travaille en étroite collaboration avec les Églises membres pour atteindre ses objectifs",
+      "ourMotto": "Notre devise",
+      "motto": "« Être Église ensemble »"
     },
     "departments": {
       "title": "Départements",
-      "description": "Le CEPCA fonctionne à travers des départements spécialisés notamment la Santé, l'Éducation, les Affaires Sociales et Féminines, le Témoignage Chrétien, la Jeunesse, l'Information et la Communication.",
-      "preview": "Nos départements coordonnent les activités à travers les églises membres, des services de santé et d'éducation aux programmes pour les jeunes et aux initiatives de communication.",
-      "pageTitle": "Nos Départements",
-      "pageSubtitle": "Services spécialisés coordonnant les activités à travers les églises membres",
-      "departmentCoordination": "Coordination des Départements",
-      "regionalOffices": "Bureaux Régionaux",
-      "regionalOfficesText": "Les départements opèrent depuis des emplacements stratégiques à travers le Cameroun",
+      "description": "Le CEPCA agit par l'intermédiaire de départements spécialisés : santé, éducation, femmes et affaires sociales, témoignage chrétien, jeunesse, information et communication.",
+      "preview": "Nos départements coordonnent les activités des Églises membres, des services de santé et d'éducation aux programmes pour la jeunesse et aux initiatives de communication.",
+      "pageTitle": "Nos départements",
+      "pageSubtitle": "Des services spécialisés qui coordonnent les activités des Églises membres",
+      "departmentCoordination": "Coordination des départements",
+      "regionalOffices": "Bureaux régionaux",
+      "regionalOfficesText": "Les départements sont implantés en des lieux stratégiques dans tout le Cameroun",
       "commissions": "Commissions",
-      "commissionsText": "Chaque département a une commission pour la planification et le suivi",
+      "commissionsText": "Chaque département dispose d'une commission chargée de la planification et du suivi",
       "coordination": "Coordination",
-      "coordinationText": "Des réunions régulières assurent une collaboration efficace entre les départements",
+      "coordinationText": "Des réunions régulières garantissent une collaboration efficace entre les départements",
       "saf": {
-        "name": "Service Administratif et Financier (SAF)",
-        "location": "Siège de Yaoundé",
-        "description": "Centralise tous les revenus et dépenses du CEPCA; prépare les états financiers annuels et les rapports d'inventaire.",
-        "short": "Admin & Finance"
+        "name": "Service administratif et financier (SAF)",
+        "location": "Siège, Yaoundé",
+        "description": "Centralise l'ensemble des recettes et des dépenses du CEPCA ; établit les états financiers annuels et les rapports d'inventaire.",
+        "short": "Administration et finances"
       },
       "ds": {
         "name": "Département de la Santé (DS)",
-        "location": "Bureau Régional de Douala",
-        "description": "Coordonne les activités de santé publique des églises membres; représente les œuvres médicales de l'église devant le Gouvernement, en particulier le Ministère de la Santé Publique.",
+        "location": "Bureau régional de Douala",
+        "description": "Coordonne les activités de santé publique des Églises membres ; représente les œuvres médicales des Églises auprès du Gouvernement, en particulier du ministère de la Santé publique.",
         "short": "Santé"
       },
       "oepp": {
         "name": "Département de l'Éducation (OEPP)",
-        "location": "Centre d'Éducation de Yaoundé",
-        "description": "Coordonne le travail éducatif des églises membres; développe des politiques à moyen et long terme pour l'éducation privée protestante.",
+        "location": "Centre éducatif de Yaoundé",
+        "description": "Coordonne l'œuvre éducative des Églises membres ; élabore les politiques à moyen et long terme de l'enseignement privé protestant.",
         "short": "Éducation"
       },
       "dfas": {
-        "name": "Département des Affaires Féminines et Sociales (DFAS)",
-        "location": "Bureau Régional de Bamenda",
-        "description": "Met en valeur le rôle des femmes dans l'Église et la société; prépare les femmes à une participation effective au sein de leurs églises et de la communauté camerounaise.",
-        "short": "Femmes & Social"
+        "name": "Département des Femmes et des Affaires sociales (DFAS)",
+        "location": "Bureau régional de Bamenda",
+        "description": "Met en valeur le rôle de la femme dans l'Église et dans la société ; prépare les femmes à participer pleinement à la vie de leurs Églises et de la société camerounaise.",
+        "short": "Femmes et affaires sociales"
       },
       "dtc": {
-        "name": "Département du Témoignage Chrétien (DTC)",
-        "location": "Bureau Régional de Garoua",
-        "description": "Coordonne la planification de l'évangélisation; organise des réunions de réflexion théologique; aide les départements à développer des stratégies évangéliques appropriées.",
-        "short": "Témoignage Chrétien"
+        "name": "Département du Témoignage chrétien (DTC)",
+        "location": "Bureau régional de Garoua",
+        "description": "Coordonne la planification de l'évangélisation ; organise des rencontres de réflexion théologique ; aide les départements à élaborer des stratégies d'évangélisation adaptées.",
+        "short": "Témoignage chrétien"
       },
       "dj": {
         "name": "Département de la Jeunesse (DJ)",
-        "location": "Centre de Jeunesse de Buea",
-        "description": "Forme les jeunes pour une participation active dans l'église et la société; développe des outils pour l'éducation civique et morale; identifie les défis et intérêts communs.",
+        "location": "Centre de jeunesse de Buea",
+        "description": "Forme les jeunes à une participation active dans l'Église et dans la société ; élabore des outils d'éducation civique et morale ; identifie les défis et les intérêts communs.",
         "short": "Jeunesse"
       },
       "dic": {
         "name": "Département de l'Information et de la Communication (DIC)",
-        "location": "Centre Médiatique de Yaoundé",
-        "description": "Gère toute la communication au sein du CEPCA; produit et diffuse des programmes radio et TV protestants; aide les églises membres à couvrir les événements.",
+        "location": "Centre des médias de Yaoundé",
+        "description": "Assure l'ensemble de la communication au sein du CEPCA ; produit et diffuse des émissions protestantes de radio et de télévision ; accompagne les Églises membres dans la couverture de leurs événements.",
         "short": "Information"
       },
       "bured": {
-        "name": "Bureau d'Études et de Recherches pour le Développement (BURED)",
-        "location": "Centre de Recherche de Yaoundé",
-        "description": "Favorise la participation du CEPCA et de ses églises membres au développement national et aux questions socio-économiques.",
+        "name": "Bureau de recherches et d'études pour le développement (BURED)",
+        "location": "Centre de recherche de Yaoundé",
+        "description": "Favorise la participation du CEPCA et de ses Églises membres au développement national et aux questions socio-économiques.",
         "short": "Recherche"
       }
     },
     "structure": {
       "title": "Structure du CEPCA",
-      "description": "Notre structure organisationnelle comprend l'Assemblée Générale, le Comité Exécutif et les Commissions spécialisées qui assurent une gouvernance et une coordination efficaces.",
-      "preview": "L'Assemblée Générale sert d'organe de décision suprême, se réunissant tous les deux ans pour définir la politique et l'orientation générales.",
+      "description": "Notre organisation comprend l'Assemblée générale, le Comité exécutif et des commissions spécialisées, qui garantissent une gouvernance et une coordination efficaces.",
+      "preview": "L'Assemblée générale est notre instance suprême de décision ; elle se réunit tous les deux ans pour définir la politique et les orientations générales.",
       "pageTitle": "Structure du CEPCA",
-      "pageSubtitle": "Cadre organisationnel assurant une gouvernance et une coordination efficaces",
+      "pageSubtitle": "Un cadre organisationnel au service d'une gouvernance et d'une coordination efficaces",
       "organizationalChart": "Organigramme",
-      "generalAssembly": "Assemblée Générale",
-      "generalAssemblyShort": "Organe de Décision Suprême",
-      "meetsEvery2Years": "Se réunit tous les 2 ans",
-      "generalAssemblyLong": "Organe de décision suprême, se réunit une fois tous les deux ans, définit la politique générale.",
-      "generalAssemblyFull": "Organe de décision suprême qui se réunit une fois tous les deux ans pour définir la politique générale et l'orientation stratégique du CEPCA.",
-      "executiveCommittee": "Comité Exécutif",
-      "executiveCommitteeShort": "Exécution des Politiques",
+      "generalAssembly": "Assemblée générale",
+      "generalAssemblyShort": "Instance suprême de décision",
+      "meetsEvery2Years": "Se réunit tous les deux ans",
+      "generalAssemblyLong": "Instance suprême de décision ; se réunit une fois tous les deux ans et définit la politique générale.",
+      "generalAssemblyFull": "Instance suprême de décision, elle se réunit une fois tous les deux ans pour définir la politique générale et les orientations stratégiques du CEPCA.",
+      "executiveCommittee": "Comité exécutif",
+      "executiveCommitteeShort": "Mise en œuvre des politiques",
       "meetsTwiceYearly": "Se réunit deux fois par an",
-      "executiveCommitteeLong": "Exécute les politiques du CEPCA. Se réunit deux fois par an sous la convocation du Président. Comprend les Chefs des 12 Églises membres, le Secrétaire Général, les Secrétaires Exécutifs des Départements et le Chef de l'Administration et des Finances (SAF).",
-      "executiveCommitteeFull": "Exécute les politiques du CEPCA et se réunit deux fois par an sous la convocation du Président.",
+      "executiveCommitteeLong": "Met en œuvre les politiques du CEPCA. Il se réunit deux fois par an sur convocation du président. Il comprend les responsables des 12 Églises membres, le secrétaire général, les secrétaires exécutifs des départements et le chef du Service administratif et financier (SAF).",
+      "executiveCommitteeFull": "Met en œuvre les politiques du CEPCA et se réunit deux fois par an sur convocation du président.",
       "commissionsTitle": "Commissions",
-      "commissionsFull": "Chaque département a une commission responsable de la planification et du suivi des programmes.",
-      "definesPolicy": "Définit les politiques organisationnelles",
-      "electsLeadership": "Élit les postes de direction",
+      "commissionsFull": "Chaque département dispose d'une commission chargée de la planification et du suivi des programmes.",
+      "definesPolicy": "Définit les politiques de l'organisation",
+      "electsLeadership": "Élit les responsables",
       "approvesPlans": "Approuve les plans stratégiques",
-      "reviewsPerformance": "Examine les performances organisationnelles",
-      "churchLeaders": "Chefs des 12 Églises membres",
-      "generalSecretary": "Secrétaire Général",
-      "executiveSecretaries": "Secrétaires Exécutifs",
-      "headOfAdmin": "Chef de l'Administration (SAF)",
+      "reviewsPerformance": "Évalue les résultats de l'organisation",
+      "churchLeaders": "Responsables des 12 Églises membres",
+      "generalSecretary": "Secrétaire général",
+      "executiveSecretaries": "Secrétaires exécutifs",
+      "headOfAdmin": "Chef de l'administration (SAF)",
       "programPlanning": "Planification des programmes",
       "activityMonitoring": "Suivi des activités",
-      "resourceAllocation": "Allocation des ressources",
-      "performanceEvaluation": "Évaluation des performances",
-      "headquartersInfo": "Informations sur le Siège",
+      "resourceAllocation": "Affectation des ressources",
+      "performanceEvaluation": "Évaluation des résultats",
+      "headquartersInfo": "Informations sur le siège",
       "address": "Adresse",
       "logo": "Logo",
-      "logoDescription": "La carte du Cameroun avec une croix à l'intérieur, sur des fonds verts, violets et blancs",
+      "logoDescription": "La carte du Cameroun portant une croix, sur fond vert, violet et blanc",
       "motto": "Devise",
-      "mottoText": "\"Être Église Ensemble\""
+      "mottoText": "« Être Église ensemble »",
+      "logoAlt": "L'emblème du CEPCA : la carte du Cameroun portant une croix"
     },
     "impact": {
-      "title": "Notre Impact",
-      "memberChurches": "Églises Membres",
-      "believers": "Croyants",
-      "educationalInstitutions": "Institutions Éducatives",
-      "healthCenters": "Centres de Santé"
+      "title": "Notre impact",
+      "memberChurches": "Églises membres",
+      "believers": "Fidèles",
+      "educationalInstitutions": "Établissements d'enseignement",
+      "healthCenters": "Centres de santé"
     },
     "generalSecretariat": {
-      "title": "Secrétariat Général",
-      "pageTitle": "Le Secrétariat Général du CEPCA",
-      "description": "Le Secrétariat Général est l'élément de coordination et de liaison entre les divers Secrétariats, Services et Bureaux nationaux.",
-      "preview": "Les départements et services du Conseil lui sont rattachés, de la Santé et de l'Éducation à la Jeunesse et à la Communication.",
+      "title": "Secrétariat général",
+      "pageTitle": "Le Secrétariat général du CEPCA",
+      "description": "Le Secrétariat général est l'organe de coordination et de liaison entre les différents secrétariats, services et bureaux nationaux.",
+      "preview": "Les départements et services du Conseil lui sont rattachés, de la santé et de l'éducation à la jeunesse et à la communication.",
       "summary": "Coordination et liaison",
-      "attachedTitle": "Départements et Services rattachés",
-      "attachedLede": "Les départements et services rattachés au Secrétariat Général. Chacun coordonne son domaine d'activité à travers les Églises membres.",
-      "attachedTo": "Rattachés au Secrétariat Général",
-      "secretaryTitle": "Le Secrétaire Général",
-      "secretaryRole": "Le Secrétaire Général dirige le Secrétariat Général, qui coordonne les départements et services qui lui sont rattachés, et siège au Comité Exécutif, le Bureau du CEPCA.",
+      "attachedTitle": "Départements et services rattachés",
+      "attachedLede": "Les départements et services rattachés au Secrétariat général. Chacun coordonne son domaine d'action au sein des Églises membres.",
+      "attachedTo": "Rattachés au Secrétariat général",
+      "secretaryTitle": "Le secrétaire général",
+      "secretaryRole": "Le secrétaire général dirige le Secrétariat général, qui coordonne les départements et services qui lui sont rattachés, et siège au Comité exécutif, le Bureau du CEPCA.",
       "seeBoard": "Voir le Bureau du CEPCA",
-      "photoAlt": "Le Secrétaire Général du CEPCA"
+      "photoAlt": "Le secrétaire général du CEPCA"
     },
     "board": {
       "pageTitle": "Le Bureau du CEPCA",
-      "lede": "Le Bureau du CEPCA est son Comité Exécutif. Il exécute les politiques du Conseil et se réunit deux fois par an, sur convocation du Président du CEPCA.",
+      "lede": "Le Bureau du CEPCA est son Comité exécutif. Il met en œuvre les politiques du Conseil et se réunit deux fois par an sur convocation du président du CEPCA.",
       "president": "Président du CEPCA",
-      "firstVicePresident": "Premier Vice-Président",
-      "secondVicePresident": "Deuxième Vice-Président"
-    }
+      "firstVicePresident": "Premier vice-président",
+      "secondVicePresident": "Deuxième vice-président"
+    },
+    "photos": {
+      "leadersAlt": "Les responsables des Églises membres côte à côte lors de la Semaine du protestantisme du Littoral",
+      "pastorAlt": "Une pasteure en étole rouge, sa Bible à la main, lors de la clôture nationale de la Semaine du protestantisme",
+      "signAlt": "L'enseigne du Conseil devant son siège, à Yaoundé",
+      "congregationAlt": "Des membres d'une association de femmes lors de la clôture nationale de la Semaine du protestantisme",
+      "headquartersAlt": "Le bâtiment du Secrétariat général, à Yaoundé",
+      "assemblyAlt": "Le clergé des Églises membres réuni sur les marches lors de la clôture nationale",
+      "greetingAlt": "Des membres du clergé de deux Églises membres se saluent lors de la Semaine du protestantisme du Littoral",
+      "choirAlt": "Une chorale de femmes en tenue assortie lors de la clôture nationale de la Semaine du protestantisme"
+    },
+    "nextChapter": "Chapitre suivant"
   },
   "sermons": {
-    "pageTitle": "Sermons",
-    "pageSubtitle": "Messages inspirants de nos leaders spirituels à travers les églises membres",
-    "latest": "Derniers",
-    "homepageSubtitle": "Écoutez nos messages récents et développez votre parcours de foi. Tous les sermons sont disponibles en streaming et en téléchargement.",
+    "pageTitle": "Prédications",
+    "pageSubtitle": "Des messages inspirants des responsables spirituels de nos Églises membres",
+    "latest": "Les plus récentes",
+    "homepageSubtitle": "Écoutez nos messages récents et grandissez dans la foi. Toutes les prédications sont disponibles en écoute et en téléchargement.",
     "duration": "min",
     "listen": "Écouter",
     "download": "Télécharger",
-    "loading": "Chargement..."
+    "loading": "Chargement…"
   },
   "blogList": {
-    "pageTitle": "Blogs",
+    "pageTitle": "Blog",
     "pageSubtitle": {
-      "en": "Histoires inspirantes et réflexions spirituelles de notre communauté",
-      "fr": "Histoires inspirantes et réflexions spirituelles de notre communauté"
+      "en": "Récits inspirants et réflexions spirituelles de notre communauté",
+      "fr": "Récits inspirants et réflexions spirituelles de notre communauté"
     },
-    "noPostsAvailable": "Aucun article de blog disponible pour le moment. Revenez bientôt !",
+    "noPostsAvailable": "Aucun article n'est disponible pour le moment. Revenez bientôt !",
     "categories": {
       "faith": "Foi",
       "community": "Communauté",
-      "hope": "Espoir",
+      "hope": "Espérance",
       "service": "Service"
     }
   },
   "blogDetail": {
-    "notFound": "Article de blog introuvable."
+    "notFound": "Article introuvable."
   },
   "members": {
     "pageTitle": "Nos Églises",
-    "pageTitleHighlight": "Membres",
-    "pageSubtitle": "Douze dénominations protestantes unies dans la foi, le service et le développement communautaire à travers le Cameroun",
-    "memberChurches": "Églises Membres",
-    "founded": "Fondée",
-    "location": "Localisation",
+    "pageTitleHighlight": "membres",
+    "pageSubtitle": "Douze Églises protestantes unies dans la foi, le service et le développement communautaire dans tout le Cameroun",
+    "memberChurches": "Églises membres",
+    "founded": "Fondée en",
+    "location": "Siège",
     "leadership": "Direction",
     "history": "Histoire",
-    "contactInformation": "Informations de Contact",
+    "contactInformation": "Coordonnées",
     "phone": "Téléphone",
-    "email": "Email",
+    "email": "E-mail",
     "address": "Adresse",
-    "memberNotFound": "Membre introuvable",
-    "returnToMembers": "Retour aux Membres",
-    "viewDetails": "Voir les Détails",
-    "exploreAllMembers": "Explorer Tous les Membres",
-    "unitedInFaith": "Unis dans la Foi, Divers dans l'Expression",
-    "servingTogether": "Servant ensemble depuis 1957 pour renforcer l'unité protestante et faire avancer le développement communautaire à travers le Cameroun.",
+    "memberNotFound": "Église membre introuvable",
+    "returnToMembers": "Retour aux Églises membres",
+    "viewDetails": "Voir les détails",
+    "exploreAllMembers": "Découvrir toutes les Églises membres",
+    "unitedInFaith": "Unies dans la foi, diverses dans leur expression",
+    "servingTogether": "Ensemble au service depuis 1957 pour renforcer l'unité protestante et faire progresser le développement communautaire dans tout le Cameroun.",
     "churches": {
       "ea": {
         "denomination": "Église Anglicane (EA)",
-        "leader": "Évêque Mgr. DIBO BLANGWE Thomas",
-        "history": "L'Église Anglicane du Cameroun a été une pierre angulaire de la foi chrétienne depuis son établissement. Avec des racines profondes dans la tradition anglicane, elle a servi la communauté avec dévouement et guidance spirituelle pendant des décennies."
+        "leader": "Mgr DIBO BLANGWE Thomas, évêque",
+        "history": "L'Église anglicane au Cameroun est un pilier de la foi chrétienne depuis son implantation. Profondément enracinée dans la tradition anglicane, elle sert la communauté avec dévouement et l'accompagne spirituellement depuis des décennies."
       },
       "cbc": {
         "denomination": "Cameroon Baptist Convention (CBC)",
-        "leader": "Président National Rév. Dr TEKE John Ekema",
-        "history": "La Cameroon Baptist Convention (CBC) se dresse comme l'une des plus anciennes et influentes dénominations protestantes du Cameroun, avec un riche héritage d'évangélisation, d'éducation et de développement communautaire."
+        "leader": "Rév. Dr TEKE John Ekema, président national",
+        "history": "La Cameroon Baptist Convention (CBC) est l'une des dénominations protestantes les plus anciennes et les plus influentes du Cameroun, riche d'un héritage d'évangélisation, d'éducation et de développement communautaire."
       },
       "eec": {
         "denomination": "Église Évangélique du Cameroun (EEC)",
-        "leader": "Président Rév. BILLA MBENGA Alexandre",
-        "history": "L'Église Évangélique du Cameroun a été un phare de la foi évangélique, engagée à répandre l'Évangile et à servir les communautés à travers le Cameroun avec un dévouement inébranlable."
+        "leader": "Rév. BILLA MBENGA Alexandre, président",
+        "history": "L'Église Évangélique du Cameroun (EEC) est un phare de la foi évangélique, résolument engagée à annoncer l'Évangile et à servir les communautés dans tout le Cameroun."
       },
       "eelc": {
         "denomination": "Église Évangélique Luthérienne du Cameroun (EELC)",
-        "leader": "Évêque national Mgr. BAIGUEL Jean",
-        "history": "L'Église Luthérienne du Cameroun a maintenu son héritage luthérien tout en s'adaptant aux contextes locaux, fournissant guidance spirituelle et services communautaires dans les régions du nord."
+        "leader": "Mgr BAIGUEL Jean, évêque national",
+        "history": "L'Église Évangélique Luthérienne du Cameroun a préservé son héritage luthérien tout en s'adaptant aux réalités locales ; elle offre accompagnement spirituel et services communautaires dans le nord du pays."
       },
       "eflc": {
         "denomination": "Église Fraternelle Luthérienne du Cameroun (EFLC)",
-        "leader": "Président Rév. DEBSIA DABA Alvius",
-        "history": "L'Église Fraternelle Luthérienne du Cameroun met l'accent sur la fraternité et la communion communautaire, servant les régions du nord avec dévouement aux principes luthériens et engagement local."
+        "leader": "Rév. DEBSIA DABA Alvius, président",
+        "history": "L'Église Fraternelle Luthérienne du Cameroun met l'accent sur la fraternité et la communion ; elle sert le nord du pays, fidèle aux principes luthériens et engagée localement."
       },
       "epc": {
         "denomination": "Église Presbytérienne Camerounaise (EPC)",
-        "leader": "Secrétaire Général Rév. ABESSOLO ZE",
-        "history": "L'Église Presbytérienne Camerounaise a été instrumentale dans l'éducation et le développement social, maintenant de fortes traditions presbytériennes tout en servant des communautés diverses."
+        "leader": "Rév. ABESSOLO ZE, secrétaire général",
+        "history": "L'Église Presbytérienne Camerounaise joue un rôle déterminant dans l'éducation et le développement social ; elle perpétue de solides traditions presbytériennes tout en servant des communautés diverses."
       },
       "epa": {
         "denomination": "Église Protestante Africaine (EPA)",
-        "leader": "Secrétaire Général Rév MFOM Jules Perigord",
-        "history": "L'Église Protestante Africaine représente le christianisme protestant indigène, mélangeant les valeurs africaines traditionnelles avec la théologie protestante pour servir les communautés locales."
+        "leader": "Rév. MFOM Jules Perigord, secrétaire général",
+        "history": "L'Église Protestante Africaine incarne un christianisme protestant enraciné en Afrique, qui allie les valeurs africaines traditionnelles à la théologie protestante pour servir les communautés locales."
       },
       "nbc": {
         "denomination": "Native Baptist Church (NBC)",
-        "leader": "Président National Rév. Dr NSOGA Job Salomon Modérateur",
-        "history": "Native Baptist Church (NBC) a des racines profondes dans la tradition baptiste tout en embrassant les contextes culturels locaux, servant les communautés avec ferveur évangélique et engagement social."
+        "leader": "Rév. Dr NSOGA Job Salomon, président national (modérateur)",
+        "history": "La Native Baptist Church (NBC) est profondément enracinée dans la tradition baptiste tout en épousant les contextes culturels locaux ; elle sert les communautés avec ferveur évangélique et engagement social."
       },
       "pcc": {
         "denomination": "Presbyterian Church in Cameroon (PCC)",
-        "leader": "Rt. Rév MIKI Hans ABIA Rt. Vice",
-        "history": "Presbyterian Church in Cameroon a été un pilier de l'éducation et des soins de santé, maintenant une forte gouvernance presbytérienne tout en s'adaptant aux contextes camerounais."
+        "leader": "Très Rév. MIKI Hans ABIA, modérateur",
+        "history": "La Presbyterian Church in Cameroon (PCC) est un pilier de l'éducation et de la santé ; elle maintient une solide gouvernance presbytérienne tout en s'adaptant aux réalités camerounaises."
       },
       "uebc": {
         "denomination": "Union des Églises Baptistes du Cameroun (UEBC)",
-        "leader": "Président Rév. EDOUBE Ernest",
-        "history": "L'Union des Églises Baptistes du Cameroun unit les églises baptistes à travers la nation, promouvant les principes baptistes et coordonnant les activités évangéliques et sociales."
+        "leader": "Rév. EDOUBE Ernest, président",
+        "history": "L'Union des Églises Baptistes du Cameroun rassemble des Églises baptistes dans tout le pays ; elle promeut les principes baptistes et coordonne des activités d'évangélisation et d'action sociale."
       },
       "ueec": {
         "denomination": "Union des Églises Évangéliques du Cameroun (UEEC)",
-        "leader": "Président Rév. HAMADINA Salomon",
-        "history": "L'Union des Églises Évangéliques du Cameroun coordonne les églises évangéliques dans les régions du nord, mettant l'accent sur l'unité dans la diversité et le service communautaire."
+        "leader": "Rév. HAMADINA Salomon, président",
+        "history": "L'Union des Églises Évangéliques du Cameroun (UEEC) coordonne des Églises évangéliques dans le nord du pays, en mettant l'accent sur l'unité dans la diversité et le service communautaire."
       },
       "mpe": {
         "denomination": "Mission du Plein Évangile (MPE)",
-        "leader": "Surintendant Général Rév. SOKENG ALAIN Clément",
-        "history": "La Mission du Plein Évangile met l'accent sur le message complet de l'Évangile avec signes, prodiges et miracles, servant les communautés avec ferveur pentecôtiste et engagement social."
+        "leader": "Rév. SOKENG ALAIN Clément, surintendant général",
+        "history": "La Mission du Plein Évangile met l'accent sur le message intégral de l'Évangile, accompagné de signes, de prodiges et de miracles ; elle sert les communautés avec une ferveur pentecôtiste et un engagement social."
       }
     },
     "website": "Site web",
-    "visitWebsite": "Visiter le site"
+    "visitWebsite": "Visiter le site",
+    "logoAlt": "Logo : {{name}}"
   },
   "home": {
     "eyebrow": "Conseil des Églises Protestantes du Cameroun",
-    "scrollCue": "Défiler",
+    "scrollCue": "Faire défiler",
     "nextGatherings": "Prochains rendez-vous",
     "allEvents": "Tous les événements",
     "stats": {
@@ -491,8 +499,8 @@
       "schools": "Écoles"
     },
     "sections": {
-      "whoWeAre": "Qui nous sommes",
-      "pillars": "Là où le travail se concrétise",
+      "whoWeAre": "Qui sommes-nous",
+      "pillars": "Sur le terrain",
       "mandate": "Mandat",
       "principles": "Principes",
       "programs": "Programmes",
@@ -508,25 +516,25 @@
     "readMandate": "Lire le mandat complet",
     "workshops": {
       "title": "Ateliers et",
-      "titleHighlight": "Formations",
+      "titleHighlight": "formations",
       "subtitle": "Formations pratiques pour le clergé, les enseignants et le personnel de secrétariat des Églises membres.",
       "viewAll": "Tous les ateliers",
-      "capacity": "Capacité",
+      "capacity": "Places",
       "duration": "Durée"
     },
     "gallery": {
-      "title": "Le conseil à",
+      "title": "Le Conseil à",
       "titleHighlight": "l'œuvre",
       "subtitle": "Images des programmes, des rencontres et des paroisses des douze Églises membres.",
       "view": "Voir",
       "close": "Fermer",
-      "previous": "Photographie précédente",
-      "next": "Photographie suivante"
+      "previous": "Photo précédente",
+      "next": "Photo suivante"
     },
     "announcements": {
       "title": "Dernières",
-      "titleHighlight": "Annonces",
-      "subtitle": "Communications du secrétariat, dans leur ordre de publication.",
+      "titleHighlight": "annonces",
+      "subtitle": "Les communications du secrétariat, par ordre de publication.",
       "viewAll": "Toutes les annonces",
       "priorityHigh": "Urgent",
       "priorityMedium": "Avis",
@@ -534,18 +542,22 @@
     },
     "departments": {
       "title": "Nos",
-      "titleHighlight": "Départements"
+      "titleHighlight": "départements"
     },
     "news": {
       "title": "Dernières",
-      "titleHighlight": "Actualités"
+      "titleHighlight": "actualités"
+    },
+    "photos": {
+      "pastorAlt": "Un pasteur en robe noire et étole violette dans le sanctuaire d'une église",
+      "wallAlt": "Le mur du siège du Conseil : une fenêtre en forme de croix au-dessus d'une banderole portant le nom de ses Églises membres"
     }
   },
   "impact": {
-    "title": "Transformer des vies à travers le Cameroun",
-    "subtitle": "Acteur clé et partenaire stratégique de la promotion d'un développement intégral fondé sur l'Évangile, alliant les dimensions spirituelles et sociales du témoignage chrétien",
+    "title": "Transformer des vies dans tout le Cameroun",
+    "subtitle": "Acteur clé et partenaire stratégique de la promotion d'un développement intégral fondé sur l'Évangile, alliant les dimensions spirituelle et sociale du témoignage chrétien",
     "ctaTitle": "Participez à notre mission",
-    "ctaBody": "Votre soutien nous permet de poursuivre notre action dans la santé, l'éducation et le développement communautaire à travers le Cameroun. Ensemble, nous pouvons avoir un impact durable.",
+    "ctaBody": "Votre soutien nous permet de poursuivre notre action en matière de santé, d'éducation et de développement communautaire dans tout le Cameroun. Ensemble, nous pouvons avoir un impact durable.",
     "donateNow": "Faire un don",
     "stats": {
       "churches": {
@@ -554,14 +566,14 @@
       },
       "believers": {
         "label": "Fidèles",
-        "description": "À travers le Cameroun"
+        "description": "Dans tout le Cameroun"
       },
       "congregations": {
         "label": "Paroisses",
-        "description": "Églises et paroisses"
+        "description": "Lieux de culte et paroisses"
       },
       "schools": {
-        "label": "Institutions éducatives",
+        "label": "Établissements d'enseignement",
         "description": "Écoles, collèges et centres de formation"
       },
       "universities": {
@@ -574,7 +586,7 @@
       },
       "radio": {
         "label": "Stations de radio",
-        "description": "Dans 5 régions"
+        "description": "Dans cinq régions"
       },
       "microfinance": {
         "label": "Institutions de microfinance",
@@ -584,7 +596,7 @@
   },
   "news": {
     "pageTitle": "Actualités",
-    "pageSubtitle": "Comptes rendus, étapes marquantes et nominations au sein du conseil et de ses églises membres",
+    "pageSubtitle": "Comptes rendus, temps forts et nominations au sein du Conseil et de ses Églises membres",
     "readArticle": "Lire l'article",
     "allNews": "Toute l'actualité",
     "empty": "Aucune actualité n'a encore été publiée.",
@@ -604,7 +616,7 @@
     "leadership": "Direction",
     "contact": "Contact",
     "location": "Siège",
-    "coverage": "Couverture",
+    "coverage": "Zone d'action",
     "address": "Adresse",
     "phone": "Téléphone",
     "email": "E-mail",
@@ -637,5 +649,20 @@
       "more": "Autres actions du département",
       "notFound": "Cette page est introuvable"
     }
+  },
+  "a11y": {
+    "heroCarousel": "Les Églises membres du CEPCA et leurs rassemblements",
+    "previousSlide": "Diapositive précédente",
+    "nextSlide": "Diapositive suivante",
+    "goToSlide": "Aller à la diapositive {{n}}",
+    "primaryNav": "Navigation principale",
+    "home": "Accueil du CEPCA",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "footerNav": "Pied de page",
+    "whatsapp": "Contacter le CEPCA sur WhatsApp",
+    "play": "Lecture",
+    "pause": "Pause",
+    "seek": "Avancer ou reculer"
   }
 }

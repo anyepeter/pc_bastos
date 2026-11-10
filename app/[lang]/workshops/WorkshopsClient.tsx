@@ -39,7 +39,7 @@ export default function WorkshopsClient({
     <>
       <PageHero
         title={fr ? 'Ateliers et' : 'Workshops &'}
-        titleHighlight={fr ? 'Formations' : 'Training'}
+        titleHighlight={fr ? 'formations' : 'Training'}
         lede={
           fr
             ? 'Renforcer notre communauté par des programmes de formation complets et le développement des compétences'

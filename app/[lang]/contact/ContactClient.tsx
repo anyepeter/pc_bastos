@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {
   AlertCircle,
   CheckCircle2,
-  Heart,
   Loader2,
   Mail,
   MapPin,
@@ -14,7 +13,9 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import PageLayout from '@/components/PageLayout';
-import PageHero from '@/components/PageHero';
+import Image from 'next/image';
+import SplitReveal from '@/components/motion/SplitReveal';
+import Parallax from '@/components/motion/Parallax';
 import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
@@ -124,15 +125,6 @@ export default function ContactPage() {
     });
   };
 
-  const handlePrayerRequest = () => {
-    setFormData((current) => ({
-      ...current,
-      requestType: 'prayer',
-      subject: 'Prayer Request',
-    }));
-    document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   /**
    * The ways to reach the council, all from /admin/settings — the same
    * numbers and address the footer shows. A channel with nothing set is left
@@ -181,79 +173,163 @@ export default function ContactPage() {
 
   const required = t('contact.form.required');
 
+  const quick = [
+    { id: 'call', Icon: Phone, href: telHref(settings.phone), label: settings.phone, external: false },
+    { id: 'email', Icon: Mail, href: `mailto:${settings.email}`, label: settings.email, external: false },
+    ...settings.whatsapp.slice(0, 1).map((number) => ({
+      id: 'whatsapp',
+      Icon: MessageCircle,
+      href: whatsappHref(number),
+      label: 'WhatsApp',
+      external: true,
+    })),
+  ];
+
   return (
     <PageLayout>
-      <PageHero
-        title={t('contact.pageTitle')}
-        titleHighlight={t('contact.pageTitleHighlight')}
-        lede={t('contact.pageSubtitle')}
-      />
+      {/* Hero: the invitation on the left, the Secretariat itself on the
+          right with its address pinned to the photograph like a card. */}
+      <section className="relative isolate overflow-hidden bg-white pb-20 pt-28 sm:pt-32 lg:pb-24 lg:pt-36">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-40 top-24 -z-10 h-[30rem] w-[30rem] rounded-full bg-plum-100/60 blur-[120px]"
+        />
+        <div className="shell grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
+          <div className="lg:col-span-6">
+            <Reveal>
+              <div className="flex items-center gap-3">
+                <span aria-hidden="true" className="grow-x h-px w-10 origin-left bg-plum-500" />
+                <p className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-plum-700">{t('home.eyebrow')}</p>
+              </div>
+            </Reveal>
+            <SplitReveal
+              as="h1"
+              delay={120}
+              className="mt-7 block font-display text-[clamp(2.9rem,6.4vw,5.6rem)] font-semibold leading-[0.98] tracking-tightest text-ink-900 text-balance"
+              text={[
+                { text: t('contact.pageTitle') },
+                { text: t('contact.pageTitleHighlight'), className: 'italic text-leaf-600' },
+              ]}
+            />
+            <Reveal delay={360}>
+              <p className="mt-7 max-w-[48ch] text-lg leading-relaxed text-ink-600 text-pretty">{t('contact.pageSubtitle')}</p>
+            </Reveal>
+            <Reveal delay={440}>
+              <ul className="mt-9 flex flex-wrap gap-3">
+                {quick.map(({ id, Icon, href, label, external }) => (
+                  <li key={id}>
+                    <a
+                      href={href}
+                      {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      className="focus-ring group inline-flex items-center gap-3 rounded-full border border-ink-200 bg-white py-2 pl-2 pr-5 font-ui text-sm font-semibold text-ink-800 shadow-[0_10px_24px_-18px_rgb(45_27_90/0.5)] transition-all duration-300 ease-spring hover:-translate-y-0.5 hover:border-leaf-300 hover:shadow-[0_18px_30px_-18px_rgb(39_113_78/0.6)] active:translate-y-px"
+                    >
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-leaf-600 text-white transition-transform duration-500 ease-spring group-hover:rotate-[-12deg]">
+                        <Icon aria-hidden="true" className="h-4 w-4" />
+                      </span>
+                      <span className="max-w-[16rem] truncate">{label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          </div>
+
+          <div className="relative pb-10 lg:col-span-6">
+            <Reveal variant="wipe" delay={200}>
+              <Parallax strength={70} className="aspect-[4/3] rounded-2xl bg-ink-100">
+                <Image
+                  src="/images/hero-image.jpg"
+                  alt={t('about.photos.headquartersAlt')}
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  className="object-cover"
+                />
+              </Parallax>
+            </Reveal>
+            <Reveal delay={700} className="absolute bottom-0 left-4 right-4 sm:left-auto sm:right-8 sm:w-[22rem]">
+              <div className="panel rounded-2xl p-5 sm:p-6">
+                <div className="flex items-start gap-4">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white">
+                    <MapPin aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="font-mono text-[0.64rem] uppercase tracking-[0.2em] text-plum-700">{t('contact.visitUs.title')}</p>
+                    <p className="mt-2 whitespace-pre-line font-display text-lg font-semibold leading-snug text-ink-900">
+                      {inLanguage(settings.address, language)}
+                    </p>
+                    {settings.mapsUrl && (
+                      <a
+                        href={settings.mapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="focus-ring mt-3 inline-flex items-center gap-1.5 rounded font-ui text-sm font-semibold text-plum-700 transition-colors duration-300 hover:text-plum-600"
+                      >
+                        {t('contact.visitUs.getDirections')}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
 
       {/* The channels and the form, side by side. The form takes the wider
           column: it is the reason most people open this page. */}
-      <PageSection tone="white">
+      <PageSection tone="tint" className="lg:py-28">
         <SectionHeading
           title={t('contact.weAreHere')}
           standfirst={t('contact.description')}
           layout="split"
         />
 
-        <div className="mt-11 grid gap-8 lg:grid-cols-12 lg:gap-10">
-          <ul className="grid gap-5 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1">
-            {channels.map((channel, i) => {
-              const { Icon } = channel;
-
-              return (
-                <Reveal as="li" key={channel.id} delay={Math.min(i, 8) * 60}>
-                  <div className="card card-hover flex h-full gap-5 rounded-2xl p-6">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white">
-                      <Icon aria-hidden="true" className="h-5 w-5 text-leaf-600" />
-                    </span>
-
-                    <div className="min-w-0">
-                      <h3 className="font-display text-xl font-semibold leading-tight tracking-tight text-ink-900">
-                        {channel.title}
-                      </h3>
-
-                      {channel.body && (
-                        <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-ink-600">
-                          {channel.body}
-                        </p>
-                      )}
-
-                      <ul className="mt-3 space-y-1">
-                        {channel.links.map((link) => (
-                          <li key={link.href}>
-                            <a
-                              href={link.href}
-                              {...(link.external
-                                ? { target: '_blank', rel: 'noopener noreferrer' }
-                                : {})}
-                              className="focus-ring inline-block break-words rounded font-ui text-sm font-medium text-plum-700 transition-colors duration-300 hover:text-plum-600"
-                            >
-                              {link.label}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-
-                      {channel.note && (
-                        <p className="mt-3 whitespace-pre-line text-[13px] leading-relaxed text-ink-500">
-                          {channel.note}
-                        </p>
-                      )}
+        <div className="mt-12 grid gap-10 lg:grid-cols-12 lg:gap-12">
+          <div className="lg:col-span-5">
+            <ul className="divide-y divide-ink-200 border-y border-ink-200 lg:sticky lg:top-28">
+              {channels.map((channel, i) => {
+                const { Icon } = channel;
+                return (
+                  <Reveal as="li" key={channel.id} delay={Math.min(i, 8) * 70}>
+                    <div className="group flex gap-5 py-6">
+                      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white transition-all duration-500 ease-spring group-hover:-rotate-6 group-hover:border-leaf-300">
+                        <Icon aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+                      </span>
+                      <div className="min-w-0">
+                        <h3 className="font-display text-xl font-semibold leading-tight tracking-tight text-ink-900">{channel.title}</h3>
+                        {channel.body && (
+                          <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-ink-600">{channel.body}</p>
+                        )}
+                        <ul className="mt-2 space-y-1">
+                          {channel.links.map((link) => (
+                            <li key={link.href}>
+                              <a
+                                href={link.href}
+                                {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                                className="focus-ring inline-block break-words rounded font-ui text-base font-semibold text-plum-700 transition-colors duration-300 hover:text-plum-600"
+                              >
+                                {link.label}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                        {channel.note && (
+                          <p className="mt-2 whitespace-pre-line text-[13px] leading-relaxed text-ink-500">{channel.note}</p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </ul>
+                  </Reveal>
+                );
+              })}
+            </ul>
+          </div>
 
           <Reveal delay={120} className="lg:col-span-7">
             <div id="contact-form" className="card scroll-mt-28 rounded-2xl p-6 sm:p-8 lg:p-10">
               <div className="flex items-start gap-5">
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white">
-                  <Heart aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+                  <Send aria-hidden="true" className="h-5 w-5 text-leaf-600" />
                 </span>
                 <div>
                   <h3 className="font-display text-2xl font-semibold leading-tight tracking-tight text-ink-900">
@@ -432,7 +508,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="focus-ring flex w-full items-center justify-center gap-2.5 rounded-xl bg-plum-600 px-6 py-3.5 font-ui text-[15px] font-semibold text-white shadow-[0_14px_30px_-14px_rgba(93,50,166,0.7)] transition-all duration-300 ease-spring hover:bg-plum-700 hover:shadow-[0_18px_36px_-14px_rgba(93,50,166,0.8)] active:translate-y-px disabled:cursor-not-allowed disabled:bg-plum-400 disabled:shadow-none"
+                  className="focus-ring flex w-full items-center justify-center gap-2.5 rounded-xl bg-leaf-600 px-6 py-3.5 font-ui text-[15px] font-semibold text-white shadow-[0_14px_30px_-14px_rgba(39,113,78,0.7)] transition-all duration-300 ease-spring hover:bg-leaf-700 hover:shadow-[0_18px_36px_-14px_rgba(39,113,78,0.8)] active:translate-y-px disabled:cursor-not-allowed disabled:bg-leaf-400 disabled:shadow-none"
                 >
                   {isSubmitting ? (
                     <>
@@ -480,75 +556,51 @@ export default function ContactPage() {
         </div>
       </PageSection>
 
-      {/* Prayer. A painted dark band so the invitation punctuates the page
-          instead of reading as one more card. */}
-      <PageSection tone="dark" paint className="py-20 lg:py-28">
-        <SectionHeading
-          title={t('contact.prayer.title')}
-          standfirst={t('contact.prayer.description')}
-          tone="dark"
-          layout="split"
-        />
-
-        <Reveal delay={200} className="mt-11">
-          <button
-            type="button"
-            onClick={handlePrayerRequest}
-            className="focus-ring inline-flex items-center gap-2.5 rounded-full bg-white px-7 py-3.5 font-ui text-sm font-semibold text-plum-900 transition-all duration-300 ease-spring hover:bg-leaf-100 active:translate-y-px"
-          >
-            <Heart aria-hidden="true" className="h-4 w-4" />
-            {t('contact.prayer.submitRequest')}
-          </button>
-        </Reveal>
-      </PageSection>
-
-      {/* Where to find the secretariat. The embed is drawn from the address
-          in /admin/settings; the links below it go to the map pin set there,
-          the same one the footer uses. */}
-      <PageSection tone="tint">
-        <SectionHeading
-          title={t('contact.map.title')}
-          standfirst={t('contact.map.description')}
-          layout="split"
-        />
-
-        <Reveal className="mt-11">
-          <div className="card overflow-hidden rounded-2xl">
-            <iframe
-              title={t('contact.map.title')}
-              src={mapEmbedSrc(settings.address)}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
-              className="block h-[380px] w-full border-0 lg:h-[440px]"
-            />
-          </div>
-        </Reveal>
-
-        {settings.mapsUrl && (
-          <Reveal delay={120} className="mt-8">
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <a
-                href={settings.mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="focus-ring inline-flex items-center justify-center gap-2.5 rounded-full bg-plum-600 px-7 py-3.5 font-ui text-sm font-semibold text-white shadow-[0_14px_30px_-14px_rgba(93,50,166,0.7)] transition-all duration-300 ease-spring hover:bg-plum-700 active:translate-y-px"
-              >
-                <MapPin aria-hidden="true" className="h-4 w-4" />
-                {t('contact.visitUs.getDirections')}
-              </a>
-              <a
-                href={settings.mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="focus-ring inline-flex items-center justify-center gap-2.5 rounded-full border border-ink-300 bg-white px-7 py-3.5 font-ui text-sm font-semibold text-ink-800 transition-all duration-300 ease-spring hover:border-plum-400 hover:bg-plum-50 active:translate-y-px"
-              >
-                {t('contact.map.viewOnGoogleMaps')}
-              </a>
+      {/* Where to find the secretariat: the map fills the frame and the
+          directions sit on an opaque card inside it (below it on phones). */}
+      <section className="bg-white py-16 lg:py-24">
+        <div className="shell">
+          <Reveal variant="wipe">
+            <div className="relative overflow-hidden rounded-2xl border border-ink-200 bg-ink-100">
+              <iframe
+                title={t('contact.map.title')}
+                src={mapEmbedSrc(settings.address)}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+                className="block h-[340px] w-full border-0 sm:h-[420px] lg:h-[520px]"
+              />
+              <div className="panel m-4 rounded-2xl p-6 sm:p-7 lg:absolute lg:left-6 lg:top-6 lg:m-0 lg:w-[27rem]">
+                <h2 className="font-display text-[clamp(1.8rem,3vw,2.4rem)] font-semibold leading-tight tracking-tight text-ink-900">
+                  {t('contact.map.title')}
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-ink-600 text-pretty">{t('contact.map.description')}</p>
+                {settings.mapsUrl && (
+                  <div className="mt-6 flex flex-col gap-3 whitespace-nowrap sm:flex-row">
+                    <a
+                      href={settings.mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="focus-ring inline-flex items-center justify-center gap-2.5 rounded-full bg-leaf-600 px-6 py-3 font-ui text-sm font-semibold text-white transition-all duration-300 ease-spring hover:bg-leaf-700 active:translate-y-px"
+                    >
+                      <MapPin aria-hidden="true" className="h-4 w-4" />
+                      {t('contact.visitUs.getDirections')}
+                    </a>
+                    <a
+                      href={settings.mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="focus-ring inline-flex items-center justify-center gap-2.5 rounded-full border border-ink-300 bg-white px-6 py-3 font-ui text-sm font-semibold text-ink-800 transition-all duration-300 ease-spring hover:border-plum-400 hover:bg-plum-50 active:translate-y-px"
+                    >
+                      {t('contact.map.viewOnGoogleMaps')}
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
           </Reveal>
-        )}
-      </PageSection>
+        </div>
+      </section>
     </PageLayout>
   );
 }

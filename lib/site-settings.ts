@@ -1,4 +1,5 @@
 import type { Language, Translation } from '@/lib/translations';
+import { frenchTypography } from '@/lib/french-typography';
 
 /**
  * The council's own details: logo, contact channels, social links and giving
@@ -54,11 +55,13 @@ export const DEFAULT_SITE_SETTINGS: SiteSettingsValues = {
   whatsapp: ['+237 677 875 300', '+237 656 779 874'],
   address: {
     en: 'Yaoundé, P.O. Box 491 Rue Ceper, Elig-Essono',
-    fr: 'Yaoundé, B.P. 491 Rue Ceper, Elig-Essono',
+    fr: 'Yaoundé, B.P. 491, rue Ceper, Elig-Essono',
   },
   officeHours: {
-    en: 'Monday - Friday: 9:00 AM - 5:00 PM\nEmergency: Available 24/7',
-    fr: 'Lundi - Vendredi: 9h00 - 17h00\nUrgence: Disponible 24h/24 et 7j/7',
+    // No "emergency 24/7" line: that came from the starter template, and a
+    // council secretariat does not keep an emergency service.
+    en: 'Monday to Friday, 9 am – 5 pm',
+    fr: 'Du lundi au vendredi, de 9 h à 17 h',
   },
   mapsUrl: 'https://maps.app.goo.gl/ehjxm8QprKj2Jpv16',
   // The council's official page (the source of the site's event reports).
@@ -77,7 +80,7 @@ export const logoSrc = (settings: SiteSettingsValues) => settings.logo || DEFAUL
 
 /** A bilingual value in the reader's language, falling back to English. */
 export const inLanguage = (value: Translation, language: Language) =>
-  (value[language] || value.en || '').trim();
+  language === 'fr' && value.fr?.trim() ? frenchTypography(value.fr.trim()) : (value.en || '').trim();
 
 /** `tel:` wants the digits and a leading plus, nothing else. */
 export const telHref = (number: string) => `tel:${number.replace(/[^\d+]/g, '')}`;

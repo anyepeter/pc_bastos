@@ -114,7 +114,7 @@ export default function GiveClient({ programs }: GiveClientProps) {
       ? {
           eyebrow: 'Faire un don',
           title: 'Votre générosité fait vivre la mission',
-          lead: "Chaque don soutient les Églises membres du CEPCA et les communautés qu'elles servent à travers le Cameroun — éducation, santé, eau potable et accompagnement pastoral.",
+          lead: "Chaque don soutient les Églises membres du CEPCA et les communautés qu'elles servent dans tout le Cameroun : éducation, santé, eau potable et accompagnement pastoral.",
           ctaWays: 'Comment donner',
           ctaTalk: 'Parler à quelqu’un',
           verse:
@@ -135,12 +135,12 @@ export default function GiveClient({ programs }: GiveClientProps) {
             {
               icon: HandHeart,
               title: 'Une gestion responsable',
-              body: 'Les fonds sont administrés par le secrétariat général et rendus visibles à travers nos programmes.',
+              body: 'Les fonds sont administrés par le Secrétariat général et rendus visibles dans nos programmes.',
             },
           ],
           programsTitle: 'Ce que votre don finance',
           programsLead:
-            'Voici les programmes actuellement soutenus par le conseil.',
+            'Voici les programmes actuellement soutenus par le Conseil.',
           programsAll: 'Voir tous les programmes',
           waysTitle: 'Comment donner',
           waysLead:
@@ -152,13 +152,13 @@ export default function GiveClient({ programs }: GiveClientProps) {
           momoBody: 'Le moyen le plus rapide de donner depuis votre téléphone.',
           inPerson: 'Sur place',
           inPersonBody:
-            'Vous pouvez remettre votre don pendant le culte ou directement au secrétariat général.',
+            'Vous pouvez remettre votre don lors d’un culte ou directement au Secrétariat général.',
           pending: 'Coordonnées à venir',
           pendingBody:
-            'Les coordonnées de don ne sont pas encore publiées en ligne. Contactez le secrétariat général et nous vous les transmettrons directement.',
+            'Les coordonnées de don ne sont pas encore publiées en ligne. Contactez le Secrétariat général et nous vous les transmettrons directement.',
           contactTitle: 'Une question sur les dons ?',
           contactBody:
-            'Le secrétariat général vous répond et peut vous accompagner pour un don important ou un legs.',
+            'Le Secrétariat général vous répond et peut vous accompagner pour un don important ou un legs.',
           bankName: 'Banque',
           accountName: 'Titulaire',
           accountNumber: 'Numéro de compte',

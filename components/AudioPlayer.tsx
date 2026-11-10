@@ -3,11 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, RotateCcw, RotateCw, Loader2 } from 'lucide-react';
 
-/* This component is used from both locales but takes no `t`; the labels are
-   assistive-technology only and are not rendered as visible copy. */
-const PLAY_LABEL = 'Play';
-const PAUSE_LABEL = 'Pause';
-const SEEK_LABEL = 'Seek';
+import { useTranslation } from 'react-i18next';
 
 interface AudioPlayerProps {
   src: string;
@@ -15,6 +11,7 @@ interface AudioPlayerProps {
 }
 
 export default function AudioPlayer({ src, onClose }: AudioPlayerProps) {
+  const { t } = useTranslation();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -155,7 +152,7 @@ export default function AudioPlayer({ src, onClose }: AudioPlayerProps) {
       <div className="flex items-center justify-between space-x-3">
         <button
           onClick={togglePlayPause}
-          aria-label={isPlaying ? PAUSE_LABEL : PLAY_LABEL}
+          aria-label={isPlaying ? t('a11y.pause') : t('a11y.play')}
           className="focus-ring rounded-lg p-2 transition-colors duration-300 hover:bg-plum-700"
         >
           {isPlaying ? (
@@ -172,7 +169,7 @@ export default function AudioPlayer({ src, onClose }: AudioPlayerProps) {
             ref={progressRef}
             role="slider"
             tabIndex={0}
-            aria-label={SEEK_LABEL}
+            aria-label={t('a11y.seek')}
             aria-valuemin={0}
             aria-valuemax={Math.round(duration) || 0}
             aria-valuenow={Math.round(currentTime)}

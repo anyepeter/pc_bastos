@@ -4,7 +4,14 @@ import { Inter, Playfair_Display, Outfit, JetBrains_Mono } from 'next/font/googl
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 
 /** Headlines (`font-display`, `font-serif`). */
-const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair', display: 'swap' });
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+  // The true italic, for mottos, quotes and accented words — a browser's
+  // slanted imitation of the roman looks broken at display sizes.
+  style: ['normal', 'italic'],
+  display: 'swap',
+});
 
 /** Display face — headlines and nav. Carries the four weights the scale uses. */
 const outfit = Outfit({

@@ -25,7 +25,7 @@ export default function LanguageSelector({ onDark = false }: { onDark?: boolean 
   return (
     <div
       role="group"
-      aria-label="Language"
+      aria-label={language === 'fr' ? 'Langue' : 'Language'}
       className={`relative inline-flex items-center rounded-full border p-0.5 transition-colors duration-300 ${
         onDark ? 'border-white/25 bg-white/10' : 'border-ink-200 bg-ink-50'
       }`}

@@ -93,6 +93,10 @@ Helpers `readTranslation` / `normalizeTranslation` / `hasTranslation` live in [l
 - **Static UI text** → i18next. Keys live in `public/locales/{en,fr}/translation.json`, imported directly by [lib/i18n.ts](lib/i18n.ts) (bundled, not fetched). Consumed with `useTranslation()` — client components only. Add a key to *both* JSON files.
 - **Dynamic DB text** → the `Translation` type (`{ en, fr }`) and `getTranslatedText(value, language)` from [lib/translations.ts](lib/translations.ts).
 
+**French style.** Sentence case, never English Title Case (« Faire un don », « Secrétariat général », « Églises membres »); guillemets « … », not quotation marks; « le CEPCA » is masculine; « Église » takes a capital for the Church as an institution, its adjectives do not (« les Églises protestantes »); titles of office are lower case in running text (« le secrétaire général », « le président du CEPCA »); the council's name stays exactly as it writes it, « Conseil des Églises Protestantes du Cameroun »; member churches' names as they write them, with accented capitals (« Église Évangélique du Cameroun »). Bible references read « Jean 17.21 ».
+
+**French spacing is applied at render time.** Type an ordinary space before `: ; ! ? »` and after `«`; [lib/french-typography.ts](lib/french-typography.ts) turns it into a no-break space, also joins digit groups (« 15 500 », « 50 % ») and curls apostrophes between letters. It runs in the French i18next instance (a postProcessor in [lib/i18n.ts](lib/i18n.ts)), in `getTranslatedText` and `inLanguage` for French, and in `pageMetadata`. It only replaces spaces that are there — it never inserts one — so the space must be typed. It uses U+00A0, not the thinner U+202F: the site's Google font subsets do not contain U+202F. The admin editors read raw values (`readTranslation`), so editors see exactly what they typed. French times are « 14 h 30 », the first of the month « 1er novembre » ([lib/format.ts](lib/format.ts)).
+
 **The address is the source of truth for the language** (`/fr/…` is French, everything else English). The `[lang]` route param flows into [RootShell](components/RootShell.tsx), which creates the Redux store with that language (`state.blog.language`, read by client components) and hands react-i18next a per-language instance from `getI18n(language)`. Never call `i18n.changeLanguage()`: the server renders both languages side by side, so a shared instance would leak one request's language into another's HTML. Switching language means **navigating** to the other address — [LanguageSelector](components/LanguageSelector.tsx) renders real links and stores the choice in the `lang` cookie. There is no browser-language sniffing.
 
 ### Redux store
@@ -152,6 +156,8 @@ Seed or reset a super admin with `npm run create-admin` (`ADMIN_EMAIL` + `ADMIN_
 **`SUPER_ADMIN_EMAILS`** (comma-separated) is a second lock: when set, even a row marked `super_admin` is refused unless its address is listed. Set it before launch.
 
 ## Conventions
+
+- **Design contract:** [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md). Animation is the in-house kit in [components/motion/](components/motion/) plus `Reveal` variants (`wipe`, `fade`, `left`, `right`, `scale`) — no animation library. `PageSection` clips with `overflow-x: clip` so `position: sticky` works inside it.
 
 - `'use client'` is required for anything using `useTranslation()`, Redux hooks, or React state. Server components pass translated text down as props.
 - Server Actions return `{ success, data?, error? }` rather than throwing; callers check `result.success`.

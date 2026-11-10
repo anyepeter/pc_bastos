@@ -152,28 +152,38 @@ export default function DepartmentsClient({
               <Reveal as="li" key={entry.key} delay={Math.min(i, 8) * 60}>
                 <article
                   id={entry.anchor}
-                  className="group relative grid scroll-mt-28 gap-x-10 gap-y-5 border-b border-ink-200 py-9 transition-colors duration-300 lg:grid-cols-12 lg:py-11"
+                  className="group relative grid scroll-mt-28 gap-x-10 gap-y-5 border-b border-ink-200 py-9 lg:grid-cols-12 lg:items-center lg:py-12"
                 >
-                  <div className="lg:col-span-5">
-                    <div className="flex items-center gap-4">
-                      <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-ink-200 bg-white transition-colors duration-300 group-hover:border-leaf-300">
+                  {/* Hover sweep: a tinted ground that grows in from the left. */}
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-y-0 -left-4 -right-4 origin-left scale-x-0 rounded-2xl bg-ink-50 transition-transform duration-700 ease-spring group-hover:scale-x-100 sm:-left-6 sm:-right-6"
+                  />
+
+                  <div className="relative flex items-center gap-5 lg:col-span-3 lg:block">
+                    <span
+                      aria-hidden="true"
+                      className="block font-display text-[clamp(2.6rem,4.6vw,4.4rem)] font-semibold leading-none tracking-tight text-outline text-plum-300 transition-colors duration-500 group-hover:text-plum-700 group-hover:[-webkit-text-fill-color:currentColor]"
+                    >
+                      {entry.acronym}
+                    </span>
+                    <span className="flex items-center gap-3 lg:mt-5">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-ink-200 bg-white transition-colors duration-300 group-hover:border-leaf-300">
                         {entry.logo ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img src={entry.logo} alt="" aria-hidden="true" className="h-full w-full object-contain p-1.5" />
                         ) : (
-                          <Icon aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+                          <Icon aria-hidden="true" className="h-4 w-4 text-leaf-600" />
                         )}
                       </span>
-                      <span className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-ink-400">
+                      <span className="tnum font-mono text-[0.62rem] uppercase tracking-[0.24em] text-ink-400">
                         {String(i + 1).padStart(2, '0')}
-                        <span aria-hidden="true" className="px-2 text-ink-300">
-                          ·
-                        </span>
-                        <span className="text-plum-700">{entry.acronym}</span>
                       </span>
-                    </div>
+                    </span>
+                  </div>
 
-                    <h2 className="mt-6 font-display text-2xl font-semibold leading-tight tracking-tight text-ink-900 transition-colors duration-300 group-hover:text-plum-700 lg:text-[1.7rem]">
+                  <div className="relative lg:col-span-4">
+                    <h2 className="font-display text-2xl font-semibold leading-tight tracking-tight text-ink-900 transition-colors duration-300 group-hover:text-plum-700 lg:text-[1.7rem]">
                       {entry.href ? (
                         <Link
                           href={entry.href}
@@ -185,7 +195,6 @@ export default function DepartmentsClient({
                         entry.name
                       )}
                     </h2>
-
                     {entry.location && (
                       <p className="mt-4 flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-500">
                         <MapPin aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-ink-400" />
@@ -194,18 +203,17 @@ export default function DepartmentsClient({
                     )}
                   </div>
 
-                  <div className="lg:col-span-6 lg:col-start-7 lg:pt-1">
+                  <div className="relative flex items-start justify-between gap-6 lg:col-span-5">
                     <p className="max-w-[52ch] text-base leading-relaxed text-ink-600 text-pretty">
                       {entry.description}
+                      {entry.href && <span className="sr-only"> {t('departments.visit')}</span>}
                     </p>
-
                     {entry.href && (
                       <span
                         aria-hidden="true"
-                        className="mt-5 inline-flex items-center gap-2 font-ui text-sm font-semibold text-ink-700 transition-colors duration-300 group-hover:text-plum-700"
+                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-ink-200 bg-white text-ink-500 transition-all duration-500 ease-spring group-hover:-rotate-45 group-hover:border-leaf-600 group-hover:bg-leaf-600 group-hover:text-white"
                       >
-                        {t('departments.visit')}
-                        <ArrowRight className="h-4 w-4 text-leaf-600 transition-transform duration-300 ease-spring group-hover:translate-x-1" />
+                        <ArrowRight className="h-5 w-5" />
                       </span>
                     )}
                   </div>

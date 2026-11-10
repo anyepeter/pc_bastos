@@ -2,6 +2,8 @@
  * Translation types and utilities for multilingual support
  */
 
+import { frenchTypography } from './french-typography';
+
 export type Language = 'en' | 'fr';
 
 export const LANGUAGES: Language[] = ['en', 'fr'];
@@ -58,6 +60,9 @@ export function getTranslatedText(translation: Translation | string, language: L
   if (typeof translation === 'string') {
     return translation;
   }
+
+  // French text gets French spacing; an English fallback is left as is.
+  if (language === 'fr' && translation.fr) return frenchTypography(translation.fr);
 
   // Return the translation for the specified language, fallback to English
   return translation[language] || translation.en || '';

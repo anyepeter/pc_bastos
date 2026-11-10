@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from '@/components/LocalizedLink';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store/hooks';
 import { getTranslatedText, readTranslation } from '@/lib/translations';
@@ -10,6 +10,9 @@ import PageHero from '@/components/PageHero';
 import PageSection from '@/components/PageSection';
 import SectionHeading from '@/components/SectionHeading';
 import Reveal from '@/components/Reveal';
+import NextChapter from '@/components/NextChapter';
+import MottoSeal from '@/components/MottoSeal';
+import SplitReveal from '@/components/motion/SplitReveal';
 import { boardPortrait, type PublicBoardMember } from '@/lib/board';
 import {
   DEPARTMENTS,
@@ -57,62 +60,70 @@ export default function GeneralSecretariatClient({
       <PageHero
         title={t('about.generalSecretariat.pageTitle')}
         lede={t('about.generalSecretariat.description')}
+        media={{ src: '/images/hero-image.jpg', alt: t('about.photos.headquartersAlt'), position: '50% 55%' }}
       />
 
       {secretary && (
-        <PageSection tone="white">
-          {/* A compact profile, centred under the centred page title. The
-              portrait is a fixed column at each size (160 / 208 / 272px), so
-              it never grows with the screen: on a phone it sits above the
-              text, from 640px it sits beside it. Without a photo the text
-              stands alone. */}
-          <div
-            className={`mx-auto grid max-w-4xl gap-8 ${
-              secretary.photo
-                ? 'sm:grid-cols-[13rem_minmax(0,1fr)] sm:items-center sm:gap-10 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-16'
-                : ''
-            }`}
-          >
+        <PageSection tone="white" className="lg:py-28">
+          {/* The General Secretary as a portrait feature: the photograph
+              uncovers from below, the name is set large beside it. Without a
+              photo the text stands alone. */}
+          <div className={`grid items-center gap-10 ${secretary.photo ? 'lg:grid-cols-12 lg:gap-16' : ''}`}>
             {secretary.photo && (
-              <Reveal>
-                <div className="w-40 overflow-hidden rounded-2xl border border-ink-200 bg-ink-50 shadow-[0_18px_40px_-24px_rgba(45,27,90,0.45)] sm:w-full">
-                  <Image
-                    src={boardPortrait(secretary.photo)}
-                    alt={secretary.name || t('about.generalSecretariat.photoAlt')}
-                    width={800}
-                    height={1000}
-                    sizes="(min-width: 1024px) 272px, (min-width: 640px) 208px, 160px"
-                    priority
-                    className="aspect-[4/5] h-auto w-full object-cover object-top"
-                  />
-                </div>
-              </Reveal>
+              <div className="relative mx-auto w-full max-w-sm lg:col-span-5 lg:max-w-none">
+                <Reveal variant="wipe">
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ink-100">
+                    <Image
+                      src={boardPortrait(secretary.photo)}
+                      alt={secretary.name || t('about.generalSecretariat.photoAlt')}
+                      fill
+                      sizes="(min-width: 1024px) 38vw, 24rem"
+                      priority
+                      className="object-cover object-top"
+                    />
+                  </div>
+                </Reveal>
+                <Reveal variant="scale" delay={700} className="absolute -right-5 top-1/2 -translate-y-1/2 sm:-right-10">
+                  <MottoSeal className="h-24 w-24 sm:h-28 sm:w-28" />
+                </Reveal>
+                <div
+                  aria-hidden="true"
+                  className="absolute -bottom-6 -left-6 -z-10 h-32 w-44"
+                  style={{
+                    backgroundImage: 'radial-gradient(theme(colors.leaf.300) 1.4px, transparent 1.6px)',
+                    backgroundSize: '16px 16px',
+                  }}
+                />
+              </div>
             )}
 
-            <div className="min-w-0">
-              <Reveal delay={60}>
-                <h2 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-tight text-ink-900 text-balance">
-                  {secretary.name || read(secretary.title) || t('about.generalSecretariat.secretaryTitle')}
-                </h2>
-                {secretary.name && (
-                  <p className="mt-3 font-ui text-sm font-medium uppercase tracking-[0.12em] text-plum-700">
+            <div className={`min-w-0 ${secretary.photo ? 'lg:col-span-7' : 'mx-auto max-w-3xl'}`}>
+              <Reveal>
+                <div className="flex items-center gap-3">
+                  <span aria-hidden="true" className="grow-x h-px w-10 origin-left bg-plum-500" />
+                  <p className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-plum-700">
                     {read(secretary.title) || t('about.generalSecretariat.secretaryTitle')}
                   </p>
-                )}
+                </div>
               </Reveal>
-              <Reveal delay={120}>
-                <p className="mt-5 max-w-[52ch] text-base leading-relaxed text-ink-600 text-pretty sm:text-lg">
+              <SplitReveal
+                as="h2"
+                delay={100}
+                className="mt-7 block font-display text-[clamp(2.4rem,5vw,4.4rem)] font-semibold leading-[1.02] tracking-tight text-ink-900 text-balance"
+                text={secretary.name || t('about.generalSecretariat.secretaryTitle')}
+              />
+              <Reveal delay={260}>
+                <p className="mt-8 max-w-[52ch] font-display text-[clamp(1.2rem,1.8vw,1.5rem)] leading-[1.5] text-ink-700 text-pretty">
                   {t('about.generalSecretariat.secretaryRole')}
                 </p>
                 <Link
                   href="/board"
-                  className="focus-ring group mt-7 inline-flex min-h-[44px] items-center gap-2 rounded font-ui text-sm font-semibold text-plum-700 transition-colors duration-300 hover:text-plum-800"
+                  className="focus-ring group mt-9 inline-flex items-center gap-3 rounded-full border border-ink-300 bg-white py-2 pl-6 pr-2 font-ui text-sm font-semibold text-ink-800 transition-all duration-300 ease-spring hover:border-plum-400 hover:bg-plum-50"
                 >
                   {t('about.generalSecretariat.seeBoard')}
-                  <ArrowRight
-                    aria-hidden="true"
-                    className="h-4 w-4 text-leaf-600 transition-transform duration-300 ease-spring group-hover:translate-x-1"
-                  />
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-leaf-600 text-white transition-transform duration-300 ease-spring group-hover:translate-x-1">
+                    <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                  </span>
                 </Link>
               </Reveal>
             </div>
@@ -120,46 +131,62 @@ export default function GeneralSecretariatClient({
         </PageSection>
       )}
 
-      <PageSection tone="tint">
+      {/* The departments and services, as a directory: the acronym large and
+          outlined, filling with colour under the pointer. */}
+      <PageSection tone="tint" className="lg:py-28">
         <SectionHeading
+          eyebrow={t('home.sections.departments')}
           title={t('about.generalSecretariat.attachedTitle')}
           standfirst={t('about.generalSecretariat.attachedLede')}
-          layout="stack"
         />
 
-        <ul className="mt-11 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <ul className="mt-14 grid border-t border-ink-200 md:grid-cols-2">
           {entries.map(({ key, href, Icon, acronym, name, summary }, i) => (
-            <Reveal as="li" key={key} delay={Math.min(i, 8) * 60}>
+            <Reveal
+              as="li"
+              key={key}
+              delay={Math.min(i, 8) * 50}
+              className="border-b border-ink-200 md:[&:nth-child(odd)]:border-r"
+            >
               <Link
                 href={href}
-                className="card card-hover focus-ring group flex h-full flex-col rounded-2xl p-6"
+                onMouseMove={(e) => {
+                  const r = e.currentTarget.getBoundingClientRect();
+                  e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`);
+                  e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`);
+                }}
+                className="spotlight focus-ring group flex h-full gap-6 p-6 transition-colors duration-500 hover:bg-white sm:gap-8 sm:p-8 lg:p-10"
               >
-                <div className="flex items-start justify-between gap-4">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-white transition-colors duration-300 group-hover:border-leaf-300">
-                    <Icon aria-hidden="true" className="h-5 w-5 text-leaf-600" />
+                <span
+                  aria-hidden="true"
+                  className="w-24 shrink-0 font-display text-[clamp(1.6rem,2.6vw,2.4rem)] font-semibold leading-none tracking-tight text-outline text-plum-400 transition-colors duration-500 group-hover:[-webkit-text-fill-color:currentColor] group-hover:text-plum-700 sm:w-32"
+                >
+                  {acronym}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-start justify-between gap-4">
+                    <span className="font-display text-xl font-semibold leading-snug tracking-tight text-ink-900 transition-colors duration-300 group-hover:text-plum-700">
+                      {name}
+                    </span>
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-ink-200 bg-white transition-all duration-500 ease-spring group-hover:-rotate-45 group-hover:border-leaf-600 group-hover:bg-leaf-600">
+                      <Icon aria-hidden="true" className="h-4 w-4 text-leaf-600 transition-colors duration-300 group-hover:hidden" />
+                      <ArrowRight aria-hidden="true" className="hidden h-4 w-4 text-white group-hover:block" />
+                    </span>
                   </span>
-                  <span className="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-plum-700">
-                    {acronym}
-                  </span>
-                </div>
-
-                <h3 className="mt-5 font-display text-lg font-semibold leading-snug tracking-tight text-ink-900 transition-colors duration-300 group-hover:text-plum-700">
-                  {name}
-                </h3>
-
-                <p className="mt-3 text-sm leading-relaxed text-ink-600 text-pretty">{summary}</p>
-
-                <span className="mt-auto flex justify-end pt-4">
-                  <ArrowUpRight
-                    aria-hidden="true"
-                    className="h-4 w-4 text-ink-400 transition-all duration-300 ease-spring group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-plum-700"
-                  />
+                  <span className="mt-3 block max-w-[52ch] text-sm leading-relaxed text-ink-600 text-pretty">{summary}</span>
                 </span>
               </Link>
             </Reveal>
           ))}
         </ul>
       </PageSection>
+
+      <NextChapter
+        href="/about/structure"
+        title={t('about.structure.title')}
+        description={t('about.structure.description')}
+        image="/images/about/assembly-steps.jpg"
+      />
     </>
   );
 }

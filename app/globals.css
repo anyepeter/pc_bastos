@@ -238,6 +238,138 @@
     transform: translate3d(0, 0, 0);
   }
 
+  /* Reveal variants (Reveal's `variant` prop). Same gating as .reveal. */
+  .js .reveal[data-variant='fade'] {
+    transform: none;
+  }
+  .js .reveal[data-variant='left'] {
+    transform: translate3d(-40px, 0, 0);
+  }
+  .js .reveal[data-variant='right'] {
+    transform: translate3d(40px, 0, 0);
+  }
+  .js .reveal[data-variant='scale'] {
+    transform: scale(0.96);
+  }
+  .js .reveal[data-variant][data-revealed='true'] {
+    transform: none;
+  }
+  /* Wipe: the frame uncovers from the bottom edge up while the photograph
+     inside settles from an overscale — a camera pulling focus. */
+  /* The clip goes on the CHILD: Chrome's IntersectionObserver honours the
+     observed element's own clip-path, so a fully clipped wrapper would never
+     count as visible and never reveal. */
+  .js .reveal[data-variant='wipe'] {
+    opacity: 1;
+    transform: none;
+  }
+  .js .reveal[data-variant='wipe'] > * {
+    clip-path: inset(100% 0 0 0 round 1rem);
+    transition: clip-path 1200ms cubic-bezier(0.77, 0, 0.18, 1) var(--reveal-delay, 0ms);
+    will-change: clip-path;
+  }
+  .js .reveal[data-variant='wipe'][data-revealed='true'] > * {
+    clip-path: inset(0 0 0 0 round 1rem);
+  }
+  .js .reveal[data-variant='wipe'] img {
+    transform: scale(1.18);
+    transition: transform 1800ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+  }
+  .js .reveal[data-variant='wipe'][data-revealed='true'] img {
+    transform: scale(1);
+  }
+
+  /* SplitReveal: each word rises from behind its own mask. The mask is padded
+     and pulled back by the same amount so accents and descenders survive the
+     clip without changing the line box. */
+  .split-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-block: 0.12em;
+    margin-block: -0.12em;
+  }
+  .split-word {
+    display: inline-block;
+  }
+  .js .split-word {
+    transform: translate3d(0, 112%, 0);
+    transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1) var(--split-delay, 0ms);
+  }
+  .js .split[data-revealed='true'] .split-word {
+    transform: none;
+  }
+
+  /* ScrollWords: dim until the reading line passes. */
+  .js .scroll-words > span {
+    opacity: clamp(0.14, calc(var(--progress, 0) * (var(--words) + 6) - var(--i)), 1);
+    transition: opacity 160ms linear;
+  }
+
+  /* Parallax: the oversized inner layer travels against the scroll. */
+  .parallax-layer {
+    transform: translate3d(0, calc((var(--progress, 0.5) - 0.5) * var(--parallax, 80px)), 0);
+    will-change: transform;
+  }
+
+  /* A line that draws itself with --progress (vertical by default). */
+  .draw-y {
+    transform-origin: top;
+    transform: scaleY(var(--progress, 1));
+  }
+  .draw-x {
+    transform-origin: left;
+    transform: scaleX(var(--progress, 1));
+  }
+
+  /* Marquee ribbon. */
+  .marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: gallery-slide var(--marquee-duration, 40s) linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+  .marquee-run {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+  }
+
+  /* Editorial drop cap for the first paragraph of a long read. */
+  .drop-cap::first-letter {
+    float: left;
+    margin: 0.06em 0.14em 0 0;
+    font-family: var(--font-playfair), Georgia, serif;
+    font-size: 4.4em;
+    font-weight: 600;
+    line-height: 0.8;
+    color: theme('colors.leaf.600');
+  }
+
+  /* Outlined display type that fills on hover. */
+  /* Only the FILL goes transparent: the stroke is currentColor, so `color`
+     must stay set (a transparent color would hide the stroke too). */
+  .text-outline {
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1.25px currentColor;
+  }
+
+  /* Hairline that grows from its centre when its Reveal arrives. */
+  .js .reveal .grow-x {
+    transform: scaleX(0);
+    transition: transform 1100ms cubic-bezier(0.22, 1, 0.36, 1) calc(var(--reveal-delay, 0ms) + 250ms);
+  }
+  .js .reveal[data-revealed='true'] .grow-x {
+    transform: scaleX(1);
+  }
+
   .text-balance {
     text-wrap: balance;
   }
@@ -284,10 +416,26 @@
     scroll-behavior: auto;
   }
   .reveal,
-  .js .reveal {
+  .js .reveal,
+  .js .reveal[data-variant] {
     opacity: 1;
     transform: none;
     transition: none;
+    clip-path: none;
+  }
+  .js .reveal[data-variant='wipe'] > * {
+    clip-path: none;
+    transition: none;
+  }
+  .js .reveal[data-variant='wipe'] img,
+  .js .split-word,
+  .js .reveal .grow-x,
+  .parallax-layer {
+    transform: none;
+    transition: none;
+  }
+  .js .scroll-words > span {
+    opacity: 1;
   }
   .card-hover:hover {
     transform: none;

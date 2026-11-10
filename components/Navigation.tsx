@@ -163,10 +163,10 @@ const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
               : 'border-b border-ink-200 bg-white/90 backdrop-blur-md'
         }`}
       >
-        <nav aria-label="Primary" className="shell">
+        <nav aria-label={t('a11y.primaryNav')} className="shell">
           <div className="flex h-16 items-center justify-between gap-6 sm:h-20">
             {/* Wordmark */}
-            <Link href="/" className="focus-ring group flex shrink-0 items-center gap-3" aria-label="CEPCA home">
+            <Link href="/" className="focus-ring group flex shrink-0 items-center gap-3" aria-label={t('a11y.home')}>
               <span
                 className={`flex h-10 w-10 items-center justify-center rounded-xl ring-1 ring-inset transition-colors duration-300 sm:h-11 sm:w-11 ${
                   overHero
@@ -294,7 +294,7 @@ const Navigation = ({ scroll = false }: { scroll?: boolean }) => {
                 onClick={() => setIsMenuOpen((open) => !open)}
                 aria-expanded={isMenuOpen}
                 aria-controls="mobile-menu"
-                aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-label={isMenuOpen ? t('a11y.closeMenu') : t('a11y.openMenu')}
                 className={`focus-ring rounded-lg p-2.5 transition-colors duration-200 ${
                   overHero
                     ? 'text-white hover:bg-white/[0.15] active:bg-white/25'

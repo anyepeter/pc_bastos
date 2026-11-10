@@ -139,9 +139,9 @@
   "contact": {
     "pageTitle": "Get in",
     "pageTitleHighlight": "Touch",
-    "pageSubtitle": "We'd love to hear from you! Whether you're planning your first visit, need prayer, or want to learn more about our church family.",
-    "weAreHere": "We're Here for You",
-    "description": "Our team is ready to answer your questions, pray with you, or help you take your next step in faith. Don't hesitate to reach out!",
+    "pageSubtitle": "Write to the General Secretariat, call during office hours or visit us in Yaoundé. Member churches, partners, journalists and members of the public are all welcome to get in touch.",
+    "weAreHere": "How to reach us",
+    "description": "The secretariat answers questions about the council, its member churches and its departments, and passes your message on to the right person.",
     "visitUs": {
       "title": "Visit Us",
       "getDirections": "Get Directions →"
@@ -151,7 +151,7 @@
     },
     "emailUs": {
       "title": "Email Us",
-      "response": "We typically respond within 24 hours"
+      "response": "We reply as soon as we can, usually within a few working days."
     },
     "whatsapp": {
       "title": "Contact on WhatsApp",
@@ -175,11 +175,6 @@
       "sending": "Sending...",
       "success": "Thank you for your message! We'll get back to you soon.",
       "sendError": "Your message could not be sent. Please try again in a few minutes, or write to us directly at"
-    },
-    "prayer": {
-      "title": "Need Prayer?",
-      "description": "Our prayer team is committed to lifting up your needs before God. No request is too big or too small - we're here to pray with you.",
-      "submitRequest": "Submit Prayer Request"
     },
     "map": {
       "title": "Find Us",
@@ -336,7 +331,8 @@
       "logo": "Logo",
       "logoDescription": "The map of Cameroon with a cross inside, set against green, violet, and white backgrounds",
       "motto": "Motto",
-      "mottoText": "\"Being Church Together\""
+      "mottoText": "\"Being Church Together\"",
+      "logoAlt": "The CEPCA emblem: a map of Cameroon with a cross"
     },
     "impact": {
       "title": "Our Impact",
@@ -365,7 +361,18 @@
       "president": "President of CEPCA",
       "firstVicePresident": "First Vice-President",
       "secondVicePresident": "Second Vice-President"
-    }
+    },
+    "photos": {
+      "leadersAlt": "Leaders of the member churches standing side by side at the Littoral Week of Protestantism",
+      "pastorAlt": "A pastor in a red stole holding her Bible at the national closing of the Week of Protestantism",
+      "signAlt": "The council's signboard at its headquarters in Yaoundé",
+      "congregationAlt": "Members of a women's fellowship at the national closing of the Week of Protestantism",
+      "headquartersAlt": "The General Secretariat's building in Yaoundé",
+      "assemblyAlt": "Clergy of the member churches gathered on the steps at the national closing",
+      "greetingAlt": "Clergy of two member churches greeting each other at the Littoral Week of Protestantism",
+      "choirAlt": "A women's choir in matching dress at the national closing of the Week of Protestantism"
+    },
+    "nextChapter": "Next chapter"
   },
   "sermons": {
     "pageTitle": "Sermons",
@@ -476,7 +483,8 @@
       }
     },
     "website": "Website",
-    "visitWebsite": "Visit website"
+    "visitWebsite": "Visit website",
+    "logoAlt": "{{name}} logo"
   },
   "home": {
     "eyebrow": "Council of Protestant Churches of Cameroon",
@@ -539,6 +547,10 @@
     "news": {
       "title": "Latest",
       "titleHighlight": "News"
+    },
+    "photos": {
+      "pastorAlt": "A pastor in a black gown and purple stole in a church sanctuary",
+      "wallAlt": "The council's headquarters wall, a cross-shaped window above a banner naming its member churches"
     }
   },
   "impact": {
@@ -637,5 +649,20 @@
       "more": "More from this department",
       "notFound": "This page could not be found"
     }
+  },
+  "a11y": {
+    "heroCarousel": "CEPCA member churches and gatherings",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide",
+    "goToSlide": "Go to slide {{n}}",
+    "primaryNav": "Primary",
+    "home": "CEPCA home",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "footerNav": "Footer",
+    "whatsapp": "Contact CEPCA on WhatsApp",
+    "play": "Play",
+    "pause": "Pause",
+    "seek": "Seek"
   }
 }

@@ -1,6 +1,7 @@
 import i18next, { type i18n as I18n } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import type { Language } from '@/lib/translations';
+import { frenchTypography } from '@/lib/french-typography';
 
 // Bundled, not fetched: the strings are in the first render on both sides.
 import enTranslation from '@/public/locales/en/translation.json';
@@ -26,10 +27,23 @@ export function getI18n(language: Language): I18n {
   if (existing) return existing;
 
   const instance = i18next.createInstance();
-  instance.use(initReactI18next).init({
+  instance.use(initReactI18next);
+
+  // French gets its non-breaking spaces (before ? ! ; : », after «) at render
+  // time, so the locale file keeps ordinary, readable spaces.
+  if (language === 'fr') {
+    instance.use({
+      type: 'postProcessor',
+      name: 'frenchTypography',
+      process: (value: string) => frenchTypography(value),
+    });
+  }
+
+  instance.init({
     resources,
     lng: language,
     fallbackLng: 'en',
+    ...(language === 'fr' ? { postProcess: ['frenchTypography'] } : {}),
     // Resources are inline, so init finishes synchronously — needed for SSR.
     initAsync: false,
     interpolation: { escapeValue: false }, // React already escapes

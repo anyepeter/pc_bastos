@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { Language } from '@/lib/translations';
 import { LANGUAGES } from '@/lib/translations';
 import { isLanguage, localizePath } from '@/lib/locale-path';
+import { frenchTypography } from '@/lib/french-typography';
 import {
   absoluteUrl,
   DEFAULT_SHARE_IMAGE,
@@ -67,7 +68,7 @@ export const PAGE_COPY: Record<PageKey, Record<Language, Copy>> = {
     fr: {
       title: 'Qui sommes-nous',
       description:
-        'Le Conseil des Églises Protestantes du Cameroun : notre histoire depuis la FEMEC en 1969, notre mission, nos instances et le Secrétariat Général.',
+        'Le Conseil des Églises Protestantes du Cameroun : notre histoire depuis la FEMEC en 1969, notre mission, nos instances et le Secrétariat général.',
     },
   },
   history: {
@@ -79,7 +80,7 @@ export const PAGE_COPY: Record<PageKey, Record<Language, Copy>> = {
     fr: {
       title: 'Notre histoire',
       description:
-        "De la Fédération Évangélique de l'Afrique Équatoriale Française à la FEMEC en 1969, puis au CEPCA d'aujourd'hui : l'histoire de l'unité protestante au Cameroun.",
+        "De la Fédération évangélique de l'Afrique-Équatoriale française à la FEMEC en 1969, puis au CEPCA d'aujourd'hui : l'histoire de l'unité protestante au Cameroun.",
     },
   },
   missionVision: {
@@ -103,7 +104,7 @@ export const PAGE_COPY: Record<PageKey, Record<Language, Copy>> = {
     fr: {
       title: 'Gouvernance et structure',
       description:
-        "Assemblée Générale, Comité Exécutif, commissions spécialisées et Secrétariat Général : comment fonctionne le Conseil des Églises Protestantes du Cameroun.",
+        "Assemblée générale, Comité exécutif, commissions spécialisées et Secrétariat général : comment fonctionne le Conseil des Églises Protestantes du Cameroun.",
     },
   },
   generalSecretariat: {
@@ -113,9 +114,9 @@ export const PAGE_COPY: Record<PageKey, Record<Language, Copy>> = {
         "The General Secretariat coordinates CEPCA's national services and departments — health, education, youth, women, Christian witness, communication and more.",
     },
     fr: {
-      title: 'Secrétariat Général',
+      title: 'Secrétariat général',
       description:
-        'Le Secrétariat Général coordonne les services et départements nationaux du CEPCA : santé, éducation, jeunesse, femmes, témoignage chrétien, communication…',
+        'Le Secrétariat général coordonne les services et départements nationaux du CEPCA : santé, éducation, jeunesse, femmes, témoignage chrétien, communication…',
     },
   },
   board: {
@@ -127,7 +128,7 @@ export const PAGE_COPY: Record<PageKey, Record<Language, Copy>> = {
     fr: {
       title: 'Bureau et organigramme',
       description:
-        'Le Président, les Vice-Présidents et le Secrétaire Général du Conseil des Églises Protestantes du Cameroun, et les départements du Secrétariat Général.',
+        'Le président, les vice-présidents et le secrétaire général du Conseil des Églises Protestantes du Cameroun, et les départements du Secrétariat général.',
     },
   },
   members: {
@@ -139,7 +140,7 @@ export const PAGE_COPY: Record<PageKey, Record<Language, Copy>> = {
     fr: {
       title: 'Églises membres',
       description:
-        'Les 12 Églises protestantes du CEPCA — presbytériennes, baptistes, luthériennes, évangéliques, anglicane, Plein Évangile — leurs responsables et leur histoire.',
+        'Les 12 Églises protestantes du CEPCA — presbytériennes, baptistes, luthériennes, évangéliques, anglicane, Plein Évangile — leurs responsables, leur histoire.',
     },
   },
   departments: {
@@ -151,7 +152,7 @@ export const PAGE_COPY: Record<PageKey, Record<Language, Copy>> = {
     fr: {
       title: 'Départements',
       description:
-        'Les départements du CEPCA : santé, éducation, jeunesse, femme et affaires sociales, témoignage chrétien, communication, recherche et développement.',
+        'Les départements du CEPCA : santé, éducation, jeunesse, femmes et affaires sociales, témoignage chrétien, communication, recherche et développement.',
     },
   },
   events: {
@@ -163,7 +164,7 @@ export const PAGE_COPY: Record<PageKey, Record<Language, Copy>> = {
     fr: {
       title: 'Événements',
       description:
-        'Les rassemblements du Conseil des Églises Protestantes du Cameroun, à venir et passés — cultes, Semaine du Protestantisme, assemblées, visites — en photos.',
+        'Les rassemblements du Conseil des Églises Protestantes du Cameroun, à venir et passés — cultes, Semaine du protestantisme, assemblées, visites — en photos.',
     },
   },
   news: {
@@ -187,7 +188,7 @@ export const PAGE_COPY: Record<PageKey, Record<Language, Copy>> = {
     fr: {
       title: 'Annonces',
       description:
-        'Les avis du secrétariat du CEPCA : cérémonies à venir, réunions et appels aux Églises membres et aux fidèles à travers le Cameroun.',
+        'Les avis du secrétariat du CEPCA : cérémonies à venir, réunions et appels aux Églises membres et aux fidèles dans tout le Cameroun.',
     },
   },
   blogs: {
@@ -232,8 +233,8 @@ export const PAGE_COPY: Record<PageKey, Record<Language, Copy>> = {
       description: "Sermons and messages from the spiritual leaders of CEPCA's member churches in Cameroon.",
     },
     fr: {
-      title: 'Sermons',
-      description: 'Sermons et messages des responsables spirituels des Églises membres du CEPCA au Cameroun.',
+      title: 'Prédications',
+      description: 'Prédications et messages des responsables spirituels des Églises membres du CEPCA au Cameroun.',
     },
   },
   contact: {
@@ -245,7 +246,7 @@ export const PAGE_COPY: Record<PageKey, Record<Language, Copy>> = {
     fr: {
       title: 'Nous contacter',
       description:
-        "Contactez le Secrétariat Général du Conseil des Églises Protestantes du Cameroun : téléphone, WhatsApp, e-mail, horaires et plan d'accès.",
+        "Contactez le Secrétariat général du Conseil des Églises Protestantes du Cameroun : téléphone, WhatsApp, e-mail, horaires et plan d'accès.",
     },
   },
   give: {
@@ -330,6 +331,11 @@ export function pageMetadata({
   section,
   noIndex = false,
 }: PageMetadataInput): Metadata {
+  if (language === 'fr') {
+    title = frenchTypography(title);
+    description = frenchTypography(description);
+    if (imageAlt) imageAlt = frenchTypography(imageAlt);
+  }
   const url = pageUrl(path, language);
   // " · CEPCA" only while the whole title still fits a results page (≈60
   // characters); a long event or article title keeps its own words instead.

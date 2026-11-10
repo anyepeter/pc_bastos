@@ -89,7 +89,7 @@ const HeroSection = () => {
         onFocusCapture={() => setPaused(true)}
         onBlurCapture={() => setPaused(false)}
         aria-roledescription="carousel"
-        aria-label="CEPCA member churches and gatherings"
+        aria-label={t('a11y.heroCarousel')}
       >
         {/* ── Slides ───────────────────────────────────────────────── */}
         <div className="absolute inset-0">
@@ -213,7 +213,7 @@ const HeroSection = () => {
               <button
                 type="button"
                 onClick={() => go(active - 1)}
-                aria-label="Previous slide"
+                aria-label={t('a11y.previousSlide')}
                 className="focus-ring flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm transition-all duration-300 ease-spring hover:border-white/60 hover:bg-white/20 active:translate-y-px sm:h-14 sm:w-14"
               >
                 <ArrowLeft className="h-5 w-5" />
@@ -221,7 +221,7 @@ const HeroSection = () => {
               <button
                 type="button"
                 onClick={() => go(active + 1)}
-                aria-label="Next slide"
+                aria-label={t('a11y.nextSlide')}
                 className="focus-ring flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm transition-all duration-300 ease-spring hover:border-white/60 hover:bg-white/20 active:translate-y-px sm:h-14 sm:w-14"
               >
                 <ArrowRight className="h-5 w-5" />
@@ -235,7 +235,7 @@ const HeroSection = () => {
                   key={slide.src}
                   type="button"
                   onClick={() => go(i)}
-                  aria-label={`Go to slide ${i + 1}`}
+                  aria-label={t('a11y.goToSlide', { n: i + 1 })}
                   aria-current={i === active}
                   className="focus-ring group py-2"
                 >

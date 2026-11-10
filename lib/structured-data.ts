@@ -65,7 +65,7 @@ export function organizationJsonLd({ language, settings, churches = [], departme
     logo: { '@type': 'ImageObject', url: absoluteUrl(logoSrc(settings)) },
     description:
       language === 'fr'
-        ? "Le Conseil des Églises Protestantes du Cameroun (CEPCA) est l'organisation œcuménique des Églises protestantes du Cameroun. Il rassemble 12 Églises membres et coordonne leur action commune en santé, éducation, jeunesse, femmes, témoignage chrétien et communication."
+        ? "Le Conseil des Églises Protestantes du Cameroun (CEPCA) est l'organisation œcuménique des Églises protestantes du Cameroun. Il rassemble 12 Églises membres et coordonne leur action commune dans les domaines de la santé, de l'éducation, de la jeunesse, des femmes, du témoignage chrétien et de la communication."
         : 'The Council of Protestant Churches of Cameroon (CEPCA, CPCC in English) is the ecumenical body of the Protestant churches of Cameroon. It brings together 12 member churches and coordinates their common work in health, education, youth, women, Christian witness and communication.',
     areaServed: { '@type': 'Country', name: 'Cameroon', identifier: 'CM' },
     knowsLanguage: ['en', 'fr'],

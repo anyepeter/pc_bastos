@@ -129,6 +129,37 @@ match it.
 - `.reveal` fails open — content is visible when JS or IntersectionObserver is
   unavailable. Never gate content on an `isVisible` state.
 
+### The motion kit (`components/motion/`, added 2026-11-10)
+
+Still no library — a handful of hooks that write CSS custom properties, with
+the animating done in `app/globals.css`. All of them rest under reduced motion
+and fail open without scripts.
+
+| Piece | Use |
+| --- | --- |
+| `Reveal variant=` | `rise` (default), `fade`, `left`, `right`, `scale`, and `wipe` — the frame uncovers from its foot while the photo inside settles from 118%. The clip is on the CHILD: Chrome's IntersectionObserver honours the observed element's own clip-path, so a clipped wrapper never reveals. |
+| `SplitReveal` | Headings whose words rise from behind masks. Takes a string or `[{ text, className }]` runs (accent words). `PageHero` uses it for every h1. |
+| `ScrollWords` | A statement that lights up word by word as it is read (the Preamble, the vision). |
+| `Parallax` | Clips and slides an oversized `fill` image against the scroll. |
+| `useScrollProgress` | Writes `--progress` (0–1). `.draw-y` / `.draw-x` lines read it — the History timeline, the Structure spine, the History reading rail. |
+| `useInView` | One-shot "has been seen" — milestones and tiers light up as the line reaches them. |
+| `Marquee` | Endless ribbon: `MottoRibbon` (the motto in BOTH languages at once) and `ChurchLogoRibbon`. |
+
+Also: `MottoSeal` (rotating bilingual seal — decorative, never over a rounded
+corner), `NextChapter` (closing card linking the About pages into a sequence:
+history → mission → secretariat → structure → board), `.text-outline`
+(outlined display type — it sets only `-webkit-text-fill-color`, because a
+transparent `color` would also hide the currentColor stroke), `.drop-cap`,
+`.grow-x`.
+
+**Sticky works inside bands.** `PageSection` clips with `overflow-x: clip`,
+not `overflow: hidden`; the latter captures `position: sticky`. Don't put a
+`Reveal` (a transform) on the sticky element itself.
+
+**Photography on the About pages is the council's own**, in
+`public/images/about/` (from the Week of Protestantism posts). Text never sits
+on a photo without the neutral charcoal scrim; never plum.
+
 ## Accessibility
 
 - One `h1` per page (`PageHero` provides it). Sections use `h2`, then `h3`.

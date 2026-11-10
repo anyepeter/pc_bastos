@@ -2,6 +2,7 @@
 
 import { useSiteSettings } from './SiteSettingsProvider';
 import { whatsappHref } from '@/lib/site-settings';
+import { useTranslation } from 'react-i18next';
 
 /**
  * WhatsApp's own glyph — lucide's MessageCircle reads as a generic chat bubble
@@ -14,6 +15,7 @@ const WhatsAppGlyph = ({ className }: { className?: string }) => (
 );
 
 export default function WhatsAppButton() {
+  const { t } = useTranslation();
   // The first WhatsApp number in /admin/settings; none set, no button.
   const [number] = useSiteSettings().whatsapp;
   if (!number) return null;
@@ -25,7 +27,7 @@ export default function WhatsAppButton() {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Contact CEPCA on WhatsApp"
+      aria-label={t('a11y.whatsapp')}
       className="focus-ring group fixed bottom-5 right-5 z-float inline-flex items-center gap-0 overflow-hidden rounded-full border border-ink-200 bg-white/90 p-4 text-plum-700 shadow-[0_18px_40px_-16px_rgba(3,10,8,0.9)] backdrop-blur-md transition-all duration-300 ease-spring hover:gap-2.5 hover:border-plum-400 hover:bg-plum-500 hover:text-ink-900 hover:shadow-[0_20px_44px_-14px_rgba(162,130,233,0.65)] active:translate-y-px sm:bottom-7 sm:right-7"
     >
       <WhatsAppGlyph className="h-6 w-6 shrink-0" />

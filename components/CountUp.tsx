@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useAppSelector } from '@/store/hooks';
 
 interface CountUpProps {
   /** Target value. Rendered with tabular figures so it never jitters. */
@@ -29,6 +30,7 @@ export default function CountUp({
   durationMs = 1400,
   className = '',
 }: CountUpProps) {
+  const language = useAppSelector((state) => state.blog.language);
   const ref = useRef<HTMLSpanElement | null>(null);
   const [display, setDisplay] = useState(0);
   const started = useRef(false);
@@ -72,7 +74,9 @@ export default function CountUp({
   return (
     <span ref={ref} className={`tnum ${className}`}>
       {prefix}
-      {display.toLocaleString()}
+      {/* Grouped the page's way (1,580 / 1 580), never the browser's. French
+          uses a no-break space: the fonts carry U+00A0 but not U+202F. */}
+      {display.toLocaleString(language === 'fr' ? 'fr-FR' : 'en-US').replace(/\u202F/g, '\u00A0')}
       {suffix}
     </span>
   );
