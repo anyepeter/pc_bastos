@@ -53,7 +53,7 @@
   },
   "hero": {
     "title": "ÊTRE ÉGLISE",
-    "description": "Douze Églises protestantes. Une seule voix. Le CEPCA rassemble 13 millions de fidèles au Cameroun autour de la santé, de l'éducation et du service aux communautés.",
+    "description": "Douze Églises protestantes. Une seule voix. Le CEPCA rassemble 11,5 millions de fidèles au Cameroun autour de la santé, de l'éducation et du service aux communautés.",
     "contactUs": "Nous contacter",
     "donateNow": "Faire un don",
     "titleHighlight": "ENSEMBLE"
@@ -62,10 +62,10 @@
     "tagline": "Bienvenue au CEPCA",
     "title": "Être Église",
     "titleHighlight": "ensemble",
-    "description": "Le Conseil des Églises Protestantes du Cameroun (CEPCA) est une organisation œcuménique qui représente 12 Églises membres, 13 millions de fidèles et 15 500 paroisses. Nous sommes unis dans une même mission de guérison, d'éducation et de développement communautaire intégral dans tout le Cameroun.",
+    "description": "Le Conseil des Églises Protestantes du Cameroun (CEPCA) est une organisation œcuménique qui représente 12 Églises membres, 11,5 millions de fidèles et 15 500 paroisses. Nous sommes unis dans une même mission de guérison, d'éducation et de développement communautaire intégral dans tout le Cameroun.",
     "healthcare": {
       "title": "Santé",
-      "description": "350 hôpitaux et centres de santé qui dispensent des soins de qualité dans tout le Cameroun."
+      "description": "450 hôpitaux et centres de santé qui dispensent des soins de qualité dans tout le Cameroun."
     },
     "education": {
       "title": "Éducation",
@@ -73,13 +73,14 @@
     },
     "spiritualLeadership": {
       "title": "Accompagnement spirituel",
-      "description": "Au service de 13 millions de fidèles dans 15 500 paroisses, dans tout le pays."
+      "description": "Au service de 11,5 millions de fidèles dans 15 500 paroisses, dans tout le pays."
     },
     "learnMore": "En savoir plus sur nous",
     "supportOurWork": "Soutenir notre action",
     "stats": {
       "memberChurches": "Églises membres",
-      "believers": "Fidèles"
+      "believers": "Fidèles",
+      "believersFigure": "11,5 M"
     }
   },
   "missionVision": {
@@ -206,7 +207,7 @@
       "milestone1969": "Création de la FEMEC (Fédération des Églises et missions évangéliques du Cameroun)",
       "milestone1970s": "Années 1970 : mise en place des comités de l'éducation et de la santé",
       "milestone2009": "Ouverture à l'adhésion d'autres Églises protestantes",
-      "milestoneToday": "Aujourd'hui, 12 Églises membres servent plus de 13 millions de fidèles"
+      "milestoneToday": "Aujourd'hui, 12 Églises membres servent plus de 11,5 millions de fidèles"
     },
     "missionVision": {
       "title": "Mission et vision",

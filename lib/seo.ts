@@ -51,12 +51,12 @@ export const PAGE_COPY: Record<PageKey, Record<Language, Copy>> = {
     en: {
       title: 'CEPCA — Council of Protestant Churches of Cameroon',
       description:
-        'CEPCA (CPCC) unites 12 Protestant churches and 13 million believers across Cameroon in health, education, pastoral care and Christian witness.',
+        'CEPCA (CPCC) unites 12 Protestant churches and 11.5 million believers across Cameroon in health, education, pastoral care and Christian witness.',
     },
     fr: {
       title: 'CEPCA — Conseil des Églises Protestantes du Cameroun',
       description:
-        "Le CEPCA rassemble 12 Églises protestantes et 13 millions de fidèles au Cameroun autour de la santé, de l'éducation, de la pastorale et du témoignage chrétien.",
+        "Le CEPCA rassemble 12 Églises protestantes et 11,5 millions de fidèles au Cameroun autour de la santé, de l'éducation, de la pastorale et du témoignage chrétien.",
     },
   },
   about: {

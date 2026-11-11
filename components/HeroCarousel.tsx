@@ -14,7 +14,7 @@ export const heroSlidesData = [
     id: 1,
     headline: "Being Church Together",
       subheadline: "The United Voice of Protestant Churches in Cameroon",
-      supportingText: "12 Member Churches • 13 Million Believers • 15,500 Congregations",
+      supportingText: "12 Member Churches • 11.5 Million Believers • 15,500 Congregations",
       primaryCTA: { text: "Discover Our Mission", href: "#about" },
       secondaryCTA: { text: "View Our Members", href: "/members" },
       backgroundImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&h=1080&fit=crop&auto=format",
@@ -36,7 +36,7 @@ export const heroSlidesData = [
     {
       id: 2,
       headline: "Healing Communities with Compassion",
-      subheadline: "350 Hospitals & Health Centers Serving Cameroon",
+      subheadline: "450 Hospitals & Health Centers Serving Cameroon",
       supportingText: "From combating HIV/AIDS to maternal health, we provide quality medical care reaching millions across all regions.",
       primaryCTA: { text: "See Our Health Work", href: "/activities/healthcare" },
       secondaryCTA: { text: "Support Healthcare", href: "/donate?focus=health" },

@@ -118,7 +118,7 @@ const WelcomeSection = () => {
                 {/* Believer count, pinned over the lower-left of the cluster */}
                 <div className="absolute bottom-[22%] left-0 flex items-center gap-3 rounded-2xl bg-plum-900 px-3.5 py-3 shadow-[0_22px_44px_-20px_rgba(51,32,92,0.8)] sm:-left-5 sm:gap-4 sm:px-5 sm:py-4">
                   <span className="tnum font-ui text-2xl font-semibold leading-none text-white sm:text-3xl">
-                    13M
+                    {t('welcome.stats.believersFigure')}
                   </span>
                   <span className="max-w-[5.5rem] font-mono text-[0.56rem] uppercase leading-tight tracking-[0.18em] text-plum-200">
                     {t('welcome.stats.believers')}

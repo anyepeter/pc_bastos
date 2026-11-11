@@ -6,7 +6,7 @@ import { useAppSelector } from '@/store/hooks';
 interface CountUpProps {
   /** Target value. Rendered with tabular figures so it never jitters. */
   value: number;
-  /** Rendered before/after the number, e.g. "13" + "M". */
+  /** Rendered before/after the number, e.g. "11.5" + "M". */
   suffix?: string;
   prefix?: string;
   durationMs?: number;
@@ -33,6 +33,9 @@ export default function CountUp({
   const language = useAppSelector((state) => state.blog.language);
   const ref = useRef<HTMLSpanElement | null>(null);
   const [display, setDisplay] = useState(0);
+  // A figure like 11.5 keeps its decimal while counting and at rest.
+  const decimals = (String(value).split('.')[1] ?? '').length;
+  const factor = 10 ** decimals;
   const started = useRef(false);
 
   useEffect(() => {
@@ -56,7 +59,7 @@ export default function CountUp({
           const progress = Math.min((now - start) / durationMs, 1);
           // Ease-out cubic: fast to begin, settles rather than stopping dead.
           const eased = 1 - Math.pow(1 - progress, 3);
-          setDisplay(Math.round(eased * value));
+          setDisplay(Math.round(eased * value * factor) / factor);
           if (progress < 1) frame = requestAnimationFrame(tick);
         };
         frame = requestAnimationFrame(tick);
@@ -69,14 +72,21 @@ export default function CountUp({
       observer.disconnect();
       if (frame) cancelAnimationFrame(frame);
     };
-  }, [value, durationMs]);
+  }, [value, durationMs, factor]);
 
   return (
     <span ref={ref} className={`tnum ${className}`}>
       {prefix}
       {/* Grouped the page's way (1,580 / 1 580), never the browser's. French
           uses a no-break space: the fonts carry U+00A0 but not U+202F. */}
-      {display.toLocaleString(language === 'fr' ? 'fr-FR' : 'en-US').replace(/\u202F/g, '\u00A0')}
+      {display
+        .toLocaleString(language === 'fr' ? 'fr-FR' : 'en-US', {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        })
+        .replace(/\u202F/g, '\u00A0')}
+      {/* French sets a space before a unit: « 11,5 M ». */}
+      {language === 'fr' && /^[A-Za-z]/.test(suffix) ? '\u00A0' : ''}
       {suffix}
     </span>
   );

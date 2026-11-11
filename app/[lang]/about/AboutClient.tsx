@@ -50,7 +50,7 @@ function AboutHero() {
 
   const facts = [
     { value: 12, suffix: '', label: t('home.stats.churches') },
-    { value: 13, suffix: 'M+', label: t('home.stats.believers') },
+    { value: 11.5, suffix: 'M', label: t('home.stats.believers') },
     { value: 15500, suffix: '', label: t('home.stats.congregations') },
   ];
 
@@ -365,9 +365,9 @@ function Figures({ churches }: { churches: RibbonChurch[] }) {
 
   const impact = [
     { value: 12, suffix: '', label: t('about.impact.memberChurches') },
-    { value: 13, suffix: 'M+', label: t('about.impact.believers') },
+    { value: 11.5, suffix: 'M', label: t('about.impact.believers') },
     { value: 1580, suffix: '', label: t('about.impact.educationalInstitutions') },
-    { value: 350, suffix: '', label: t('about.impact.healthCenters') },
+    { value: 450, suffix: '', label: t('about.impact.healthCenters') },
   ];
 
   return (

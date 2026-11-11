@@ -53,7 +53,7 @@
   },
   "hero": {
     "title": "BEING CHURCH",
-    "description": "Twelve Protestant churches. One voice. CEPCA unites 13 million believers across Cameroon around healing, education and the service of communities.",
+    "description": "Twelve Protestant churches. One voice. CEPCA unites 11.5 million believers across Cameroon around healing, education and the service of communities.",
     "contactUs": "Contact Us",
     "donateNow": "Donate Now",
     "titleHighlight": "TOGETHER"
@@ -62,10 +62,10 @@
     "tagline": "Welcome to CEPCA",
     "title": "Being Church",
     "titleHighlight": "Together",
-    "description": "The Council of Protestant Churches of Cameroon (CEPCA) is an ecumenical organization representing 12 member churches, 13 million believers, and 15,500 congregations. We are united in our mission of healing, education, and holistic community development across Cameroon.",
+    "description": "The Council of Protestant Churches of Cameroon (CEPCA) is an ecumenical organization representing 12 member churches, 11.5 million believers, and 15,500 congregations. We are united in our mission of healing, education, and holistic community development across Cameroon.",
     "healthcare": {
       "title": "Healthcare",
-      "description": "350 hospitals and health centers providing quality care across Cameroon."
+      "description": "450 hospitals and health centers providing quality care across Cameroon."
     },
     "education": {
       "title": "Education",
@@ -73,13 +73,14 @@
     },
     "spiritualLeadership": {
       "title": "Spiritual Leadership",
-      "description": "Serving 13 million believers through 15,500 congregations nationwide."
+      "description": "Serving 11.5 million believers through 15,500 congregations nationwide."
     },
     "learnMore": "Learn More About Us",
     "supportOurWork": "Support Our Work",
     "stats": {
       "memberChurches": "Member Churches",
-      "believers": "Believers"
+      "believers": "Believers",
+      "believersFigure": "11.5M"
     }
   },
   "missionVision": {
@@ -206,7 +207,7 @@
       "milestone1969": "Creation of FEMEC (Federation of Evangelical Churches and Missions of Cameroon)",
       "milestone1970s": "During the 1970s: establishment of the Education and Health Committees",
       "milestone2009": "Opening to admission of other Protestant Churches",
-      "milestoneToday": "Today, 12 member churches serve more than 13 million believers"
+      "milestoneToday": "Today, 12 member churches serve more than 11.5 million believers"
     },
     "missionVision": {
       "title": "Mission & Vision",

@@ -26,7 +26,7 @@ const ImpactSection = () => {
     { key: 'churches', value: 12, suffix: '', Icon: Church },
     { key: 'schools', value: 1580, suffix: '', Icon: School },
     { key: 'universities', value: 15, suffix: '', Icon: GraduationCap },
-    { key: 'health', value: 350, suffix: '', Icon: Heart },
+    { key: 'health', value: 450, suffix: '', Icon: Heart },
     { key: 'radio', value: 9, suffix: '', Icon: Radio },
     { key: 'microfinance', value: 3, suffix: '', Icon: Building2 },
   ];
@@ -65,7 +65,7 @@ const ImpactSection = () => {
                 <Users aria-hidden="true" className="h-5 w-5 text-leaf-300" />
               </span>
               <span className="mt-5 block font-display text-[clamp(3.6rem,8vw,7rem)] font-semibold leading-none tracking-tight text-white">
-                <CountUp value={13} suffix="M" durationMs={1600} />
+                <CountUp value={11.5} suffix="M" durationMs={1600} />
               </span>
               <span className="mt-3 block font-mono text-[0.66rem] uppercase tracking-[0.22em] text-leaf-300">
                 {t('impact.stats.believers.label')}

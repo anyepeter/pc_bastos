@@ -17,9 +17,9 @@ const StatsSection = () => {
 
   const stats = [
     { value: 12, suffix: '', label: t('home.stats.churches'), Icon: Church },
-    { value: 13, suffix: 'M', label: t('home.stats.believers'), Icon: Users },
+    { value: 11.5, suffix: 'M', label: t('home.stats.believers'), Icon: Users },
     { value: 15500, suffix: '', label: t('home.stats.congregations'), Icon: Landmark },
-    { value: 350, suffix: '', label: t('home.stats.health'), Icon: Stethoscope },
+    { value: 450, suffix: '', label: t('home.stats.health'), Icon: Stethoscope },
   ];
 
   return (

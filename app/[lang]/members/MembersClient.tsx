@@ -39,7 +39,7 @@ export default function MembersClient({ churches }: { churches: PublicChurch[] }
 
   const figures = [
     { value: churches.length, suffix: '', label: t('members.memberChurches') },
-    { value: 13, suffix: 'M+', label: t('home.stats.believers') },
+    { value: 11.5, suffix: 'M', label: t('home.stats.believers') },
     { value: 15500, suffix: '', label: t('home.stats.congregations') },
   ];
 
